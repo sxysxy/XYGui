@@ -17,7 +17,7 @@ class XYMainWindow < XYWidget
 		
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
-		@layout = arg[:layout]? arg[:layout]: XYLayout.new
+		@layout = arg[:layout]? arg[:layout]: XYLayout.new(self)
 		
 		#-----------------
 		proc = Class.new(Fiddle::Closure) do
@@ -83,6 +83,6 @@ class XYMainWindow < XYWidget
 	
 	def addChild(c)
 		super(c)
-		@layout.addWidget(c)
+		@layout.addWidget(c) if @layout
 	end
 end

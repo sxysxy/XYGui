@@ -41,7 +41,7 @@ class XYWidget
 		@title = arg[:title]? arg[:title]: defualtTitle
 		@shown = true
 		
-		parent.addChild(self) if parent
+		@parent.addChild(self) if @parent
 	end
 	
 	def defualtHeight
