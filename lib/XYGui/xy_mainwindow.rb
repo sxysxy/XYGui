@@ -17,8 +17,8 @@ class XYMainWindow < XYWidget
 		@type = arg[:type]? arg[:type]: 0
 		@width = arg[:width]? arg[:width]: 200
 		@height = arg[:height]? arg[:height]: 200
-		@x = arg[:x]? arg[:x]: 100
-		@y = arg[:y]? arg[:y]: 100
+		@x = arg[:x]? arg[:x]: 200
+		@y = arg[:y]? arg[:y]: 200
 		@shown = false
 		@app = app
 		
