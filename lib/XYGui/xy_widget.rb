@@ -10,6 +10,7 @@ class XYWidgetError < Exception
 end
 
 class XYWidget
+	
 	attr_reader :handle
 	attr_reader :title
 	attr_reader :width
@@ -21,22 +22,8 @@ class XYWidget
 	attr_reader :content
 	attr_reader :shown
 	
-	WS_OVERLAPPEDWINDOW	 = 0xcf0000
-	WS_VISIBLE	 = 0x10000000
 	
-	IDI_APPLICATION  = 32512
-	IDC_ARROW = 32512
-	
-	SW_HIDE  = 0
-	SW_NORMAL  = 1
-	
-	COLOR_WINDOW = 5
-	
-	WM_NULL = 0
-	WM_CREATE = 1
-	WM_DESTROY = 2
-	
-	def initialize(app = nil, parent = nil, arg = {})
+	def initialize(app, parent = nil, arg = {})
 		@handle = 0
 		@title = ""
 		@width = 0
@@ -52,7 +39,7 @@ class XYWidget
 		@x = arg[:x]? arg[:x]: defualtX
 		@y = arg[:y]? arg[:y]: defualtY
 		@title = arg[:title]? arg[:title]: defualtTitle
-		@shown = false
+		@shown = true
 	end
 	
 	def defualtHeight
@@ -74,8 +61,17 @@ class XYWidget
 	def isShown?
 		return @shown
 	end
+	def show(flag = 1)
+		WinAPI.call("user32", "ShowWindow", @handle, flag)
+		if flag != 0
+			@shown = true
+		else
+			@shown = false
+		end
+	end
 	
 	def isChildWidget?
 		return @parent? true: false
 	end
+	
 end

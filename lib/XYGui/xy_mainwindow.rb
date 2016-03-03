@@ -10,7 +10,7 @@ class XYMainWindow < XYWidget
 	attr_reader :style
 	attr_reader :type
 	
-	def initialize(app = nil, parent = nil, arg = {})
+	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		
 		@style = arg[:style]? arg[:style]: 0
@@ -38,6 +38,7 @@ class XYMainWindow < XYWidget
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 			app.instance_eval{@name_registered = true}
 		end
+		show
 	end
 	
 	def create
@@ -46,15 +47,6 @@ class XYMainWindow < XYWidget
 							@x, @y, @width, @height,              
 							0, 0,
 							app.instance, 0)
-	end
-	
-	def show(flag = 1)
-		WinAPI.call("user32", "ShowWindow", @handle, flag)
-		if flag != 0
-			@shown = true
-		else
-			@shown = false
-		end
 	end
 	
 	def title=(new_title)
