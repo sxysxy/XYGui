@@ -15,6 +15,6 @@ class XYLayout < XYWidget
 		replace
 	end
 	def replace
-	
+		
 	end
 end

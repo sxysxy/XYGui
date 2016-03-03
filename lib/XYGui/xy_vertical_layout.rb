@@ -5,6 +5,9 @@
 require 'XYGui/xy_layout.rb'
 
 class XYVerticalLayout < XYLayout
+	def initialize(wnd)
+		super(wnd)
+	end
 	def replace
 		cur_y = 0
 		@content.each do |e|

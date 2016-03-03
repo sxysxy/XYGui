@@ -61,7 +61,8 @@ class XYMainWindow < XYWidget
 	end
 	
 	def layout=(new_layout)
-		
+		@layout = new_layout
+		@layout.replace
 	end
 
 	def defualtHeight
