@@ -10,17 +10,11 @@ class XYMainWindow < XYWidget
 	attr_reader :style
 	attr_reader :type
 	
-	def initialize(app, arg)
-		arg ||= {}
-		@title = arg[:title]? arg[:title]: "Window"
+	def initialize(app = nil, parent = nil, arg = {})
+		super(app, parent, arg)
+		
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
-		@width = arg[:width]? arg[:width]: 200
-		@height = arg[:height]? arg[:height]: 200
-		@x = arg[:x]? arg[:x]: 200
-		@y = arg[:y]? arg[:y]: 200
-		@shown = false
-		@app = app
 		
 		#-----------------
 		proc = Class.new(Fiddle::Closure) do
@@ -63,15 +57,27 @@ class XYMainWindow < XYWidget
 		end
 	end
 	
-	def is_shown?
-		return @shown
-	end
-	
 	def title=(new_title)
 		
 	end
 	
 	def style=(new_style)
 		
+	end
+
+	def defualtHeight
+		return 300
+	end
+	def defualtWidth
+		return 300
+	end
+	def defualtX
+		return 100
+	end
+	def defualtY
+		return 100
+	end
+	def defualtTitle
+		return "Window"
 	end
 end
