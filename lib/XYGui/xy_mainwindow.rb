@@ -5,16 +5,19 @@
 require 'XYGui/xy_widget.rb'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
+require 'XYGui/xy_layout.rb'
 
 class XYMainWindow < XYWidget
 	attr_reader :style
 	attr_reader :type
+	attr_reader :layout
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
+		@layout = arg[:layout]? arg[:layout]: XYLayout.new
 		
 		#-----------------
 		proc = Class.new(Fiddle::Closure) do
@@ -56,6 +59,10 @@ class XYMainWindow < XYWidget
 	def style=(new_style)
 		
 	end
+	
+	def layout=(new_layout)
+		
+	end
 
 	def defualtHeight
 		return 300
@@ -71,5 +78,10 @@ class XYMainWindow < XYWidget
 	end
 	def defualtTitle
 		return "Window"
+	end
+	
+	def addChild(c)
+		super(c)
+		@layout.addWidget(c)
 	end
 end
