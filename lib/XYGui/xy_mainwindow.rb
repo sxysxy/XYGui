@@ -26,6 +26,9 @@ class XYMainWindow < XYWindow
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 			app.instance_eval{@name_registered = true}
 		end
+		
+		connect(:ON_DESTROY, proc{on_destroy})
+		
 		create
 		show
 	end
@@ -36,21 +39,6 @@ class XYMainWindow < XYWindow
 							@x, @y, @width, @height,              
 							0, 0,
 							app.instance, 0)
-	end
-	
-	def wndproc
-		proc = Class.new(Fiddle::Closure) do
-			define_method :call do |hwnd, msg, lparam, wparam|
-				case msg
-					when WM_DESTROY then
-						WinAPI.call("user32", "PostQuitMessage", 0)
-						return 0
-					else
-						return WinAPI.call("user32", "DefWindowProc", hwnd, msg, lparam, wparam)
-				end
-			end
-		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
-		return Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 	
 	def style=(new_style)
@@ -76,5 +64,9 @@ class XYMainWindow < XYWindow
 	def addChild(c)
 		super(c)
 		@layout.replace
+	end
+	
+	def on_destroy
+		WinAPI.call("user32", "PostQuitMessage", 0)
 	end
 end

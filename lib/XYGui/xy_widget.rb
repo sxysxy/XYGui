@@ -23,6 +23,8 @@ class XYWidget
 	attr_reader :content
 	attr_reader :shown
 	
+	attr_reader :responder
+	
 	
 	def initialize(app, parent = nil, arg = {})
 		@handle = 0
@@ -34,6 +36,7 @@ class XYWidget
 		@app = app
 		@parent = parent
 		@content = []
+		@responder = {}
 		
 		@width = arg[:width]? arg[:width]: defualtWidth
 		@height = arg[:height]? arg[:height]: defualtHeight
@@ -98,5 +101,9 @@ class XYWidget
 	
 	def title=(new_title)
 		
+	end
+	
+	def connect(sig, func)
+		@responder[sig] = func
 	end
 end
