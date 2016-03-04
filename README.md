@@ -8,8 +8,6 @@ require 'XYGui/xy_app.rb'
 require 'XYGui/xy_mainwindow.rb'
 
 app = XYApp.new("simple")
-wnd = XYMainWindow.new(app, nil)
-wnd.create
-wnd.show 
+wnd = XYMainWindow.new(app)
 app.mainloop   #Just so easy
 ```
