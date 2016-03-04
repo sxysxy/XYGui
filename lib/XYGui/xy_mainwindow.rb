@@ -16,21 +16,8 @@ class XYMainWindow < XYWindow
 		
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
-		
-		#-----------------
-		proc = Class.new(Fiddle::Closure) do
-			define_method :call do |hwnd, msg, lparam, wparam|
-				case msg
-					when WM_DESTROY then
-						WinAPI.call("user32", "PostQuitMessage", 0)
-					else
-						return WinAPI.call("user32", "DefWindowProc", hwnd, msg, lparam, wparam)
-				end
-			end
-		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
-		func = Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT)
-		#-----------------
-		wndcls = [@type, func.to_i, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
+
+		wndcls = [@type, wndproc.to_i, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), COLOR_WINDOW + 1,
 					0, app.name].pack("lllllllllp")
 		
@@ -49,6 +36,21 @@ class XYMainWindow < XYWindow
 							@x, @y, @width, @height,              
 							0, 0,
 							app.instance, 0)
+	end
+	
+	def wndproc
+		proc = Class.new(Fiddle::Closure) do
+			define_method :call do |hwnd, msg, lparam, wparam|
+				case msg
+					when WM_DESTROY then
+						WinAPI.call("user32", "PostQuitMessage", 0)
+						return 0
+					else
+						return WinAPI.call("user32", "DefWindowProc", hwnd, msg, lparam, wparam)
+				end
+			end
+		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
+		return Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 	
 	def style=(new_style)
