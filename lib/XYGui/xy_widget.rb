@@ -25,6 +25,7 @@ class XYWidget
 	
 	attr_reader :responder
 	
+	alias :to_i :handle
 	
 	def initialize(app, parent = nil, arg = {})
 		@handle = 0
@@ -103,7 +104,11 @@ class XYWidget
 		
 	end
 	
-	def connect(sig, func)
+	def getAsChildId
+		@parent? (@parent.connect.size - 1): 0 
+	end
+	
+	def connect(sig, &func)
 		@responder[sig] = func
 	end
 end

@@ -27,7 +27,7 @@ class XYMainWindow < XYWindow
 			app.instance_eval{@name_registered = true}
 		end
 		
-		connect(:ON_DESTROY, proc{on_destroy})
+		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		
 		create
 		show
@@ -66,7 +66,7 @@ class XYMainWindow < XYWindow
 		@layout.replace
 	end
 	
-	def on_destroy
+	def onDestroy(wp, lp)
 		WinAPI.call("user32", "PostQuitMessage", 0)
 	end
 end

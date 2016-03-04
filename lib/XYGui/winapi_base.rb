@@ -21,7 +21,7 @@ module WinAPI
 				@cache[api].call *arg
 			rescue Exception => e
 				@cache[api] = nil	
-				raise APICallError, "Error when calling API #{dllname}##{api}"
+				raise APICallError, "Error when calling API #{dllname}##{api}, Error Message:#{e.message}"
 			end
 		end
 	end
@@ -38,6 +38,14 @@ module WinAPI
 			end
 		end
 		return form
+	end
+	
+	def self.hiword(v)
+		v >> 16
+	end
+	
+	def self.loword(v)
+		v ^ ((WinAPI.hiword(v))<<16)
 	end
 	
 end
