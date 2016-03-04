@@ -39,6 +39,8 @@ class XYMainWindow < XYWindow
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 			app.instance_eval{@name_registered = true}
 		end
+		create
+		show
 	end
 	
 	def create

@@ -43,8 +43,6 @@ class XYWidget
 		@shown = true
 		
 		@parent.addChild(self) if @parent
-		create
-		show
 	end
 	
 	def defualtHeight

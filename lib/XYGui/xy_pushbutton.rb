@@ -10,6 +10,8 @@ class XYPushButton < XYWidget
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
+		create
+		show
 	end
 	
 	def create
