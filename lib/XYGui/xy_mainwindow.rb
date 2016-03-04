@@ -45,19 +45,19 @@ class XYMainWindow < XYWindow
 		
 	end
 
-	def defualtHeight
+	def defaultHeight
 		return 300
 	end
-	def defualtWidth
+	def defaultWidth
 		return 300
 	end
-	def defualtX
+	def defaultX
 		return 100
 	end
-	def defualtY
+	def defaultY
 		return 100
 	end
-	def defualtTitle
+	def defaultTitle
 		return "Window"
 	end
 	

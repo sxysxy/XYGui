@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["1441157749@qq.com"]
 
   spec.summary       = %q{A set of gui tools}
-  spec.description   = %q{}
+  spec.description   = %q{Based on Win32API}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
