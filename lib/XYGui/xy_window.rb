@@ -6,11 +6,17 @@ require 'XYGui/xy_widget.rb'
 
 class XYWindow < XYWidget
 	attr_reader :layout
+	
+	attr_reader :hdc
+	attr_reader :ps
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
+		@hdc = 0
+		@ps = Fiddle::Pointer.malloc(64)
 		
 		connect(:ON_SIZE){|a,b| onSize(a, b)}
+		connect(:ON_PAINT) {|a,b| startPaint(a,b)}
 	end
 	
 	def layout=(new_layout)
@@ -25,6 +31,9 @@ class XYWindow < XYWidget
 		proc = Class.new(Fiddle::Closure) do
 			define_method :call do |hwnd, msg, wparam, lparam|
 				case msg
+					when WM_PAINT then
+						_responder[:ON_PAINT].call(wparam, lparam) if _responder[:ON_PAINT]
+						return 0
 					when WM_DESTROY then
 						_responder[:ON_DESTROY].call(wparam, lparam) if _responder[:ON_DESTROY]
 						return 0
@@ -48,5 +57,15 @@ class XYWindow < XYWidget
 		@width = WinAPI.loword(lparam)
 		@height = WinAPI.hiword(lparam)
 		@layout.replace
+	end
+	
+	def startPaint(wparam, lparam)
+		@hdc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		onPaint
+		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
+	end
+	
+	def onPaint
+		
 	end
 end

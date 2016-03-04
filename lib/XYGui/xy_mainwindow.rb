@@ -18,7 +18,7 @@ class XYMainWindow < XYWindow
 		@type = arg[:type]? arg[:type]: 0
 
 		wndcls = [@type, wndproc.to_i, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
-					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), COLOR_WINDOW + 1,
+					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
 					0, app.name].pack("lllllllllp")
 		
 		unless app.instance_eval{@name_registered}

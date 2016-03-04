@@ -39,29 +39,29 @@ class XYWidget
 		@content = []
 		@responder = {}
 		
-		@width = arg[:width]? arg[:width]: defualtWidth
-		@height = arg[:height]? arg[:height]: defualtHeight
-		@x = arg[:x]? arg[:x]: defualtX
-		@y = arg[:y]? arg[:y]: defualtY
-		@title = arg[:title]? arg[:title]: defualtTitle
+		@width = arg[:width]? arg[:width]: defaultWidth
+		@height = arg[:height]? arg[:height]: defaultHeight
+		@x = arg[:x]? arg[:x]: defaultX
+		@y = arg[:y]? arg[:y]: defaultY
+		@title = arg[:title]? arg[:title]: defaultTitle
 		@shown = true
 		
 		@parent.addChild(self) if @parent
 	end
 	
-	def defualtHeight
+	def defaultHeight
 		return 0
 	end
-	def defualtWidth
+	def defaultWidth
 		return 0
 	end
-	def defualtX
+	def defaultX
 		return 0
 	end
-	def defualtY
+	def defaultY
 		return 0
 	end
-	def defualtTitle
+	def defaultTitle
 		return ""
 	end
 	
@@ -78,6 +78,7 @@ class XYWidget
 		else
 			@shown = false
 		end
+		WinAPI.call("user32", "UpdateWindow", @handle)
 	end
 	
 	def isChildWidget?
@@ -105,7 +106,7 @@ class XYWidget
 	end
 	
 	def getAsChildId
-		@parent? (@parent.connect.size - 1): 0 
+		@parent? (@parent.content.size - 1): 0 
 	end
 	
 	def connect(sig, &func)

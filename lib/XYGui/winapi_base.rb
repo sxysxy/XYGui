@@ -40,6 +40,18 @@ module WinAPI
 		return form
 	end
 	
+	def self.getStringPointer(s)
+		[s].pack("p").unpack("L")
+	end
+	
+	def self.getPointerString(p)
+		Fiddle::Pointer.new(p).to_s
+	end
+	
+	def self.getAPILastError
+		return WinAPI.call("kernel32", "GetLastError")
+	end
+	
 	def self.hiword(v)
 		v >> 16
 	end
