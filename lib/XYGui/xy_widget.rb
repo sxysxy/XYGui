@@ -2,6 +2,7 @@
 
 =end
 
+require 'XYGui'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
 
@@ -10,7 +11,7 @@ class XYWidgetError < Exception
 end
 
 class XYWidget
-	
+	include XYGui
 	attr_reader :handle
 	attr_reader :title
 	attr_reader :width
@@ -42,6 +43,8 @@ class XYWidget
 		@shown = true
 		
 		@parent.addChild(self) if @parent
+		create
+		show
 	end
 	
 	def defualtHeight
@@ -63,6 +66,9 @@ class XYWidget
 	def isShown?
 		return @shown
 	end
+	def create
+	
+	end
 	def show(flag = 1)
 		WinAPI.call("user32", "ShowWindow", @handle, flag)
 		if flag != 0
@@ -78,5 +84,21 @@ class XYWidget
 	
 	def addChild(c)
 		@content.push(c)
+	end
+	
+	def resize(w, h)
+		@width = w
+		@height = h
+		WinAPI.call("user32", "MoveWindow", @handle, @x, @y, w, h, 1)
+	end
+	
+	def repos(x, y)
+		@x = x
+		@y = y
+		WinAPI.call("user32", "MoveWindow", @handle, @x, @y, @width, @handle, 0)
+	end
+	
+	def title=(new_title)
+		
 	end
 end

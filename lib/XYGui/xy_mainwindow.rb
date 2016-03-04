@@ -2,22 +2,20 @@
 
 =end
 
-require 'XYGui/xy_widget.rb'
+require 'XYGui/xy_window.rb'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_layout.rb'
 
-class XYMainWindow < XYWidget
+class XYMainWindow < XYWindow
 	attr_reader :style
 	attr_reader :type
-	attr_reader :layout
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
-		@layout = arg[:layout]? arg[:layout]: XYLayout.new(self)
 		
 		#-----------------
 		proc = Class.new(Fiddle::Closure) do
@@ -41,7 +39,6 @@ class XYMainWindow < XYWidget
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 			app.instance_eval{@name_registered = true}
 		end
-		show
 	end
 	
 	def create
@@ -52,17 +49,8 @@ class XYMainWindow < XYWidget
 							app.instance, 0)
 	end
 	
-	def title=(new_title)
-		
-	end
-	
 	def style=(new_style)
 		
-	end
-	
-	def layout=(new_layout)
-		@layout = new_layout
-		@layout.replace
 	end
 
 	def defualtHeight
@@ -83,6 +71,6 @@ class XYMainWindow < XYWidget
 	
 	def addChild(c)
 		super(c)
-		@layout.addWidget(c) if @layout
+		@layout.replace
 	end
 end

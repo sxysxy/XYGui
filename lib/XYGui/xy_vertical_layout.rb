@@ -10,9 +10,9 @@ class XYVerticalLayout < XYLayout
 	end
 	def replace
 		cur_y = 0
-		@content.each do |e|
-			e.instance_eval{@x = 0; @y = cur_y}
-			WinAPI.call("user32", "MoveWindow", e.handle, 0, cur_y, e.width, e.height, 1)
+		@window.content.each do |e|
+			e.repos(0, cur_y)
+			e.resize(@window.width, e.height)
 			cur_y += e.height
 		end
 	end

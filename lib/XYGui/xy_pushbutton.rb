@@ -10,11 +10,13 @@ class XYPushButton < XYWidget
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
+	end
+	
+	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "Button", "Button",
-								WS_CHILDWINDOW|BS_DEFPUSHBUTTON,
-								@x, @y, @width, @height, parent.handle,
-								0, app.instance, 0)
-		show
+							WS_CHILDWINDOW|BS_DEFPUSHBUTTON,
+							@x, @y, @width, @height, parent.handle,
+							0, app.instance, 0)
 	end
 	
 	def defualtHeight
