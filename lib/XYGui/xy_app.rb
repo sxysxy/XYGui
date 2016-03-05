@@ -8,19 +8,19 @@ class XYApp
 	attr_reader :instance
 	attr_reader :name
 	attr_reader :message
-	attr_accessor :flag_exit
+	attr_accessor :flagExit
 	
 	def initialize(appname)
 		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
 		@name = appname
-		@name_registered = false
-		@flag_exit = false
+		@nameRegistered = false
+		@flagExit = false
 		@message = Fiddle::Pointer.malloc(32)
 	end
 	
 	def mainloop
 		while WinAPI.call("user32", "GetMessage", @message.to_i, 0, 0, 0) != 0
-			if @flag_exit
+			if @flagExit
 				beforeExit
 				break
 			end
@@ -34,7 +34,7 @@ class XYApp
 	end
 	
 	def exit
-		@flag_exit = true
+		@flagExit = true
 	end
 	
 	def force_exit

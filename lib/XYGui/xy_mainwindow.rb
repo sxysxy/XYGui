@@ -21,10 +21,10 @@ class XYMainWindow < XYWindow
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
 					0, app.name].pack("lllllllllp")
 		
-		unless app.instance_eval{@name_registered}
+		unless app.instance_eval{@nameRegistered}
 			r = WinAPI.call("user32", "RegisterClass", wndcls)
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
-			app.instance_eval{@name_registered = true}
+			app.instance_eval{@nameRegistered = true}
 		end
 		
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
@@ -67,6 +67,6 @@ class XYMainWindow < XYWindow
 	end
 	
 	def onDestroy(wp, lp)
-		WinAPI.call("user32", "PostQuitMessage", 0)
+		WinAPI.call("user32", "PostQuitMessage", @handle)
 	end
 end

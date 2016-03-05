@@ -17,7 +17,7 @@ class XYTextEdit < XYWidget
 	
 	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "EDIT", "", 
-								WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL | ES_MULTILINE,
+								WS_CHILD | WS_BORDER | WS_VISIBLE | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT,
 								@x, @y, @width, @height, @parent.handle, 
 								getAsChildId,
 								app.instance, 0)

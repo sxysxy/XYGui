@@ -13,4 +13,6 @@ button1 = XYPushButton.new(app, wnd, {:title => 'Clear'})
 button1.connect(:ON_COMMAND) {|a,b| editor.text=""}
 button2 = XYPushButton.new(app, wnd, {:title => 'Quit'})
 button2.connect(:ON_COMMAND) {|a,b| app.exit}
+
+wd2 = XYMainWindow.new(app, nil)
 app.mainloop
