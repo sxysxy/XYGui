@@ -7,14 +7,14 @@ require 'XYGui/xy_vertical_layout.rb'
 require 'XYGui/xy_textedit.rb'
 
 app = XYApp.new("asimplewindow")
-wnd = XYMainWindow.new(app, nil, {:layout => XYVerticalLayout, :height => 320, :width => 400})
+wnd = XYMainWindow.new(app, nil, {:layout => XYVerticalLayout, :height => 320, :width => 600, :title => "I am The Main Window. If you close me, this app will stop"})
 wnd.connect(:ON_DESTROY) {|a,b| app.forceExit}
 editor = XYTextEdit.new(app, wnd, {:text => "Write something here"})
 button1 = XYPushButton.new(app, wnd, {:title => 'Clear'})
 button1.connect(:ON_COMMAND) {|a,b| editor.text=""}
 button2 = XYPushButton.new(app, wnd, {:title => 'Quit'})
 button2.connect(:ON_COMMAND) {|a,b| app.exit}
-w2 = XYMainWindow.new(app, nil)
 wnd.show
-w2.show
+wnd2th = XYMainWindow.new(app, nil,{:x => 300, :y => 300, :title => 'Only a show'})
+wnd2th.show
 app.mainloop

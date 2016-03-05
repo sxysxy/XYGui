@@ -17,22 +17,21 @@ class XYMainWindow < XYWindow
 		@style = arg[:style]? arg[:style]: 0
 		@type = arg[:type]? arg[:type]: 0
 
-		unless app.instance_eval{@nameRegistered}
+
 		wndcls = [@type, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
-					0, app.name].pack("lllllllllp")
+					0, @className].pack("lllllllllp")
 		
-			r = WinAPI.call("user32", "RegisterClass", wndcls)
-			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
-			app.instance_eval{@nameRegistered = true}
-		end
-		puts "a new window"
+		r = WinAPI.call("user32", "RegisterClass", wndcls)
+		raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
+		app.instance_eval{@nameRegistered = true}
+
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		create
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @app.name, @title,  
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
 							WS_OVERLAPPEDWINDOW,   
 							@x, @y, @width, @height,              
 							0, 0,
