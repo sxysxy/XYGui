@@ -37,7 +37,7 @@ class XYApp
 		@flagExit = true
 	end
 	
-	def force_exit
+	def forceExit
 		WinAPI.call("kernel32", "ExitProcess", 0)
 	end
 end

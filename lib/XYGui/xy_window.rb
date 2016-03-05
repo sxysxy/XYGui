@@ -16,7 +16,8 @@ class XYWindow < XYWidget
 		@ps = Fiddle::Pointer.malloc(64)
 		
 		connect(:ON_SIZE){|a,b| onSize(a, b)}
-		connect(:ON_PAINT) {|a,b| startPaint(a,b)}
+		connect(:ON_BEGINPAINT) {|a,b| beginPaint(a,b)}
+		connect(:ON_PAINT) {|a,b| onPaint(a,b)}
 	end
 	
 	def layout=(new_layout)
@@ -32,7 +33,7 @@ class XYWindow < XYWidget
 			define_method :call do |hwnd, msg, wparam, lparam|
 				case msg
 					when WM_PAINT then
-						_responder[:ON_PAINT].call(wparam, lparam) if _responder[:ON_PAINT]
+						_responder[:ON_BEGINPAINT].call(wparam, lparam) if _responder[:ON_BEGINPAINT]
 						return 0
 					when WM_DESTROY then
 						_responder[:ON_DESTROY].call(wparam, lparam) if _responder[:ON_DESTROY]
@@ -53,19 +54,24 @@ class XYWindow < XYWidget
 		return Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 	
+	def show(flag = 1)
+		@layout.replace
+		super(flag)
+	end
+	
 	def onSize(wparam, lparam)
 		@width = WinAPI.loword(lparam)
 		@height = WinAPI.hiword(lparam)
 		@layout.replace
 	end
 	
-	def startPaint(wparam, lparam)
+	def beginPaint(wparam, lparam)
 		@hdc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
-		onPaint
+		@responder[:ON_PAINT].call(wparam, lparam) if @responder[:ON_PAINT]
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end
 	
-	def onPaint
+	def onPaint(wparam, lparam)
 		
 	end
 end
