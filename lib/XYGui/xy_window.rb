@@ -20,6 +20,11 @@ class XYWindow < XYWidget
 		connect(:ON_PAINT) {|a,b| onPaint(a,b)}
 	end
 	
+	def show(flag = 1)
+		@layout.replace
+		super(flag)
+	end
+	
 	def layout=(new_layout)
 		@layout = new_layout
 		@layout.replace
@@ -29,8 +34,10 @@ class XYWindow < XYWidget
 		_self = self
 		_content = @content
 		_responder = @responder
+		_app = @app
 		proc = Class.new(Fiddle::Closure) do
 			define_method :call do |hwnd, msg, wparam, lparam|
+				#return WinAPI.call("user32", "DefWindowProc", hwnd, msg, wparam, lparam) if hwnd != _handle  #not current window
 				case msg
 					when WM_PAINT then
 						_responder[:ON_BEGINPAINT].call(wparam, lparam) if _responder[:ON_BEGINPAINT]
@@ -51,12 +58,7 @@ class XYWindow < XYWidget
 				end
 			end
 		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
-		return Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
-	end
-	
-	def show(flag = 1)
-		@layout.replace
-		super(flag)
+		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 	
 	def onSize(wparam, lparam)

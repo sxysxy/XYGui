@@ -12,7 +12,6 @@ class XYPushButton < XYWidget
 		super(app, parent, arg)
 		@text = @title
 		create
-		show
 	end
 	
 	def create
@@ -20,7 +19,7 @@ class XYPushButton < XYWidget
 							WS_CHILDWINDOW|BS_DEFPUSHBUTTON,
 							@x, @y, @width, @height, @parent.handle,
 							getAsChildId,    #use to tell child-window-id
-							app.instance, 0)
+							@app.instance, 0)
 	end
 	
 	

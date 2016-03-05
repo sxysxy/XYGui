@@ -12,7 +12,6 @@ class XYTextEdit < XYWidget
 		
 		@text = arg[:text]? arg[:text]: ""
 		create
-		show
 	end
 	
 	def create
@@ -20,7 +19,7 @@ class XYTextEdit < XYWidget
 								WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT,
 								@x, @y, @width, @height, @parent.handle, 
 								getAsChildId,
-								app.instance, 0)
+								@app.instance, 0)
 	end
 	
 	def show(flag = 1)

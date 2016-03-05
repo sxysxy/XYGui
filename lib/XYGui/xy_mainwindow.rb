@@ -18,7 +18,7 @@ class XYMainWindow < XYWindow
 		@type = arg[:type]? arg[:type]: 0
 
 		unless app.instance_eval{@nameRegistered}
-		wndcls = [@type, wndproc.to_i, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
+		wndcls = [@type, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
 					0, app.name].pack("lllllllllp")
 		
@@ -26,28 +26,23 @@ class XYMainWindow < XYWindow
 			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 			app.instance_eval{@nameRegistered = true}
 		end
-		
+		puts "a new window"
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
-		
 		create
-		show
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, app.name, @title,  
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @app.name, @title,  
 							WS_OVERLAPPEDWINDOW,   
 							@x, @y, @width, @height,              
 							0, 0,
-							app.instance, 0)
+							@app.instance, 0)
 	end
 	
 	def style=(new_style)
 		
 	end
 	
-	def show(flag = 1)
-		super(flag)
-	end
 	def defaultHeight
 		return 300
 	end
@@ -70,7 +65,6 @@ class XYMainWindow < XYWindow
 	end
 	
 	def onDestroy(wp, lp)
-		
 		return WinAPI.call("user32", "DefWindowProc", @handle, WM_DESTROY, wp, lp)
 	end
 end

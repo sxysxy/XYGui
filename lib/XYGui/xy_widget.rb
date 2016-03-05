@@ -79,6 +79,7 @@ class XYWidget
 			@shown = false
 		end
 		WinAPI.call("user32", "UpdateWindow", @handle)
+		@content.each {|e| e.show}
 	end
 	
 	def isChildWidget?
