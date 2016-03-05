@@ -64,6 +64,6 @@ class XYMainWindow < XYWindow
 	end
 	
 	def onDestroy(wp, lp)
-		return WinAPI.call("user32", "DefWindowProc", @handle, WM_DESTROY, wp, lp)
+		@app.exit
 	end
 end
