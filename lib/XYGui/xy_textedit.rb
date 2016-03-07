@@ -20,12 +20,12 @@ class XYTextEdit < XYWidget
 								@x, @y, @width, @height, @parent.handle, 
 								getAsChildId,
 								@app.instance, 0)
+		#WinAPI.call("user32", "SetWindowLont", @handle, -4, editproc)
 	end
 	
 	def show(flag = 1)
 		super(flag)
 		self.text = @text
-		setReadOnly(false)
 	end
 	
 	def defaultHeight
@@ -39,7 +39,7 @@ class XYTextEdit < XYWidget
 	def text
 		len = WinAPI.call("user32", "GetWindowTextLength", @handle)
 		buf = "\x00"*(len+2)
-		WinAPI.call("user32", "GetWindowText", @handle, buf, len+1)
+		WinAPI.call("user32", "SendMessage", @handle, WM_GETTEXT, len+1, buf)
 		buf
 	end
 	
@@ -49,6 +49,10 @@ class XYTextEdit < XYWidget
 	
 	def setReadOnly(flag)
 		_flag = (flag == true)? 1: 0
-		WinAPI.call("user32", "SendMessage", @handle, EM_SETREADONLY, _flag, 0)
+		WinAPI.call("user32", "PostMessage", @handle, EM_SETREADONLY, _flag, 0)
+	end
+	
+	def editproc
+	
 	end
 end
