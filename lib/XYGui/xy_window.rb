@@ -19,13 +19,16 @@ class XYWindow < XYWidget
 		@className = @app.name + @app.windowIdCount.to_s
 		
 		#---------------------------------------------------
+		#create
+		connect(:ON_CREATE) {|a, b| arg[:creator]? arg[:creator].call(a,b): onCreate(a, b)}
+		
 		#size
 		connect(:ON_BEFORESIZE) {|a, b| beforeSize(a, b)}
 		connect(:ON_SIZE){|a,b| onSize(a, b)}
 		
 		#paint
 		connect(:ON_BEGINPAINT) {|a,b| beginPaint(a,b)}
-		connect(:ON_PAINT) {|a,b| onPaint}
+		connect(:ON_PAINT) {|a,b| onPaint(a, b)}
 	end
 	
 	def show(flag = 1)
@@ -60,6 +63,9 @@ class XYWindow < XYWidget
 					when WM_SIZE then
 						_responder[:ON_BEFORESIZE].call(_self, {:height => WinAPI.hiword(lparam), :width => WinAPI.loword(lparam)}) if _responder[:ON_BEFORESIZE]
 						return 0
+					when WM_CREATE then
+						_responder[:ON_CREATE].call(_self, nil) if _responder[:ON_CREATE]
+						return 0
 					else
 						return WinAPI.call("user32", "DefWindowProc", hwnd, msg, wparam, lparam)
 				end
@@ -84,7 +90,11 @@ class XYWindow < XYWidget
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end
 	
-	def onPaint
+	def onCreate(sender, data)
+	
+	end
+	
+	def onPaint(sender, data)
 		
 	end
 	

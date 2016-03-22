@@ -38,13 +38,13 @@ class XYTextEdit < XYWidget
 	
 	def text
 		len = WinAPI.call("user32", "GetWindowTextLength", @handle)
-		buf = "\x00"*(len+2)
+		buf = "\x00"*(len+1)
 		WinAPI.call("user32", "SendMessage", @handle, WM_GETTEXT, len+1, buf)
-		buf
+		buf.chop!
 	end
 	
 	def text=(str)
-		WinAPI.call("user32", "SetWindowText", @handle, str)
+		WinAPI.call("user32", "SendMessage", @handle, WM_SETTEXT, 0, str)
 	end
 	
 	def setReadOnly(flag)

@@ -15,11 +15,18 @@ class XYApp
 		@name = appname
 		@windowIdCount = 0
 		
-		@message = Fiddle::Pointer.malloc(32)
+		@message = Fiddle::Pointer.malloc(36)
 	end
 	
 	def mainloop
-		while WinAPI.call("user32", "GetMessage", @message.to_i, 0, 0, 0) != 0 
+		while WinAPI.call("user32", "GetMessage", @message.to_i, 0, 0, 0) > 0
+			WinAPI.call("user32", "TranslateMessage", @message.to_i)
+			WinAPI.call("user32", "DispatchMessage", @message.to_i)
+		end
+	end
+	
+	def main
+		if(WinAPI.call("user32", "PeekMessage", @message.to_i, 0, 0, 0, 1) > 0)  #1, PM_REMOVE
 			WinAPI.call("user32", "TranslateMessage", @message.to_i)
 			WinAPI.call("user32", "DispatchMessage", @message.to_i)
 		end

@@ -32,7 +32,7 @@ class XYMainWindow < XYWindow
 	
 	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
-							WS_OVERLAPPEDWINDOW,   
+							WS_OVERLAPPEDWINDOW | @style,   
 							@x, @y, @width, @height,              
 							0, 0,
 							@app.instance, 0)

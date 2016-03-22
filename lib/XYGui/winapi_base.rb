@@ -41,7 +41,7 @@ module WinAPI
 	end
 	
 	def self.getStringPointer(s)
-		[s].pack("p").unpack("L")
+		Fiddle::Pointer.new([s].pack("p").unpack("L").first).to_i
 	end
 	
 	def self.getPointerString(p)
