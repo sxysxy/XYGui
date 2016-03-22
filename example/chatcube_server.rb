@@ -18,13 +18,13 @@ class ChatCubeServer
 		@app = XYApp.new("chatcube_server")
 		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400})
 		@log = "Started Server at #{Time.now.to_s} \r\nPort: 2000 \r\n"
+		@prelen = @log.length
 		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500})
 		@textarea.setReadOnly(true)
 		
 		@btnquit = XYPushButton.new(@app, @mainwindow, {:title => "Quit"})
 		@btnclr = XYPushButton.new(@app, @mainwindow, {:title => "Clear"})
-		
-
+	
 	end
 	
 	def main
@@ -44,15 +44,23 @@ class ChatCubeServer
 		
 		clt = nil
 		@sok = TCPServer.open(2000)
-		t = Thread.new do
+		Thread.new do
 			loop {clt = @sok.accept}
 		end
-		
+	
 		while true
 			@app.main
 			if clt
-				@log += "#{clt.read}\r\n"
+				t = nil
+				while t = clt.read
+					break
+				end
+				@log += "#{t}\r\n"
 				@textarea.text = @log
+				Thread.new do
+				clt.write @log[59...@log.length]
+				clt.close
+				end
 				clt = nil
 			end
 		end

@@ -21,6 +21,8 @@ class ChatCubeServer
 	attr_reader :host
 	attr_reader :port
 	
+	attr_reader :rev
+	
 	HOST = "localhost"
 	PORT = 2000
 	def initialize
@@ -37,6 +39,7 @@ class ChatCubeServer
 		@host = @xml.elements["host"].text
 		@port = @xml.elements["port"].text.to_i
 		@name = @xml.elements["name"].text
+		@rev = nil
 	end
 	
 	def main
@@ -56,8 +59,12 @@ class ChatCubeServer
 				text = @textarea.text
 				Thread.new do
 					begin
-						s = TCPSocket.new(@host, @port)
+						s = TCPSocket.open(@host, @port)
 						s.write sprintf("%s said (at #{Time.now.to_s}) \r\n%s", @name.encode("gbk", "utf-8"), text)
+						@rev = nil
+						while @rev = s.read
+							break if @rev
+						end
 						s.close
 					rescue
 						XYMessageBox.show("Error!", "Fail to find the server!")
@@ -69,8 +76,20 @@ class ChatCubeServer
 			end
 		end
 		
+		@mainwindow.connect(:ON_DESTROY) do |sender, data|
+			@xml = nil
+			@app.forceExit
+		end
+		
 		@mainwindow.show
-		@app.mainloop
+		while true
+			@app.main
+			if @rev
+				puts @rev
+				@msgs.text = @rev
+				@rev = nil
+			end
+		end
 	end
 end
 
