@@ -58,10 +58,15 @@ class ChatCubeServer
 				@log += "#{t}\r\n"
 				@textarea.text = @log
 				Thread.new do
-				clt.write @log[59...@log.length]
-				clt.close
+					begin 
+					clt.write @log[59...@log.length]
+					clt.close
+					clt = nil
+					rescue Exception => e
+						puts e.message
+					end
 				end
-				clt = nil
+				
 			end
 		end
 	

@@ -55,17 +55,14 @@ class ChatCubeServer
 		
 		@send.connect(:ON_COMMAND) do |sender, data|
 			begin
-				s = nil
 				text = @textarea.text
 				Thread.new do
 					begin
-						s = TCPSocket.open(@host, @port)
-						s.write sprintf("%s said (at #{Time.now.to_s}) \r\n%s", @name.encode("gbk", "utf-8"), text)
-						@rev = nil
-						while @rev = s.read
-							break if @rev
-						end
-						s.close
+						@sok = TCPSocket.open(@host, @port)
+						@sok.write sprintf("%s said (at #{Time.now.to_s}) \r\n%s", @name.encode("gbk", "utf-8"), text)
+						@buffer = @sok.read
+						@rev = true
+						
 					rescue
 						XYMessageBox.show("Error!", "Fail to find the server!")
 					end
@@ -85,9 +82,8 @@ class ChatCubeServer
 		while true
 			@app.main
 			if @rev
-				puts @rev
-				@msgs.text = @rev
-				@rev = nil
+				@msgs.text = @buffer
+				@rev = false
 			end
 		end
 	end
