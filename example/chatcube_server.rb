@@ -16,8 +16,8 @@ class ChatCubeServer
 	PORT = 2000
 	def initialize
 		@app = XYApp.new("chatcube_server")
-		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' server!', :height => 500, :width => 400, :style => XYGui::WS_VSCROLL})
-		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => "Started Server at #{Time.now.to_s}", :height => 500})
+		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400, :style => XYGui::WS_VSCROLL})
+		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => "Started Server at #{Time.now.to_s} \r\nPort: 2000", :height => 500})
 		@textarea.setReadOnly(true)
 		
 		@btnquit = XYPushButton.new(@app, @mainwindow, {:title => "Quit"})
