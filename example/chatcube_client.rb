@@ -5,6 +5,7 @@ require 'XYGui/xy_mainwindow.rb'
 require 'XYGui/xy_pushbutton.rb'
 require 'XYGui/xy_vertical_layout.rb'
 require 'XYGui/xy_textedit.rb'
+require 'XYGui/xy_messagebox.rb'
 require 'socket'
 
 
@@ -22,6 +23,8 @@ class ChatCubeServer
 		
 		@textarea = XYTextEdit.new(@app, @mainwindow)
 		@send = XYPushButton.new(@app, @mainwindow, {:title => "Send"})
+		
+		
 	end
 	
 	def main
@@ -40,7 +43,7 @@ class ChatCubeServer
 				@textarea.text = ""
 				s.close
 			rescue 
-				WinAPI.call("user32", "MessageBox", 0, "Can not find the server!", "Error", 0)
+				XYMessageBox.show("Error!", "Fail to find the server!")
 			end
 		end
 		

@@ -48,7 +48,7 @@ class ChatCubeServer
 		while true
 			@app.main
 			if clt
-				msg = clt.gets
+				msg = clt.read
 				@textarea.text = @textarea.text + "\r\n#{msg.chop}"
 				clt = nil
 			end
