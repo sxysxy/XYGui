@@ -11,17 +11,20 @@ class ChatCubeServer
 	attr_reader :mainwindow
 	attr_reader :textarea
 	attr_reader :sok
+	attr_reader :log
 	
-	HOST = "localhost"
-	PORT = 2000
+	
 	def initialize
 		@app = XYApp.new("chatcube_server")
-		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400, :style => XYGui::WS_VSCROLL})
-		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => "Started Server at #{Time.now.to_s} \r\nPort: 2000", :height => 500})
+		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400})
+		@log = "Started Server at #{Time.now.to_s} \r\nPort: 2000 \r\n"
+		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500})
 		@textarea.setReadOnly(true)
 		
 		@btnquit = XYPushButton.new(@app, @mainwindow, {:title => "Quit"})
 		@btnclr = XYPushButton.new(@app, @mainwindow, {:title => "Clear"})
+		
+
 	end
 	
 	def main
@@ -34,8 +37,8 @@ class ChatCubeServer
 			@btnquit.repos(data[:width]/2, data[:height]*7/8)
 			@btnquit.resize(data[:width]/2, data[:height]/8)
 		end
-		@mainwindow.connect(:ON_DESTROY) {|sender, data| @app.forceExit} 
-		@btnquit.connect(:ON_COMMAND) {|sender, data| @app.forceExit}
+		@mainwindow.connect(:ON_DESTROY) {|sender, data| server_exit} 
+		@btnquit.connect(:ON_COMMAND) {|sender, data| server_exit}
 		@btnclr.connect(:ON_COMMAND) {|sender, data| @textarea.text = ""}
 		@mainwindow.show
 		
@@ -48,12 +51,17 @@ class ChatCubeServer
 		while true
 			@app.main
 			if clt
-				msg = clt.read
-				@textarea.text = @textarea.text + "\r\n#{msg.chop}"
+				@log += "#{clt.read}\r\n"
+				@textarea.text = @log
 				clt = nil
 			end
 		end
 	
+	end
+	
+	def server_exit
+		@sok.close
+		@app.forceExit
 	end
 end
 
