@@ -12,12 +12,14 @@ class ChatCubeServer
 	attr_reader :textarea
 	attr_reader :sok
 	attr_reader :log
+	attr_reader :msg
 	
+	PORT = 2333
 	
 	def initialize
 		@app = XYApp.new("chatcube_server")
-		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400})
-		@log = "Started Server at #{Time.now.to_s} \r\nPort: 2000 \r\n"
+		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400, :x => 400})
+		@log = "Started Server at #{Time.now.to_s} \r\nPort: #{PORT} \r\n"
 		@prelen = @log.length
 		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500})
 		@textarea.setReadOnly(true)
@@ -25,6 +27,7 @@ class ChatCubeServer
 		@btnquit = XYPushButton.new(@app, @mainwindow, {:title => "Quit"})
 		@btnclr = XYPushButton.new(@app, @mainwindow, {:title => "Clear"})
 	
+		@msg = ""
 	end
 	
 	def main
@@ -43,7 +46,7 @@ class ChatCubeServer
 		@mainwindow.show
 		
 		clt = nil
-		@sok = TCPServer.open(2000)
+		@sok = TCPServer.open(PORT)
 		Thread.new do
 			loop {clt = @sok.accept}
 		end
@@ -51,29 +54,28 @@ class ChatCubeServer
 		while true
 			@app.main
 			if clt
-				t = nil
-				while t = clt.read
-					break
-				end
-				@log += "#{t}\r\n"
-				@textarea.text = @log
-				Thread.new do
-					begin 
-					clt.write @log[59...@log.length]
-					clt.close
-					clt = nil
-					rescue Exception => e
-						puts e.message
-					end
-				end
-				
+				server_proc(clt)
+				clt.close
+				clt = nil
 			end
 		end
 	
 	end
 	
+	def server_proc(clt)
+		len = clt.gets.to_i
+		name = clt.gets.chop
+		txt = clt.read.chop
+		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
+		@log += "Connection from #{name} \r\n"
+		@textarea.text = @msg
+		puts @msg
+		
+		clt.write @msg
+	end
+	
 	def server_exit
-		@sok.close
+		@sok.close if @sok
 		@app.forceExit
 	end
 end

@@ -47,6 +47,11 @@ class XYTextEdit < XYWidget
 		WinAPI.call("user32", "SendMessage", @handle, WM_SETTEXT, 0, str)
 	end
 	
+	def length
+		WinAPI.call("user32", "GetWindowTextLength", @handle)
+	end
+	alias :size :length
+	
 	def setReadOnly(flag)
 		_flag = (flag == true)? 1: 0
 		WinAPI.call("user32", "PostMessage", @handle, EM_SETREADONLY, _flag, 0)
