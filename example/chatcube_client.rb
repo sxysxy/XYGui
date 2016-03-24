@@ -37,9 +37,7 @@ class ChatCubeServer
 		@host = @xml.elements["host"].text
 		@port = @xml.elements["port"].text.to_i
 		@name = @xml.elements["name"].text
-		@rev = nil
-		
-		@buffer = ""
+
 	end
 	
 	def main
@@ -54,47 +52,40 @@ class ChatCubeServer
 		end
 		
 		@send.connect(:ON_COMMAND) do |sender, data|
-			begin
-				text = @textarea.text
-				len = @textarea.length+1
-				Thread.new do
-					begin
-						@rev = false
-						@sok = TCPSocket.open(@host, @port)
-						
-						
-						@sok.puts len.to_s
-						@sok.puts @name.encode('gbk', 'utf-8')
-						@sok.write text
-						@sok.puts "\x00"
-						
-						#@buffer = @sok.recv(65536)
-						@rev = true
-						@sok.close
-					rescue Exception => e
-						@sok = nil
-						@rev = false
-						XYMessageBox.show("Error!", e.message)
-					end
+			text = @textarea.text
+			Thread.new do
+				begin
+					s = TCPSocket.open(@host, port)
+					s.puts @name.encode("gbk", "utf-8")
+					s.write text
+					s.close
+				rescue
+					XYMessageBox.show("Error!", "Can not find the server!")
 				end
-				@textarea.text = ""
-			rescue Exception => e
-				puts e.message
 			end
+		end
+		
+		@sok = TCPServer.open(@port+1)
+		svr = nil
+		Thread.new do
+			loop {svr = @sok.accept}
 		end
 		
 		@mainwindow.connect(:ON_DESTROY) do |sender, data|
 			@xml = nil
-			#@sok.close if @sok
+			@sok.close
 			@app.forceExit
 		end
 		
 		@mainwindow.show
 		while true
 			@app.main
-			if @rev
-				@msgs = "66" 
-				@rev = false
+			if svr
+				msg = svr.read
+				@msgs.text = msg
+				@textarea.text = ""
+				svr.close
+				svr = nil
 			end
 		end
 	end

@@ -14,6 +14,7 @@ class ChatCubeServer
 	attr_reader :log
 	attr_reader :msg
 	
+	attr_reader :clts
 	PORT = 2333
 	
 	def initialize
@@ -28,6 +29,7 @@ class ChatCubeServer
 		@btnclr = XYPushButton.new(@app, @mainwindow, {:title => "Clear"})
 	
 		@msg = ""
+		@clts = Array.new
 	end
 	
 	def main
@@ -42,7 +44,11 @@ class ChatCubeServer
 		end
 		@mainwindow.connect(:ON_DESTROY) {|sender, data| server_exit} 
 		@btnquit.connect(:ON_COMMAND) {|sender, data| server_exit}
-		@btnclr.connect(:ON_COMMAND) {|sender, data| @textarea.text = ""}
+		@btnclr.connect(:ON_COMMAND) do|sender, data| 
+			@textarea.text = ""
+			@log = ""
+		end
+		
 		@mainwindow.show
 		
 		clt = nil
@@ -63,15 +69,28 @@ class ChatCubeServer
 	end
 	
 	def server_proc(clt)
-		len = clt.gets.to_i
 		name = clt.gets.chop
-		txt = clt.read.chop
+		txt = clt.read
 		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
 		@log += "Connection from #{name} \r\n"
-		@textarea.text = @msg
-		puts @msg
-		
-		clt.write @msg
+		@textarea.text = @log
+		puts clt.addr.last
+		#Thread.new do
+			@clts.push(clt.addr.last)
+			update_all_clts
+		#end
+	end
+	
+	def update_all_clts
+		@clts.each_with_index do |e, i|	
+			begin
+				s = TCPSocket.new(e, PORT+1)
+				s.puts @msg
+				s.close
+			rescue
+				@clts.delete_at(i)
+			end
+		end
 	end
 	
 	def server_exit
