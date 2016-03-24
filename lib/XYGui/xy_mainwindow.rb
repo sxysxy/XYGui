@@ -8,13 +8,12 @@ require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_layout.rb'
 
 class XYMainWindow < XYWindow
-	attr_reader :style
+
 	attr_reader :type
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
-		
-		@style = arg[:style]? arg[:style]: 0
+
 		@type = arg[:type]? arg[:type]: 0
 
 

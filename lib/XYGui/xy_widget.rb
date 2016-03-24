@@ -22,6 +22,7 @@ class XYWidget
 	attr_reader :parent
 	attr_reader :content
 	attr_reader :shown
+	attr_reader :style
 	
 	attr_reader :responder
 	
@@ -44,6 +45,7 @@ class XYWidget
 		@x = arg[:x]? arg[:x]: defaultX
 		@y = arg[:y]? arg[:y]: defaultY
 		@title = arg[:title]? arg[:title]: defaultTitle
+		@style = arg[:style]? arg[:style]: 0
 		@shown = true
 		
 		@parent.addChild(self) if @parent
