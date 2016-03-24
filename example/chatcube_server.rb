@@ -70,13 +70,14 @@ class ChatCubeServer
 	
 	def server_proc(clt)
 		name = clt.gets.chop
+		cmp = clt.gets
 		txt = clt.read
 		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
 		@log += "Connection from #{name} \r\n"
 		@textarea.text = @log
 		puts clt.addr.last
 		#Thread.new do
-			@clts.push(clt.addr.last)
+			@clts.push(cmp)
 			update_all_clts
 		#end
 	end
@@ -87,8 +88,9 @@ class ChatCubeServer
 				s = TCPSocket.new(e, PORT+1)
 				s.puts @msg
 				s.close
-			rescue
+			rescue Exception => e
 				@clts.delete_at(i)
+				puts e.message
 			end
 		end
 	end

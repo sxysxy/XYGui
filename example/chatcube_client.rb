@@ -38,6 +38,8 @@ class ChatCubeServer
 		@port = @xml.elements["port"].text.to_i
 		@name = @xml.elements["name"].text
 
+		@cmpname = "\00"*100
+		WinAPI.call("kernel32", "GetComputerName", @cmpname, [99].pack("L"))
 	end
 	
 	def main
@@ -57,6 +59,7 @@ class ChatCubeServer
 				begin
 					s = TCPSocket.open(@host, port)
 					s.puts @name.encode("gbk", "utf-8")
+					 s.puts @cmpname
 					s.write text
 					s.close
 				rescue
