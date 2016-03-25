@@ -72,8 +72,8 @@ class XYFont
 	VARIABLE_PITCH = 2
 	
 	def initialize(arg = {})
-		@width = 12
-		@height = 12
+		@width = 0
+		@height = 0
 		@escapement = 0
 		@orientation = 0
 		@weight = 0
@@ -92,7 +92,7 @@ class XYFont
 		pk = [@height, @width, @escapement, @orientation, @weight,
 				@ltalic, @underLine, @strikeOut, @charSet, @outPrecision,
 					@clipPrecision, @quality, @pitchAndFamily, @faceName].pack("LLLLLccccccccp")
-		hf = WinAPI.call("user32", "CreateFontIndirect", pk)
+		hf = WinAPI.call("gdi32", "CreateFontIndirect", pk)
 		Win32API.new("user32", "SendMessage", "iiii", "i").call @widget.handle, XYGui::WM_SETFONT, hf, 1
 	end
 	

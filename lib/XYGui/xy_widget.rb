@@ -51,7 +51,6 @@ class XYWidget
 		@shown = true
 		@font = arg[:font]? arg[:font]: XYFont.new
 		@font.widget = self
-		@font.apply
 		
 		@parent.addChild(self) if @parent
 	end
@@ -86,6 +85,7 @@ class XYWidget
 			@shown = false
 		end
 		WinAPI.call("user32", "UpdateWindow", @handle)
+		@font.apply
 		@content.each {|e| e.show}
 	end
 	
