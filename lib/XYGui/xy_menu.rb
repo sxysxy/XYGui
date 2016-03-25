@@ -18,9 +18,10 @@ class XYMenuBar
 	end
 	
 	def show
-		#@content.each do |e|
-				WinAPI.call("user32", "AppendMenu", @handle, XYGui::MF_POPUP, 0, @text)
-		#end
+		@content.each do |e|
+				WinAPI.call("user32", "AppendMenu", @handle, XYGui::MF_POPUP, 0, e.text)
+		end
+		WinAPI.call("user32", "AppendMenu", @handle, XYGui::MF_POPUP, 0, @text)
 		WinAPI.call("user32", "DrawMenuBar", @widget.handle)
 		WinAPI.call("user32", "SetMenu", @widget.handle, @handle)
 	end
