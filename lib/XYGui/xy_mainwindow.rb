@@ -23,7 +23,6 @@ class XYMainWindow < XYWindow
 		
 		r = WinAPI.call("user32", "RegisterClass", wndcls)
 		raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
-		app.instance_eval{@nameRegistered = true}
 
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		create

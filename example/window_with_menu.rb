@@ -5,6 +5,7 @@ require 'XYGui/xy_menu.rb'
 app = XYApp.new("hh")
 wnd = XYMainWindow.new(app, nil)
 wnd.show
-m = XYMenu.new
-puts m.handle
+m = XYMenuBar.new(wnd)
+m.setText "我是菜单".encode("gbk", "utf-8")
+m.show
 app.mainloop

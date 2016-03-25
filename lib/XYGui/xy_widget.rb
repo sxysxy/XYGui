@@ -17,6 +17,8 @@ class XYWidget
 	attr_reader :title
 	attr_reader :width
 	attr_reader :height
+	attr_reader :idcount	#id for childs
+	attr_writer :id			#id for itself
 	attr_reader :x
 	attr_reader :y
 	attr_reader :app
@@ -31,11 +33,13 @@ class XYWidget
 	alias :to_i :handle
 	
 	def initialize(app, parent = nil, arg = {})
+		@handle = 0
 		@app = app
 		@parent = parent
 		@content = []
 		@responder = {}
-		@maxChildId = 0
+		@id = 0
+		@idcount = -1
 		
 		@width = arg[:width]? arg[:width]: defaultWidth
 		@height = arg[:height]? arg[:height]: defaultHeight
@@ -89,6 +93,8 @@ class XYWidget
 	end
 	
 	def addChild(c)
+		@idcount += 1
+		c.id = @idcount
 		@content.push(c)
 	end
 	
@@ -108,8 +114,8 @@ class XYWidget
 		
 	end
 	
-	def getAsChildId
-		@parent? (@maxChildId += 1): 0 
+	def font=(new_font)
+	
 	end
 	
 	def connect(sig, &func)

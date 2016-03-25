@@ -18,7 +18,7 @@ class XYPushButton < XYWidget
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "Button", @text,
 							@style | 0x40010000,
 							@x, @y, @width, @height, @parent.handle,
-							getAsChildId,    #use to tell child-window-id
+							@id,    #use to tell child-window-id
 							@app.instance, 0)
 	end
 	

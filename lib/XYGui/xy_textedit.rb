@@ -22,7 +22,7 @@ class XYTextEdit < XYWidget
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0x10200, "EDIT", "", 
 								ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT | 0x50010000,
 								@x, @y, @width, @height, @parent.handle, 
-								getAsChildId,
+								@id,
 								@app.instance, 0)
 		@oriproc = Fiddle::Function.new(WinAPI.call("user32", "GetWindowLong", @handle, -4), [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT)
 		WinAPI.call("user32", "SetWindowLong", @handle, -4, editproc)
