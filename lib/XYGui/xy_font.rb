@@ -71,21 +71,37 @@ class XYFont
 	FIXED_PITCH = 1
 	VARIABLE_PITCH = 2
 	
+	FW_DONTCARE = 0
+	FW_THIN = 100
+	FW_EXTRALIGHT = 200
+	FW_ULTRALIGHT = 200
+	FW_LIGHT = 300
+	FW_NORMAL = 400
+	FW_REGULAR = 400
+	FW_MEDIUM = 500
+	FW_SEMIBOLD = 600
+	FW_DEMIBOLD = 600
+	FW_BOLD = 700
+	FW_EXTRABOLD = 800
+	FW_ULTRABOLD = 800
+	FW_HEAVY = 900
+	FW_BLACK = 900
+	
 	def initialize(arg = {})
-		@width = 0
-		@height = 0
-		@escapement = 0
-		@orientation = 0
-		@weight = 0
-		@ltalic = 0
-		@underLine = 0
-		@strikeOut = 0
-		@charSet = OEM_CHARSET
-		@outPrecision = 0
-		@clipPrecision = 0
-		@quality = PROOF_QUALITY
-		@pitchAndFamily = DEFAULT_PITCH
-		@faceName = "Arial"
+		@width = arg[:width]? arg[:weight]:0
+		@height = arg[:height]? arg[:height]:0
+		@escapement = arg[:escapement]? arg[:escapement]:0
+		@orientation = arg[:orientation]? arg[:orientation]:0
+		@weight = arg[:weight]? arg[:widget]: FW_MEDIUM
+		@ltalic = arg[:ltalic]? arg[:ltalic]:0
+		@underLine = arg[:underLine]? arg[:underLine]:0
+		@strikeOut = arg[:strikeOut]? arg[:strikeOut]:0
+		@charSet = arg[:charSet]? arg[:charSet]:ANSI_CHARSET
+		@outPrecision = arg[:outPrecision]? arg[:outPrecision]:0
+		@clipPrecision = arg[:clipPrecision]? arg[:clipPrecision]:0
+		@quality = arg[:quality]? arg[:quality]:PROOF_QUALITY
+		@pitchAndFamily = arg[:pitchAndFamily]? arg[:pitchAndFamily]:DEFAULT_PITCH
+		@faceName = arg[:faceName]? arg[:faceName]:"Meriyo"
 	end
 	
 	def apply

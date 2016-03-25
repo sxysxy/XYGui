@@ -19,9 +19,10 @@ module WinAPI
 			begin
 				@cache[api] = Win32API.new(dllname, api, form, "i")
 				@cache[api].call *arg
-			rescue Exception => e
-				@cache[api] = nil	
-				raise APICallError, "Error when calling API #{dllname}##{api}, Error Message:#{e.message}"
+			#rescue Exception => e
+			#	@cache[api] = nil	
+			#	puts e.message
+			#	exit
 			end
 		end
 	end

@@ -7,6 +7,10 @@ require 'XYGui/xy_widget.rb'
 
 class XYTextEdit < XYWidget
 	
+	attr_reader :oriproc
+	
+	TEMP = []
+	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		
@@ -20,7 +24,8 @@ class XYTextEdit < XYWidget
 								@x, @y, @width, @height, @parent.handle, 
 								getAsChildId,
 								@app.instance, 0)
-		#WinAPI.call("user32", "SetWindowLont", @handle, -4, editproc)
+		@oriproc = Fiddle::Function.new(WinAPI.call("user32", "GetWindowLong", @handle, -4), [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT)
+		WinAPI.call("user32", "SetWindowLong", @handle, -4, editproc)
 	end
 	
 	def show(flag = 1)
@@ -58,6 +63,18 @@ class XYTextEdit < XYWidget
 	end
 	
 	def editproc
-	
+		_self = self
+		_content = @content
+		_responder = @responder
+		_app = @app
+		_oriproc = @oriproc
+		proc = Class.new(Fiddle::Closure) do
+			define_method :call do |hwnd, msg, wparam, lparam|
+				
+				_oriproc.call hwnd, msg, wparam, lparam
+			end
+		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
+		TEMP << proc if TEMP.size == 0
+		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 end

@@ -75,7 +75,6 @@ class ChatCubeServer
 		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
 		@log += "Connection from #{name} \r\n"
 		@textarea.text = @log
-		puts clt.addr.last
 		#Thread.new do
 			@clts.push(cmp)
 			update_all_clts
