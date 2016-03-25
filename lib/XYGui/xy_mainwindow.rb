@@ -1,5 +1,5 @@
 =begin
-
+	Main Window 
 =end
 
 require 'XYGui/xy_window.rb'

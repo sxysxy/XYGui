@@ -1,10 +1,11 @@
 =begin
-
+	Base widget 
 =end
 
 require 'XYGui'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
+require 'XYGui/xy_font.rb'
 
 class XYWidgetError < Exception
 
@@ -23,6 +24,7 @@ class XYWidget
 	attr_reader :content
 	attr_reader :shown
 	attr_reader :style
+	attr_reader :front
 	
 	attr_reader :responder
 	
@@ -47,6 +49,9 @@ class XYWidget
 		@title = arg[:title]? arg[:title]: defaultTitle
 		@style = arg[:style]? arg[:style]: 0
 		@shown = true
+		@font = arg[:font]? arg[:font]: XYFont.new
+		@font.widget = self
+		@font.apply
 		
 		@parent.addChild(self) if @parent
 	end

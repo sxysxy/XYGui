@@ -1,5 +1,5 @@
 =begin
-
+	TextEditor
 =end
 
 require 'XYGui/winapi_base.rb'
@@ -15,8 +15,8 @@ class XYTextEdit < XYWidget
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "EDIT", "", 
-								WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT,
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0x10200, "EDIT", "", 
+								ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT | 0x50010000,
 								@x, @y, @width, @height, @parent.handle, 
 								getAsChildId,
 								@app.instance, 0)
