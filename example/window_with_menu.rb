@@ -1,4 +1,4 @@
-require 'XYGui/xy_app/rb'
+require 'XYGui/xy_app.rb'
 require 'XYGui/xy_mainwindow.rb'
 require 'XYGui/xy_menu.rb'
 
