@@ -57,11 +57,6 @@ class XYMainWindow < XYWindow
 		return "Window"
 	end
 	
-	def addChild(c)
-		super(c)
-		@layout.replace
-	end
-	
 	def onDestroy(wp, lp)
 		@app.exit
 	end

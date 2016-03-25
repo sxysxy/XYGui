@@ -31,16 +31,11 @@ class XYWidget
 	alias :to_i :handle
 	
 	def initialize(app, parent = nil, arg = {})
-		@handle = 0
-		@title = ""
-		@width = 0
-		@height = 0
-		@x = 0
-		@y = 0
 		@app = app
 		@parent = parent
 		@content = []
 		@responder = {}
+		@maxChildId = 0
 		
 		@width = arg[:width]? arg[:width]: defaultWidth
 		@height = arg[:height]? arg[:height]: defaultHeight
@@ -114,10 +109,14 @@ class XYWidget
 	end
 	
 	def getAsChildId
-		@parent? (@parent.content.size - 1): 0 
+		@parent? (@maxChildId += 1): 0 
 	end
 	
 	def connect(sig, &func)
 		@responder[sig] = func
+	end
+	
+	def call(sig, *arg)
+		@responder[sig].call arg if @responder[sig]
 	end
 end

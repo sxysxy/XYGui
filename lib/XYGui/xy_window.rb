@@ -56,7 +56,7 @@ class XYWindow < XYWidget
 						_responder[:ON_DESTROY].call(_self, nil) if _responder[:ON_DESTROY]
 						return 0
 					when WM_COMMAND then
-						event = wparam >> 16   						#hiword
+						event = wparam >> 16   						 #hiword
 						id = wparam^(wparam>>16)<<16				 #loword
 						_content[id].responder[:ON_COMMAND].call(_self, {:event => event}) if _content[id] && _content[id].responder[:ON_COMMAND]
 						return 0
@@ -72,6 +72,11 @@ class XYWindow < XYWidget
 			end
 		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
 		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
+	end
+	
+	def addChild(c)
+		super(c)
+		@layout.replace
 	end
 	
 	def beforeSize(sender, data)

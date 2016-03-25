@@ -5,11 +5,14 @@
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
 
-class XYMenu < XYWidget
+class XYMenuBar 
 	
-	def initialize(widget = nil, arg = {})
-		@handle = WinAPI.call("user32", "CreateMenu")
-	end
-	
+end
+
+class XYPopupMenuBar
+
+end
+
+class XYMenuCommand
 	
 end
