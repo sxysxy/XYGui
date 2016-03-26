@@ -26,6 +26,7 @@ class XYMainWindow < XYWindow
 
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		create
+		yield(self) if block_given?
 	end
 	
 	def create

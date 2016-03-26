@@ -19,6 +19,7 @@ class XYApp
 		
 		#To use some controls
 		Fiddle::dlopen("comctl32.dll") 					#Only Load this dll into memory
+		yield(self) if block_given?
 	end
 	
 	def mainloop
