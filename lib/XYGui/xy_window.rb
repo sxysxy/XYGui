@@ -10,6 +10,8 @@ class XYWindow < XYWidget
 	attr_reader :className
 	attr_reader :hdc
 	attr_reader :ps
+	
+	TEMP = []             #Avoid ruby's GC free proc(see wndproc)
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
@@ -53,7 +55,7 @@ class XYWindow < XYWidget
 						_responder[:ON_BEGINPAINT].call(_self, nil) if _responder[:ON_BEGINPAINT]
 						return 0
 					when WM_DESTROY then
-						_responder[:ON_DESTROY].call(_self, nil) if _responder[:ON_DESTROY]
+						_responder[:ON_DESTROY].call(_self, {:system => [hwnd, msg, wparam, lparam]}) if _responder[:ON_DESTROY]
 						return 0
 					when WM_COMMAND then
 						event = wparam >> 16   						 #hiword
@@ -71,6 +73,7 @@ class XYWindow < XYWidget
 				end
 			end
 		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
+		TEMP << proc 
 		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 	

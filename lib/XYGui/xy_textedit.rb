@@ -74,7 +74,7 @@ class XYTextEdit < XYWidget
 				_oriproc.call hwnd, msg, wparam, lparam
 			end
 		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
-		TEMP << proc if TEMP.size == 0
+		TEMP << proc
 		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
 end

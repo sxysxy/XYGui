@@ -1,5 +1,7 @@
-startfirt.rb               -- First Window
-simplewindow.rb            -- A window with some widgets
-window_with_menu.rb        -- A window with a menu
-chatcube_client.rb         -- A Loacl Area Network chatting software (client)
-chatcube_server.rb         -- A Loacl Area Network chatting software (server)
+startfirt.rb                     -- First Window
+simplewindow.rb                  -- A window with some widgets
+window_with_menu.rb              -- A window with a menu
+window_with_progressbar.rb       -- A window with a progressbar
+window_with_his_children.rb      -- A window with children windows
+chatcube_client.rb               -- A Loacl Area Network chatting software (client)
+chatcube_server.rb               -- A Loacl Area Network chatting software (server)
