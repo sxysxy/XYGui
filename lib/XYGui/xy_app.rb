@@ -16,6 +16,9 @@ class XYApp
 		@windowIdCount = 0
 		
 		@message = Fiddle::Pointer.malloc(36)
+		
+		#To use some controls
+		Fiddle::dlopen("comctl32.dll") 					#Only Load this dll into memory
 	end
 	
 	def mainloop

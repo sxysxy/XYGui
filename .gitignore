@@ -9,3 +9,6 @@
 
 /*.gem
 /example/*.exe
+
+/ruby_i386cmd.bat
+/example/ruby_i386cmd.bat
