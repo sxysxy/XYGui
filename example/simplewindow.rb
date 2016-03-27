@@ -8,7 +8,6 @@ require 'XYGui/xy_textedit.rb'
 
 app = XYApp.new("asimplewindow")
 wnd = XYMainWindow.new(app, nil, {:layout => XYVerticalLayout, :height => 320, :width => 600, :title => "Happy playing"})
-wnd.connect(:ON_DESTROY) {|sender, data| app.exit}
 editor = XYTextEdit.new(app, wnd, {:text => "Write something here"})
 button1 = XYPushButton.new(app, wnd, {:title => 'Clear'})
 button1.connect(:ON_COMMAND) {|sender, data| editor.text=""}
