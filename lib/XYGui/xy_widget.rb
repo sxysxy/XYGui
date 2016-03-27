@@ -16,6 +16,7 @@ class XYWidget
 	attr_reader :handle
 	attr_reader :title
 	attr_reader :width
+	attr_reader :text
 	attr_reader :height
 	attr_reader :idcount	#id for childs
 	attr_writer :id			#id for itself
@@ -31,6 +32,7 @@ class XYWidget
 	attr_reader :responder
 	
 	alias :to_i :handle
+	alias :set :instance_eval
 	
 	def initialize(app, parent = nil, arg = {})
 		@handle = 0
@@ -46,6 +48,7 @@ class XYWidget
 		@x = arg[:x]? arg[:x]: defaultX
 		@y = arg[:y]? arg[:y]: defaultY
 		@title = arg[:title]? arg[:title]: defaultTitle
+		@text = arg[:text]? arg[:text]: defaultText
 		@style = arg[:style]? arg[:style]: 0
 		@shown = true
 		@font = arg[:font]? arg[:font]: XYFont.new
@@ -69,6 +72,25 @@ class XYWidget
 	def defaultTitle
 		return ""
 	end
+	def defaultText
+		return ""
+	end
+	
+	#---------------------
+	def setText(str)
+		@@xywidgetSendmsgSetText ||= Win32API.new("user32", "SendMessage", "LLLp", "i")
+		@@xywidgetSendmsgSetText.call(@handle, WM_SETTEXT, 0, str)
+	end
+	def text=(str)
+		setText(str)
+	end
+	def getText
+		@text
+	end
+	def text
+		getText
+	end
+	#---------------------
 	
 	def isShown?
 		return @shown

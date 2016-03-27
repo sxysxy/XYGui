@@ -9,6 +9,8 @@ class XYCheckBox < XYWidget
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
 		create
+		
+		connect(:ON_COMMAND) {|a, b| coClick(a, b)} 
 	end
 	
 	def create
@@ -30,5 +32,9 @@ class XYCheckBox < XYWidget
 	
 	def defaultTitle
 		"CheckOnMe"
+	end
+	
+	def onClick
+		
 	end
 end
