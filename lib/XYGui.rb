@@ -1,5 +1,7 @@
 require "XYGui/version"
 
+raise Exception, "This gem can only run on i386 platform(So that means you should use 32-bit ruby interpreter to use this gem)" if RUBY_PLATFORM =~ /x64/
+
 module XYGui
 	SW_HIDE = 0
 	SW_SHOWNORMAL = 1

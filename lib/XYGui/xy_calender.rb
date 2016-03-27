@@ -13,7 +13,7 @@ class XYCalender < XYWidget
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "SysMonthCal32", "", 
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0x204, "SysMonthCal32", "", 
 							WS_CHILD,
 							@x, @y, @width, @height, 
 							@parent.handle, @id,
