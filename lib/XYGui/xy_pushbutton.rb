@@ -6,11 +6,9 @@ require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
 
 class XYPushButton < XYWidget
-	attr_reader :text
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
-		@text = @title
 		create
 	end
 	
@@ -36,7 +34,7 @@ class XYPushButton < XYWidget
 	def defaultY
 		return 0
 	end
-	def defaultTitle
+	def defaultText
 		return "Button"
 	end
 end

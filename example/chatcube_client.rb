@@ -31,7 +31,7 @@ class ChatCubeServer
 		@msgs.setReadOnly(true)
 		
 		@textarea = XYTextEdit.new(@app, @mainwindow)
-		@send = XYPushButton.new(@app, @mainwindow, {:title => "Send"})
+		@send = XYPushButton.new(@app, @mainwindow, {:text => "Send"})
 		
 		@xml = REXML::Document.new(File.open("chatcube_client.xml")).root
 		@host = @xml.elements["host"].text

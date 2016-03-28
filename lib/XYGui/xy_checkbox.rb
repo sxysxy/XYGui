@@ -10,7 +10,7 @@ class XYCheckBox < XYWidget
 		super(app, parent, arg)
 		create
 		
-		connect(:ON_COMMAND) {|a, b| coClick(a, b)} 
+		connect(:ON_COMMAND) {|a, b| onClick(a, b)} 
 	end
 	
 	def create
@@ -34,7 +34,7 @@ class XYCheckBox < XYWidget
 		"CheckOnMe"
 	end
 	
-	def onClick
+	def onClick(sender, data)
 		
 	end
 end

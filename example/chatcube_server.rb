@@ -25,8 +25,8 @@ class ChatCubeServer
 		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500})
 		@textarea.setReadOnly(true)
 		
-		@btnquit = XYPushButton.new(@app, @mainwindow, {:title => "Quit"})
-		@btnclr = XYPushButton.new(@app, @mainwindow, {:title => "Clear"})
+		@btnquit = XYPushButton.new(@app, @mainwindow, {:text => "Quit"})
+		@btnclr = XYPushButton.new(@app, @mainwindow, {:text => "Clear"})
 	
 		@msg = ""
 		@clts = Array.new
