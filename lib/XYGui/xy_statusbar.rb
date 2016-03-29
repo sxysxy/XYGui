@@ -27,7 +27,7 @@ class XYStatusBar < XYWidget
 	end
 	
 	def defaultHeight
-		30
+		0
 	end
 	
 	def defaultText
