@@ -1,5 +1,7 @@
 =begin
 	Main Window 
+	
+	v1.0.0  by sxysxy           2016.03.30
 =end
 
 require 'XYGui/xy_window.rb'

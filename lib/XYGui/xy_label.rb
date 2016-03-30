@@ -1,5 +1,7 @@
 =begin
 	In fact, This is just only a child window without frame
+	
+	v1.0.0  by sxysxy           2016.03.30
 =end
 
 
