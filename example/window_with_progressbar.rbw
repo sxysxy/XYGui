@@ -10,7 +10,11 @@ XYApp.new("pb") do |app|
 		XYProgressBar.new(app, wnd).value = 2333
 		XYTextEdit.new(app, wnd, {:height => 24})
 		XYPushButton.new(app, wnd, {:text => "set value"}).set do
-			connect(:ON_COMMAND) {|sender, data| wnd.content[0].setValue(wnd.content[1].text.to_i)} 
+			connect(:ON_COMMAND) do |sender, data| 
+				wnd.content[0].request do |progress| 
+					progress.setValue(wnd.content[1].text.to_i)
+				end
+			end
 		end
 	end.show
 end.mainloop

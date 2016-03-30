@@ -54,18 +54,15 @@ class ChatCubeServer
 		clt = nil
 		@sok = TCPServer.open(PORT)
 		Thread.new do
-			loop {clt = @sok.accept}
-		end
-	
-		while true
-			@app.main
-			if clt
-				server_proc(clt)
-				clt.close
-				clt = nil
+			loop do
+				Thread.start(@sok.accept) do |clt|      #mutil clients
+					server_proc(clt)
+					clt.close
+				end
 			end
 		end
 	
+		@app.mainloop	
 	end
 	
 	def server_proc(clt)
@@ -74,10 +71,12 @@ class ChatCubeServer
 		txt = clt.read
 		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
 		@log += "Connection from #{name} \r\n"
-		@textarea.text = @log
+		@textarea.request do |textarea|
+			textarea.text = @log
+		end
 		#Thread.new do
-			@clts.push(cmp)
-			update_all_clts
+		@clts.push(cmp)
+		update_all_clts
 		#end
 	end
 	
@@ -96,7 +95,7 @@ class ChatCubeServer
 	
 	def server_exit
 		@sok.close if @sok
-		@app.forceExit
+		@app.exit
 	end
 end
 

@@ -5,6 +5,8 @@ require 'XYGui/xy_mainwindow.rb'
 require 'XYGui/xy_pushbutton.rb'
 require 'XYGui/xy_vertical_layout.rb'
 require 'XYGui/xy_textedit.rb'
+require 'XYGui/xy_console.rb'
+
 
 app = XYApp.new("asimplewindow")
 wnd = XYMainWindow.new(app, nil, {:layout => XYVerticalLayout, :height => 320, :width => 600, :title => "Happy playing"})

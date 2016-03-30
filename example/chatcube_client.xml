@@ -1,5 +1,5 @@
 <root>
-	<host>localhost</host>
+	<host>day2zero</host>
 	<port>2333</port>
 	<name>Passer-by</name>
 </root>

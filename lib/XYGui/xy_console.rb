@@ -14,6 +14,7 @@ module XYConsole
 		WinAPI.call("kernel32", "AllocConsole")
 		STDIN.reopen("CONIN$")
 		STDOUT.reopen("CONOUT$")
+		STDERR.reopen("CONOUT$")
 		@shown = true
 		@hide = false
 	end

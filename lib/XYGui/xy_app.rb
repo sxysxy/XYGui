@@ -3,17 +3,23 @@
 =end
 
 require 'XYGui/winapi_base.rb'
+require 'XYGui/adt_queue.rb'
+require 'XYGui'
 
 class XYApp
 	attr_reader :instance
 	attr_reader :name
 	attr_reader :message
 	attr_accessor :windowIdCount;
+	attr_accessor :flagExit
+	attr_reader :request
 	
 	def initialize(appname)
 		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
 		@name = appname
 		@windowIdCount = 0
+		@flagExit = false
+		@request = ADTQueue.new(32)       				#max request size:32/2 = 16
 		
 		@message = Fiddle::Pointer.malloc(36)
 		
@@ -23,9 +29,17 @@ class XYApp
 	end
 	
 	def mainloop
-		while WinAPI.call("user32", "GetMessage", @message.to_i, 0, 0, 0) > 0
-			WinAPI.call("user32", "TranslateMessage", @message.to_i)
-			WinAPI.call("user32", "DispatchMessage", @message.to_i)
+		while !@flagExit
+			if WinAPI.call("user32", "PeekMessage", @message.to_i, 0, 0, 0, 1) > 0	
+				WinAPI.call("user32", "TranslateMessage", @message.to_i)
+				WinAPI.call("user32", "DispatchMessage", @message.to_i)
+			else
+				widget = @request.pop
+				rq = @request.pop
+				#puts "#{widget} requested #{rq}" if rq&&widget
+				rq.call(widget) if rq&&widget
+				sleep(0.04)
+			end
 		end
 	end
 	
@@ -37,10 +51,14 @@ class XYApp
 	end
 	
 	def exit
-		WinAPI.call("user32", "PostQuitMessage", 0)
+		@flagExit = true
 	end
 	
 	def forceExit
+		exit 
+	end
+	
+	def forceExitProcess
 		WinAPI.call("kernel32", "ExitProcess", 0)
 	end
 end

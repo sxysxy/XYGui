@@ -59,7 +59,7 @@ class ChatCubeServer
 				begin
 					s = TCPSocket.open(@host, port)
 					s.puts @name.encode("gbk", "utf-8")
-					 s.puts @cmpname
+					s.puts @cmpname
 					s.write text
 					s.close
 				rescue
@@ -71,26 +71,27 @@ class ChatCubeServer
 		@sok = TCPServer.open(@port+1)
 		svr = nil
 		Thread.new do
-			loop {svr = @sok.accept}
+			loop do
+				svr = @sok.accept
+				msg = svr.read
+				@msgs.request do |msgs|
+					msgs.text = msg
+				end
+				@textarea.request do |textarea|
+					textarea.text = ""
+				end
+				svr.close
+			end
 		end
 		
 		@mainwindow.connect(:ON_DESTROY) do |sender, data|
 			@xml = nil
 			@sok.close
-			@app.forceExit
+			@app.exit
 		end
 		
 		@mainwindow.show
-		while true
-			@app.main
-			if svr
-				msg = svr.read
-				@msgs.text = msg
-				@textarea.text = ""
-				svr.close
-				svr = nil
-			end
-		end
+		@app.mainloop
 	end
 end
 
