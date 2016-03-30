@@ -1,9 +1,4 @@
-require 'XYGui/xy_app.rb'
-require 'XYGui/xy_mainwindow.rb'
-require 'XYGui/xy_statusbar.rb'
-require 'XYGui/xy_vertical_layout.rb'
-require 'XYGui/xy_textedit.rb'
-require 'XYGui/xy_pushbutton.rb'
+require 'XYGuiCore'
 
 XYApp.new("stsub") do |app|
 	XYMainWindow.new(app, nil, {:layout => XYVerticalLayout}) do |wnd|
