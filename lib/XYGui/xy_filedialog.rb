@@ -20,7 +20,7 @@ class XYFileDialog < XYWidget
 		pack = [76, 0, 0,  			    #size, owner, instance
 				"*.*\x00", 0,   			#fitter, customFilter
 				0, 0, 		 			#maxCustFilter, filterIndex
-				@buf, 64, 0, 0   			#file, maxFile, fileTitle, maxFileTitle
+				@buf, 64, 0, 0,   			#file, maxFile, fileTitle, maxFileTitle
 				"D:\\",
 				"Choose File",
 				OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,   #flag
