@@ -181,9 +181,11 @@ class XYWidget
 	def connect(sig, &func)
 		@responder[sig] = func
 	end
-	
 	def call(sig, *arg)
 		@responder[sig].call *arg if @responder[sig]
+	end
+	def disconnect(sig)
+		@responder[sig] = nil
 	end
 	#-------------------------
 	
