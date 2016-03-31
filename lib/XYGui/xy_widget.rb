@@ -32,6 +32,8 @@ class XYWidget
 	
 	attr_reader :responder
 	
+	attr_reader :requestMutex
+	
 	alias :to_i :handle
 	alias :set :instance_eval
 	
@@ -43,6 +45,7 @@ class XYWidget
 		@responder = {}
 		@id = 0
 		@idcount = -1
+		@requestMutex = Mutex.new
 		
 		@width = arg[:width]? arg[:width]: defaultWidth
 		@height = arg[:height]? arg[:height]: defaultHeight
@@ -138,9 +141,11 @@ class XYWidget
 	def width=(nw)
 		resize(nw, @height)
 	end
+	alias :setWidth :width=
 	def height=(nh)
 		resize(@width, nh)
 	end
+	alias :setWidth :width=
 	
 	def repos(x, y)
 		@x = x
@@ -151,9 +156,11 @@ class XYWidget
 	def x=(nx)
 		repos(nx, @y)
 	end
+	alias :setX :x=
 	def y=(ny)
 		repos(@x, ny)
 	end
+	alias :setY :y=
 	#-------------------------
 	
 	#-------------------------
@@ -181,8 +188,13 @@ class XYWidget
 	#-------------------------
 	
 	def pushRequest(&proc)
-		@app.request.push(self)
-		@app.request.push(proc)
+		@requestMutex.lock
+		begin
+			@app.request.push(self)
+			@app.request.push(proc)
+		ensure
+			@requestMutex.unlock
+		end
 	end
 	alias :request :pushRequest
 end

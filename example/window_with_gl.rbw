@@ -11,9 +11,7 @@ XYApp.new("xyglapp") do |app|
 		end
 		
 		XYGLLabel.new(app, wnd, {:width => 600, :height => 600, :x => 0, :y => 0}) do |glb|
-			XYMessageBox.show("t", glb.handle.to_s)
-			XYMessageBox.show("t", glb.dc.to_s)
-			XYMessageBox.show("t", glb.glrc.to_s)
+			
 		end	
 
 	end.show
