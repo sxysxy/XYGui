@@ -9,7 +9,7 @@ require 'XYGui/xy_widget.rb'
 class XYStatusBar < XYWidget
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYStatusBar
 		
 		setText(@text)
 	end

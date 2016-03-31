@@ -9,14 +9,14 @@ class XYWindow < XYWidget
 	attr_reader :layout
 	
 	attr_reader :className
-	attr_reader :hdc
+	attr_reader :dc
 	attr_reader :ps
 	
 	TEMP = []             #Avoid ruby's GC free proc(see wndproc)
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
-		@hdc = 0
+		@dc = 0
 		@ps = Fiddle::Pointer.malloc(64)
 		@app.windowIdCount = @app.windowIdCount + 1
 		@className = @app.name + @app.windowIdCount.to_s
@@ -94,7 +94,7 @@ class XYWindow < XYWidget
 	end
 	
 	def beginPaint(sender, data)
-		@hdc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		@responder[:ON_PAINT].call(sender, data) if @responder[:ON_PAINT]
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end

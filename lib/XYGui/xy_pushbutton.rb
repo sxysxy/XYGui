@@ -10,7 +10,7 @@ class XYPushButton < XYWidget
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYPushButton
 	end
 	
 	def create

@@ -9,7 +9,7 @@ require 'XYGui/xy_widget.rb'
 class XYCheckBox < XYWidget
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYCheckBox
 		
 		connect(:ON_COMMAND) {|a, b| onClick(a, b)} 
 	end

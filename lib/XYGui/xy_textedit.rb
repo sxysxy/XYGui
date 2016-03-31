@@ -16,7 +16,10 @@ class XYTextEdit < XYWidget
 		super(app, parent, arg)
 		
 		@text = arg[:text]? arg[:text]: ""
-		create
+		if self.class == XYTextEdit
+			create
+			yield(self) if block_given?
+		end
 	end
 	
 	def create

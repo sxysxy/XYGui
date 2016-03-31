@@ -9,7 +9,7 @@ require 'XYGui/xy_widget.rb'
 class XYComboBox < XYWidget
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYComboBox
 	end
 	
 	def create

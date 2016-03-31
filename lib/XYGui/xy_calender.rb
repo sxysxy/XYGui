@@ -11,7 +11,7 @@ class XYCalender < XYWidget
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYCalender
 	end
 	
 	def create

@@ -8,6 +8,7 @@ require 'XYGui/xy_window.rb'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_layout.rb'
+require 'XYGui/xy_messagebox.rb'
 
 class XYMainWindow < XYWindow
 
@@ -27,8 +28,9 @@ class XYMainWindow < XYWindow
 		raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
 
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
-		create
-		yield(self) if block_given?
+		
+		create if self.class == XYMainWindow
+		yield(self) if block_given? && self.class == XYMainWindow
 	end
 	
 	def create

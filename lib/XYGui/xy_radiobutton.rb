@@ -9,7 +9,7 @@ require 'XYGui/xy_widget.rb'
 class XYRadioButton < XYWidget
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYRadioButton
 	end
 	
 	def create

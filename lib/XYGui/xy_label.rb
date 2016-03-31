@@ -13,7 +13,10 @@ class XYLabel < XYMainWindow
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
 		
-		create
+		if self.class == XYLabel
+			create
+			yield(self) if block_given?
+		end
 	end
 	
 	def create

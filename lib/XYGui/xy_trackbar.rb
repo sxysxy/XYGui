@@ -88,7 +88,7 @@ class XYTrackBar < XYWidget
 
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYTrackBar
 	end
 	
 	def create

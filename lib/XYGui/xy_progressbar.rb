@@ -31,7 +31,7 @@ class XYProgressBar < XYWidget
 
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		create
+		create if self.class == XYProgressBar
 		
 		setValue(0)
 		setRange(0, 10000)
