@@ -21,7 +21,7 @@ class XYFileDialog < XYWidget
 				"*.*\x00", 0,   			#fitter, customFilter
 				0, 0, 		 			#maxCustFilter, filterIndex
 				@buf, 64, 0, 0,   			#file, maxFile, fileTitle, maxFileTitle
-				"D:\\",
+				Dir.pwd.gsub("/", "\\"),					#PATH
 				"Choose File",
 				OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,   #flag
 				0,						#fileOffset 		! 2byte
