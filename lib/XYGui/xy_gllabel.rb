@@ -1,7 +1,7 @@
 =begin
-	In fact, This is just only a child window without frame
+	Wrap OpenGL into XYLabel 
 	
-	v1.0.0  by sxysxy           2016.03.30
+	v1.0.0  by sxysxy           2016.04.01
 =end
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_label.rb'
@@ -66,7 +66,7 @@ class XYGLLabel < XYLabel
 	end
 	
 	def resizeGL(w, h)
-		GL.Viewport(0, 0, w.to_f, h.to_f)
+		GL.Viewport(0, 0, w, h)
 		GL.MatrixMode(GL::GL_PROJECTION)
 		GL.LoadIdentity
 		GLU.Perspective(0.0, w.to_f/h.to_f, 0.1, 100.0)
@@ -86,15 +86,15 @@ class XYGLLabel < XYLabel
 	end
 	
 	def onSize(sender, data)
-		resizeGL(data[:width], data[:height])
+		#resizeGL(data[:width], data[:height])
 	end
 	
 	def beginPaint(sender, data)
-		#WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		#@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		#@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		if @responder[:ON_PAINT]
-		#	WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
+			#WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
 			@responder[:ON_PAINT].call(sender, data) 
 			WinAPI.call("gdi32", "SwapBuffers", @dc)
 		end
