@@ -66,10 +66,10 @@ class XYGLLabel < XYLabel
 	end
 	
 	def resizeGL(w, h)
-		GL.Viewport(0, 0, w, h)
+		GL.Viewport(0, 0, w.to_f, h.to_f)
 		GL.MatrixMode(GL::GL_PROJECTION)
 		GL.LoadIdentity
-		GLU.Perspective(45.0, w.to_f/h.to_f, 0.1, 100.0)
+		GLU.Perspective(0.0, w.to_f/h.to_f, 0.1, 100.0)
 		GL.MatrixMode(GL::GL_MODELVIEW)
 		GL.LoadIdentity
 	end
@@ -82,16 +82,19 @@ class XYGLLabel < XYLabel
 	def onCreate(sender, data)
 		@dc = WinAPI.call("user32", "GetDC", @handle)
 		enableGL
-		#initGL
+		initGL
 	end
 	
 	def onSize(sender, data)
-		#resizeGL(data[:width], data[:height])
+		resizeGL(data[:width], data[:height])
 	end
 	
 	def beginPaint(sender, data)
-		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		#WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		#@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		#@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		if @responder[:ON_PAINT]
+		#	WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
 			@responder[:ON_PAINT].call(sender, data) 
 			WinAPI.call("gdi32", "SwapBuffers", @dc)
 		end

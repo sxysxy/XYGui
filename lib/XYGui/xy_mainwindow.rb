@@ -11,16 +11,11 @@ require 'XYGui/xy_layout.rb'
 require 'XYGui/xy_messagebox.rb'
 
 class XYMainWindow < XYWindow
-
-	attr_reader :type
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 
-		@type = arg[:type]? arg[:type]: 0
-
-
-		wndcls = [@type, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
+		wndcls = [CS_OWNDC, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
 					0, @className].pack("lllllllllp")
 		
