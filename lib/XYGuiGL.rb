@@ -1,4 +1,3 @@
-require 'XYGui/xy_gllabel.rb'
 require 'XYGui/xy_messagebox.rb'
 
 begin 
@@ -15,4 +14,4 @@ rescue LoadError => e
 	exit
 end
 
-
+require 'XYGui/xy_gllabel.rb'

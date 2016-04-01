@@ -82,7 +82,7 @@ class XYGLLabel < XYLabel
 	def onCreate(sender, data)
 		@dc = WinAPI.call("user32", "GetDC", @handle)
 		enableGL
-		initGL
+		#initGL
 	end
 	
 	def onSize(sender, data)
