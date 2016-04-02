@@ -16,6 +16,7 @@ class XYGLLabel < XYLabel
 		super(app, parent, arg)
 		@glrc = 0
 		#connect(:ON_PAINT) {|a,b| onPaint(a,b)}
+		connect(:ON_CREATE) {|a,b| onCreate(a, b)}
 		
 		if self.class == XYGLLabel
 			create
@@ -34,6 +35,7 @@ class XYGLLabel < XYLabel
 	
 	def enableGL
 		#pfd
+		@dc = WinAPI.call("user32", "GetDC", @handle)
 		pfd = [40, 1, 			#size = 40, version = 1  
 				37,         #support opengl, double buffers, and draw to window
 				0,				#pixel type :RGBA
@@ -48,6 +50,7 @@ class XYGLLabel < XYLabel
 		
 		@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
+		WinAPI.call("user32", "ReleaseDC", @handle, @dc)
 	end
 	
 	def disableGL
@@ -59,10 +62,9 @@ class XYGLLabel < XYLabel
 		GL.ShadeModel(GL::GL_SMOOTH)
 		GL.ClearColor(1.0, 1.0, 1.0, 0.0)
 		GL.ClearDepth(1.0)
-		GL.Enable(GL::GL_DEPTH_TEST)
+		GL.Enable(GL::GL_DEPTH_FUNC)
 		GL.DepthFunc(GL::GL_LEQUAL)
 		GL.Hint(GL::GL_PERSPECTIVE_CORRECTION_HINT, GL::GL_NICEST)
-		resizeGL(@width, @height)
 	end
 	
 	def resizeGL(w, h)
@@ -74,23 +76,22 @@ class XYGLLabel < XYLabel
 		GL.LoadIdentity
 	end
 	
+	def onSize(sender, data)
+		#resizeGL(data[:width], data[:height])
+	end
+	
 	def onDestroy(sender, data)
 		disableGL
 		super(sender, data)
 	end
 	
 	def onCreate(sender, data)
-		@dc = WinAPI.call("user32", "GetDC", @handle)
 		enableGL
 		#initGL
 	end
 	
-	def onSize(sender, data)
-		#resizeGL(data[:width], data[:height])
-	end
-	
 	def beginPaint(sender, data)
-		WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		#@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		#@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		if @responder[:ON_PAINT]
