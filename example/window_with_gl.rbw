@@ -16,6 +16,7 @@ XYApp.new("xyglapp") do |app|
 					GL.Vertex(-0.9, -0.5)
 				GL.End
 				GL.PopMatrix
+				glb.render
 			end
 		end	
 	end.show

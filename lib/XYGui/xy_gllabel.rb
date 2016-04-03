@@ -59,12 +59,14 @@ class XYGLLabel < XYLabel
 	end
 	
 	def initGL
+=begin
 		GL.ShadeModel(GL::GL_SMOOTH)
 		GL.ClearColor(1.0, 1.0, 1.0, 0.0)
 		GL.ClearDepth(1.0)
 		GL.Enable(GL::GL_DEPTH_FUNC)
 		GL.DepthFunc(GL::GL_LEQUAL)
 		GL.Hint(GL::GL_PERSPECTIVE_CORRECTION_HINT, GL::GL_NICEST)
+=end
 	end
 	
 	def resizeGL(w, h)
@@ -97,7 +99,7 @@ class XYGLLabel < XYLabel
 		if @responder[:ON_PAINT]
 			#WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
 			@responder[:ON_PAINT].call(sender, data) 
-			WinAPI.call("gdi32", "SwapBuffers", @dc)
+			#swapBuffers
 		end
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end
@@ -105,4 +107,9 @@ class XYGLLabel < XYLabel
 	def onPaint(sender, data)
 	
 	end
+	
+	def swapBuffers
+		WinAPI.call("gdi32", "SwapBuffers", @dc)
+	end
+	alias :render :swapBuffers
 end
