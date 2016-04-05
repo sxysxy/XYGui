@@ -12,7 +12,7 @@ class XYLabel < XYMainWindow
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		
+		@style &= (~WS_OVERLAPPEDWINDOW)
 		if self.class == XYLabel
 			create
 			yield(self) if block_given?

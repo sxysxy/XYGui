@@ -32,6 +32,9 @@ class XYWindow < XYWidget
 		#paint
 		connect(:ON_BEGINPAINT) {|a,b| beginPaint(a,b)}
 		connect(:ON_PAINT) {|a,b| onPaint(a, b)}
+		
+		#key
+		connect(:ON_KEYDOWN) {|a, b| onKeydown(a, b)}
 	end
 	
 	def show(flag = 1)
@@ -66,6 +69,9 @@ class XYWindow < XYWidget
 					when WM_SIZE then
 						_responder[:ON_BEFORESIZE].call(_self, {:height => WinAPI.hiword(lparam), :width => WinAPI.loword(lparam)}) if _responder[:ON_BEFORESIZE]
 						return 0
+					when WM_KEYDOWN then
+						_responder[:ON_KEYDOWN].call(_self, {:key => wparam}) if _responder[:ON_KEYDOWN]
+						return 0;
 					when WM_CREATE then
 						_responder[:ON_CREATE].call(_self, nil) if _responder[:ON_CREATE]
 						return 0
@@ -104,6 +110,10 @@ class XYWindow < XYWidget
 	end
 	
 	def onPaint(sender, data)
+		
+	end
+	
+	def onKeydown(sender, data)
 		
 	end
 	

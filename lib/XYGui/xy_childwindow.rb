@@ -10,7 +10,6 @@ class XYChildWindow < XYMainWindow
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		
 		if self.class == XYChildWindow
 			create 
 			yield(self) if block_given?
