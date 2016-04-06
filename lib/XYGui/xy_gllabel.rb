@@ -6,8 +6,6 @@
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_label.rb'
 require 'XYGui/xy_messagebox.rb'
-require 'opengl'
-require 'glu'
 
 class XYGLLabel < XYLabel
 	
@@ -16,11 +14,12 @@ class XYGLLabel < XYLabel
 		super(app, parent, arg)
 		@glrc = 0
 		#connect(:ON_PAINT) {|a,b| onPaint(a,b)}
-		connect(:ON_CREATE) {|a,b| onCreate(a, b)}
+		#connect(:ON_CREATE) {|a,b| onCreate(a, b)}
+		disconnect(:ON_CREATE)
 		
 		if self.class == XYGLLabel
 			create
-			onCreate(0, 0)
+			onCreate(nil,  nil)
 			yield(self) if block_given?
 		end
 	end
@@ -37,7 +36,7 @@ class XYGLLabel < XYLabel
 		#pfd
 		@dc = WinAPI.call("user32", "GetDC", @handle)
 		pfd = [40, 1, 			#size = 40, version = 1  
-				37,         #support opengl, double buffers, and draw to window
+				37,         	#support opengl, double buffers, and draw to window
 				0,				#pixel type :RGBA
 				24,				#color bits
 				0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,    #0 * 18 Do not care...
@@ -70,16 +69,18 @@ class XYGLLabel < XYLabel
 	end
 	
 	def resizeGL(w, h)
+=begin
 		GL.Viewport(0, 0, w, h)
 		GL.MatrixMode(GL::GL_PROJECTION)
 		GL.LoadIdentity
 		GLU.Perspective(0.0, w.to_f/h.to_f, 0.1, 100.0)
 		GL.MatrixMode(GL::GL_MODELVIEW)
 		GL.LoadIdentity
+=end
 	end
 	
 	def onSize(sender, data)
-		#resizeGL(data[:width], data[:height])
+		resizeGL(data[:width], data[:height])
 	end
 	
 	def onDestroy(sender, data)
@@ -89,15 +90,14 @@ class XYGLLabel < XYLabel
 	
 	def onCreate(sender, data)
 		enableGL
-		#initGL
+		initGL
 	end
 	
 	def beginPaint(sender, data)
 		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
-		#@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		#@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		if @responder[:ON_PAINT]
-			#WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
+			WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
 			@responder[:ON_PAINT].call(sender, data) 
 			#swapBuffers
 		end

@@ -2,7 +2,7 @@ require 'XYGuiCore'
 require 'XYGuiGL'
 
 XYApp.new("xyglapp") do |app|
-	XYMainWindow.new(app, nil, {:width => 600, :height => 600, :title => "Hello, GL!"}) do |wnd|	
+	XYMainWindow.new(app, nil, {:width => 600, :height => 600, :title => "Hello, GL!", :fixed => true}) do |wnd|	
 		XYGLLabel.new(app, wnd, {:width => 600, :height => 600, :x => 0, :y => 0}) do |glb|
 			glb.connect(:ON_PAINT) do |sender, data|
 				GL.ClearColor(1.0, 1.0, 1.0, 0.0)

@@ -16,7 +16,7 @@ class XYMainWindow < XYWindow
 		super(app, parent, arg)
 		@style |= WS_OVERLAPPEDWINDOW
 		if(arg[:fixed])
-			@style &= (~WS_THICKFRAME)
+			@style &= (~(WS_THICKFRAME | WS_MAXIMIZEBOX))
 		end
 		
 		wndcls = [CS_OWNDC | CS_HREDRAW | CS_VREDRAW, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),

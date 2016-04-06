@@ -7,11 +7,4 @@ rescue LoadError => e
 	exit
 end
 
-begin 
-	require 'glu'
-rescue LoadError => e
-	XYMessageBox.show("Tip", "glu needed, you can run 'gem install glu' ")
-	exit
-end
-
 require 'XYGui/xy_gllabel.rb'

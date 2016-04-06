@@ -68,7 +68,7 @@ XYApp.new("cube") do |app|
 				$dx += 0.3
 				$angle += 10
 			elsif data[:key] == XYKey::VK_F1
-				XYMessageBox.show("Help", "Press Direction keys to rotate the box!")
+				XYMessageBox.show("Help", "Press Direction keys to rotate the box! ESC to exit")
 			end
 			wnd.content[0].call(:ON_PAINT, nil, nil)
 		end

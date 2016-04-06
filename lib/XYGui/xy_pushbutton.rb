@@ -5,9 +5,9 @@
 
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
-
+require 'XYGui/xy_button.rb'
 class XYPushButton < XYWidget
-	
+	include XYButton
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		create if self.class == XYPushButton
