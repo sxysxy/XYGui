@@ -3,9 +3,9 @@
 	v1.0.0  by sxysxy           2016.03.30
 =end	
 
-require 'XYGui/xy_widget.rb'
+require 'XYGui/xy_scrollable_widget.rb'
 
-class XYWindow < XYWidget
+class XYWindow < XYScrollableWidget
 	#constants
 	IDI_APPLICATION = 32512
 	IDI_HAND = 32513

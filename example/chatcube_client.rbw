@@ -27,10 +27,10 @@ class ChatCubeServer
 		@app = XYApp.new("chatcube_client")
 		@mainwindow = XYMainWindow.new(@app, nil, {:title => "ChatCube's Client!", :height => 500, :width => 400})
 		
-		@msgs = XYTextEdit.new(@app, @mainwindow)
+		@msgs = XYTextEdit.new(@app, @mainwindow, {:vscroll => true})
 		@msgs.setReadOnly(true)
 		
-		@textarea = XYTextEdit.new(@app, @mainwindow)
+		@textarea = XYTextEdit.new(@app, @mainwindow ,{:vscroll => true})
 		@send = XYPushButton.new(@app, @mainwindow, {:text => "Send"})
 		
 		@xml = REXML::Document.new(File.open("chatcube_client.xml")).root
@@ -76,6 +76,7 @@ class ChatCubeServer
 				msg = svr.read
 				@msgs.request do |msgs|
 					msgs.text = msg
+					msgs.scrollpos = 100
 				end
 				@textarea.request do |textarea|
 					textarea.text = ""

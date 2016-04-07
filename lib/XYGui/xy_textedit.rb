@@ -4,9 +4,9 @@
 =end
 
 require 'XYGui/winapi_base.rb'
-require 'XYGui/xy_widget.rb'
+require 'XYGui/xy_scrollable_widget.rb'
 
-class XYTextEdit < XYWidget
+class XYTextEdit < XYScrollableWidget
 	
 	ES_LEFT = 0x0000
 	ES_CENTER = 0x0001
@@ -78,7 +78,7 @@ class XYTextEdit < XYWidget
 	
 	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0x10200, "EDIT", "", 
-								ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT | 0x50010000,
+								ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | ES_NOHIDESEL | ES_OEMCONVERT | 0x50010000 | @style,
 								@x, @y, @width, @height, @parent.handle, 
 								@id,
 								@app.instance, 0)

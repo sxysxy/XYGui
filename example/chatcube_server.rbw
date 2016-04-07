@@ -22,7 +22,7 @@ class ChatCubeServer
 		@mainwindow = XYMainWindow.new(@app, nil, {:title => 'ChatCube\' Server!', :height => 500, :width => 400, :x => 400})
 		@log = "Started Server at #{Time.now.to_s} \r\nPort: #{PORT} \r\n"
 		@prelen = @log.length
-		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500})
+		@textarea = XYTextEdit.new(@app, @mainwindow, {:text => @log, :height => 500, :vscroll => true})
 		@textarea.setReadOnly(true)
 		
 		@btnquit = XYPushButton.new(@app, @mainwindow, {:text => "Quit"})
@@ -73,6 +73,7 @@ class ChatCubeServer
 		@log += "Connection from #{name} \r\n"
 		@textarea.request do |textarea|
 			textarea.text = @log
+			textarea.scrollpos = 100
 		end
 		#Thread.new do
 		@clts.push(cmp)
