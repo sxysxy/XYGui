@@ -49,13 +49,12 @@ XYApp.new("MultiGLTest") do |app|
 				GL.Enable(GL::GL_DEPTH_TEST)
 				GL.ClearColor(0.0, 0.0, 1.0, 0.0)
 				GL.Clear(GL::GL_COLOR_BUFFER_BIT | GL::GL_DEPTH_BUFFER_BIT)
-				GL.Translate(0.03, 0.2, 0.0)
 				GL.PushMatrix
 				GL.Begin(GL::TRIANGLES)
 					GL.Color(0.3, 1.0, 0.4, 0.0)
-					GL.Vertex(0.0, -0.87)
-					GL.Vertex(0.87, 0.5)
-					GL.Vertex(-0.87, 0.5)
+					GL.Vertex(0.0, -0.7)
+					GL.Vertex(0.8, 0.6)
+					GL.Vertex(-0.8, 0.6)
 				GL.End
 				GL.PopMatrix
 				render
@@ -67,28 +66,17 @@ XYApp.new("MultiGLTest") do |app|
 				GL.Enable(GL::GL_DEPTH_TEST)
 				GL.ClearColor(1.0, 0.0, 0.0, 0.0)
 				GL.Clear(GL::GL_COLOR_BUFFER_BIT | GL::GL_DEPTH_BUFFER_BIT)
-				GL.Translate(0.0, 0.1, 0.0)
 				GL.PushMatrix
-				GL.Begin(GL::POINTS)
-					GL.Color(0.0, 1.0, 1.0, 0.0)
-					r = 0.8
-					rd = 0.00
-					while r >= 0.0
-						rd = 0
-						while rd <= 6.28
-							x = Math.cos(rd)*r
-							y = Math.sin(rd)*r
-							GL.Vertex(x, y)
-							rd += 0.005
-						end
-						r -= 0.005
-					end
+				GL.Begin(GL::POLYGON)
+					r = 0.7
+					lim = 30
+					GL.Color(0.0, 1.0, 1.0)
+					(0..lim).each{|i| GL.Vertex(r*Math.cos(2*Math::PI/lim*i),r*Math.sin(2*Math::PI/lim*i))}
 				GL.End
 				GL.PopMatrix
 				render
 			end
 		end
-
 	end.show
 end.mainloop
 
