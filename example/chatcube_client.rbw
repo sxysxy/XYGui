@@ -76,7 +76,7 @@ class ChatCubeServer
 				msg = svr.read
 				@msgs.request do |msgs|
 					msgs.text = msg
-					msgs.scrollpos = 100
+					
 				end
 				@textarea.request do |textarea|
 					textarea.text = ""

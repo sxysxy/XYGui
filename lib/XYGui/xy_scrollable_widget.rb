@@ -32,6 +32,7 @@ class XYScrollableWidget < XYWidget
 		super(app, parent, arg)
 		@style |= WS_VSCROLL if arg[:vscroll]
 		@style |= WS_HSCROLL if arg[:hscroll]
+		@scrollinfo = Fiddle::Pointer.malloc(28)
 	end
 	
 #----------------------------
@@ -42,4 +43,9 @@ class XYScrollableWidget < XYWidget
 		WinAPI.call("user32", "SetScrollPos", @handle, flag, pos, 1)
 	end
 	alias :scrollpos= :setScrollPos
+	
+	def vscroll(offset)
+		WinAPI.call("user32", "ScrollWindow", @handle, 0, offset, 0, 0)
+	end
+	
 end
