@@ -9,7 +9,12 @@ end
 
 Thread.start do
 	XYApp.new("Slave2") do |app|
-		XYMainWindow.new(app, nil, {:y => 400, :title => 'slave 2'}).show
+		XYMainWindow.new(app, nil, {:y => 400, :title => 'slave 2'}).set do
+			connect(:ON_DESTROY) do |sender, data|
+				app.forceExit
+			end
+			show
+		end
 	end.mainloop
 end
 

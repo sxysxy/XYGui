@@ -57,7 +57,7 @@ class XYApp
 	end
 	
 	def forceExit
-		exit 
+		quit
 	end
 	
 	def forceExitProcess

@@ -14,6 +14,7 @@ module XYKey
 	VK_TAB = 0x09
 	VK_CLEAR = 0x0C
 	VK_RETURN = 0x0D
+	VK_ENTER = VK_RETURN   	#VK_ENTER is added by XYKey
 	VK_SHIFT = 0x10
 	VK_ESCAPE = 0x1B
 	VK_CONTROL = 0x11

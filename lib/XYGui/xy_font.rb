@@ -103,7 +103,7 @@ class XYFont
 		@clipPrecision = arg[:clipPrecision]? arg[:clipPrecision]:0
 		@quality = arg[:quality]? arg[:quality]:PROOF_QUALITY
 		@pitchAndFamily = arg[:pitchAndFamily]? arg[:pitchAndFamily]:DEFAULT_PITCH
-		@faceName = arg[:faceName]? arg[:faceName]:"Meriyo"
+		@faceName = arg[:faceName]? arg[:faceName]:"Arial"
 	end
 	
 	def apply

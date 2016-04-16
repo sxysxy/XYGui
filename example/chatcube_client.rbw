@@ -6,6 +6,7 @@ require 'XYGui/xy_pushbutton.rb'
 require 'XYGui/xy_vertical_layout.rb'
 require 'XYGui/xy_textedit.rb'
 require 'XYGui/xy_messagebox.rb'
+require 'XYGui/xy_key.rb'
 require 'socket'
 require 'rexml/document'
 
@@ -40,6 +41,7 @@ class ChatCubeServer
 
 		@cmpname = "\00"*100
 		WinAPI.call("kernel32", "GetComputerName", @cmpname, [99].pack("L"))
+	
 	end
 	
 	def main
