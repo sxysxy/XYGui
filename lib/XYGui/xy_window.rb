@@ -75,6 +75,9 @@ class XYWindow < XYScrollableWidget
 		#key
 		connect(:ON_KEYDOWN) {|a, b| onKeydown(a, b)}
 		connect(:ON_KEYUP) {|a,b| onKeyup(a, b)}
+		#scroll
+		connect(:ON_VSCROLL) {|a, b| onVScroll(a, b)} 
+		connect(:ON_HSCROLL) {|a, b| onHScroll(a, b)} 
 	end
 	
 	def show(flag = 1)
@@ -111,10 +114,6 @@ class XYWindow < XYScrollableWidget
 						return 0
 					when WM_KEYDOWN then
 						_responder[:ON_KEYDOWN].call(_self, {:key => wparam}) if _responder[:ON_KEYDOWN]
-						return 0;
-					when WM_KEYUP then
-						_responder[:ON_KEYUP].call(_self, {:key => wparam}) if _responder[:ON_KEYUP]
-						return 0;
 					when WM_CREATE then
 						_responder[:ON_CREATE].call(_self, nil) if _responder[:ON_CREATE]
 						return 0
@@ -160,6 +159,13 @@ class XYWindow < XYScrollableWidget
 		
 	end
 	def onKeydown(sender, data)
+		
+	end
+	
+	def onVScroll(sender, data)
+	
+	end
+	def onHScroll(sender, data)
 		
 	end
 	

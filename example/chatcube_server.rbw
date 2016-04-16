@@ -73,7 +73,7 @@ class ChatCubeServer
 		@log += "Connection from #{name} \r\n"
 		@textarea.request do |textarea|
 			textarea.text = @log
-			textarea.scrollpos = 100
+			
 		end
 		#Thread.new do
 		@clts.push(cmp)
