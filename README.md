@@ -14,7 +14,7 @@ app.mainloop   #Just so easy
 ```
 
 ##So what's XYGui's advantages?
-1. It is ALL written in Ruby, so it's interface is very friendly to ruby
+1. Its interface is very friendly to ruby
 2. Based on win32api, It runs fast
 3. Good OOP and FP interface are provided (you see, effective FP)
 ![](http://i3.piimg.com/8d90ea26799f990d.png)
