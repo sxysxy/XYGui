@@ -125,7 +125,7 @@ libpath = . $(libdir)
 LIBPATH =  -L. -L$(libdir)
 DEFFILE = $(TARGET)-$(arch).def
 
-CLEANFILES = mkmf.log $(DEFFILE) $(DEFFILE)
+CLEANFILES = mkmf.log $(DEFFILE)
 DISTCLEANFILES = 
 DISTCLEANDIRS = 
 
@@ -134,12 +134,12 @@ extout_prefix =
 target_prefix = 
 LOCAL_LIBS = 
 LIBS = $(LIBRUBYARG_SHARED)  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  
-ORIG_SRCS = xy_widget_ext.c xy_window_ext.c
+ORIG_SRCS = XYGui_ext.c
 SRCS = $(ORIG_SRCS) 
-OBJS = xy_widget_ext.o xy_window_ext.o
-HDRS = $(srcdir)/xy_widget_ext.h $(srcdir)/xy_window_ext.h
-TARGET = xy_widget_ext
-TARGET_NAME = xy_widget_ext
+OBJS = XYGui_ext.o
+HDRS = 
+TARGET = XYGui_ext
+TARGET_NAME = XYGui_ext
 TARGET_ENTRY = Init_$(TARGET_NAME)
 DLLIB = $(TARGET).so
 EXTSTATIC = 
