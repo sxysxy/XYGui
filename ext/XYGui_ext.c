@@ -56,12 +56,17 @@ void InitXYScrollableWidget()
 static VALUE cXYWindow;
 static const char* XYWindowClassName = "XYWindow";
 // WndProc
-static int XYWndProc(VALUE self, HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static VALUE XYWndProc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
 {
 	VALUE __arg1__;
 	VALUE __arg2__;
 	unsigned __tmp1__;
 	unsigned __tmp2__;
+	
+	unsigned hWnd = (unsigned)FIX2INT(a1);
+	unsigned uMsg = (unsigned)FIX2INT(a2);
+	unsigned wParam = (unsigned)FIX2INT(a3);
+	unsigned lParam = (unsigned)FIX2INT(a4);
 	switch(uMsg)
 	{
 		case WM_DESTROY:
@@ -87,21 +92,15 @@ static int XYWndProc(VALUE self, HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil); 
 			break;
 		default:
-			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			return INT2FIX(DefWindowProc(hWnd, uMsg, wParam, lParam));
 	}
-	return 0;
-}
-// call wndproc here
-static VALUE callproc(VALUE self, VALUE hWnd, VALUE uMsg, VALUE wParam, VALUE lParam)
-{
-	return INT2FIX(XYWndProc(self, (HWND)FIX2INT(hWnd), (UINT)FIX2INT(uMsg), 
-						(WPARAM)FIX2INT(wParam), (LPARAM)FIX2INT(lParam)));
+	return INT2FIX(0);
 }
 // init XYWindow
 void InitXYWindow()
 {
 	cXYWindow = rb_define_class(XYWindowClassName, cXYScrollableWidget);
-	rb_define_method(cXYWindow, "callproc", callproc, 4);
+	rb_define_method(cXYWindow, "callproc", XYWndProc, 4);
 }
 #endif
 // ------------------End XYWindow ----------------------------------------
