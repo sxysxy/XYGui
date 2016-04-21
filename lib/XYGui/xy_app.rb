@@ -40,7 +40,7 @@ class XYApp
 				rq = @request.pop
 				#puts "#{widget} requested #{rq}" if rq&&widget
 				rq.call(widget) if rq&&widget
-				sleep(0.04)
+				sleep(0.02)
 			end
 		end
 	end

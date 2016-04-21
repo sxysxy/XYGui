@@ -496,6 +496,10 @@ class XYWidget                 #basic widget
 	def disconnect(sig)
 		@responder[sig] = nil
 	end
+	#Note! childCall is for C extension to use
+	def childCall(id, sig, *arg)
+		content[id].call(sig, *arg) if content[id];
+	end
 	#-------------------------
 	
 	def pushRequest(&proc)
