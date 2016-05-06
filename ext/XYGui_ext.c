@@ -67,6 +67,10 @@ static VALUE XYWndProc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
 	unsigned uMsg = (unsigned)FIX2INT(a2);
 	unsigned wParam = (unsigned)FIX2INT(a3);
 	unsigned lParam = (unsigned)FIX2INT(a4);
+	
+	//hWnd = FIX2INT(rb_iv_get(self, "@handle"));
+	printf("%u %u\n", FIX2INT(a1), FIX2INT(rb_iv_get(self, "@handle")));
+	
 	switch(uMsg)
 	{
 		case WM_DESTROY:
