@@ -90,6 +90,7 @@ class XYWindow < XYScrollableWidget
 		@layout.replace
 	end
 	
+=begin
 	def wndproc
 		_self = self
 		_content = @content
@@ -97,7 +98,7 @@ class XYWindow < XYScrollableWidget
 		
 		proc = Class.new(Fiddle::Closure) do
 			define_method :call do |hwnd, msg, wparam, lparam|
-				#return _self.callproc(hwnd, msg, wparam, lparam)
+				return _self.callproc(hwnd, msg, wparam, lparam)
 				case msg
 					when WM_PAINT then
 						_responder[:ON_BEGINPAINT].call(_self, nil) if _responder[:ON_BEGINPAINT]
@@ -126,7 +127,8 @@ class XYWindow < XYScrollableWidget
 		TEMP << proc 
 		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
 	end
-	
+=end
+
 	def addChild(c)
 		super(c)
 		@layout.replace

@@ -18,14 +18,17 @@ class XYMainWindow < XYWindow
 		if(arg[:fixed])
 			@style &= (~(WS_THICKFRAME | WS_MAXIMIZEBOX))
 		end
-		
+
+=begin
 		wndcls = [CS_OWNDC | CS_HREDRAW | CS_VREDRAW, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
 					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
 					0, @className].pack("lllllllllp")
 		
 		r = WinAPI.call("user32", "RegisterClass", wndcls)
 		raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
-
+=end
+		registerClass
+		
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		
 		create if self.class == XYMainWindow
@@ -37,7 +40,7 @@ class XYMainWindow < XYWindow
 							@style,   
 							@x, @y, @width, @height,              
 							0, 0,
-							@app.instance, 0)
+							@app.instance, selfval)
 	end
 	
 	def style=(new_style)

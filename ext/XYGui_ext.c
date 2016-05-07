@@ -28,9 +28,14 @@ extern "C"
 // this class
 static VALUE cXYWidget;
 static const char* XYWidgetClassName = "XYWidget";
+VALUE selfval(VALUE self)
+{
+	return INT2FIX(self);
+}
 void InitXYWidget()
 {
 	cXYWidget = rb_define_class(XYWidgetClassName, rb_cObject);
+	rb_define_method(cXYWidget, "selfval", selfval, 0);
 }
 #endif
 // ---------------------- End XYWidget --------------------------------------------
@@ -56,20 +61,24 @@ void InitXYScrollableWidget()
 static VALUE cXYWindow;
 static const char* XYWindowClassName = "XYWindow";
 // WndProc
-static VALUE XYWndProc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
+static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	VALUE __arg1__;
 	VALUE __arg2__;
 	unsigned __tmp1__;
 	unsigned __tmp2__;
 	
-	unsigned hWnd = (unsigned)FIX2INT(a1);
-	unsigned uMsg = (unsigned)FIX2INT(a2);
-	unsigned wParam = (unsigned)FIX2INT(a3);
-	unsigned lParam = (unsigned)FIX2INT(a4);
-	
 	//hWnd = FIX2INT(rb_iv_get(self, "@handle"));
-	printf("%u %u\n", FIX2INT(a1), FIX2INT(rb_iv_get(self, "@handle")));
+	//printf("%u %u\n", FIX2INT(a1), FIX2INT(rb_iv_get(self, "@handle")));
+	
+	//Store the 'self' when creating the window
+	VALUE self;
+	if(uMsg == WM_CREATE)
+	{
+		self = (VALUE)(((LPCREATESTRUCT)lParam)->lpCreateParams);
+		SetWindowLong(hWnd, GWL_USERDATA, (LONG)self);
+	}
+	self = (VALUE)GetWindowLong(hWnd, GWL_USERDATA);
 	
 	switch(uMsg)
 	{
@@ -96,15 +105,44 @@ static VALUE XYWndProc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
 								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil); 
 			break;
 		default:
-			return INT2FIX(DefWindowProc(hWnd, uMsg, wParam, lParam));
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
-	return INT2FIX(0);
+	return 0;
 }
+static VALUE registerClass(VALUE self)
+{
+	WNDCLASS wc;
+	RtlZeroMemory(&wc, sizeof(wc));
+	wc.lpfnWndProc = XYWndProc;
+	wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.lpszClassName = RSTRING_PTR(rb_iv_get(self, "@className"));
+	wc.hInstance = GetModuleHandle(NULL);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	RegisterClass(&wc);
+	return self;
+}
+/*
+static VALUE callproc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
+{
+	return INT2FIX(XYWndProc(FIX2INT(a1), FIX2INT(a2), FIX2INT(a3), FIX2INT(a4)));
+}
+*/
+/*
+static VALUE wndprocaddr(VALUE self)
+{
+	//printf("In c: %d %p\n", XYWndProc, XYWndProc);
+	return INT2FIX((int)XYWndProc);
+}
+*/
 // init XYWindow
 void InitXYWindow()
 {
 	cXYWindow = rb_define_class(XYWindowClassName, cXYScrollableWidget);
-	rb_define_method(cXYWindow, "callproc", XYWndProc, 4);
+	//rb_define_method(cXYWindow, "callproc", callproc, 4);
+	//rb_define_method(cXYWindow, "wndproc", wndprocaddr, 0);
+	rb_define_method(cXYWindow, "registerClass", registerClass, 0);
 }
 #endif
 // ------------------End XYWindow ----------------------------------------

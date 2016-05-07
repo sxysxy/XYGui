@@ -11,13 +11,13 @@ NULLCMD = :
 
 #### Start of system configuration section. ####
 
-srcdir = /C/Ruby23/lib/ruby/gems/2.3.0/gems/XYGui-0.1.0/ext
-topdir = /C/Ruby23/include/ruby-2.3.0
+srcdir = /C/Ruby22/lib/ruby/gems/2.2.0/gems/XYGui-0.1.0/ext
+topdir = /C/Ruby22/include/ruby-2.2.0
 hdrdir = $(topdir)
-arch_hdrdir = C:/Ruby23/include/ruby-2.3.0/i386-mingw32
+arch_hdrdir = C:/Ruby22/include/ruby-2.2.0/i386-mingw32
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/C/Ruby23
+prefix = $(DESTDIR)/C/Ruby22
 rubysitearchprefix = $(rubylibprefix)/$(sitearch)
 rubyarchprefix = $(rubylibprefix)/$(arch)
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
@@ -75,7 +75,6 @@ COUTFLAG = -o $(empty)
 
 RUBY_EXTCONF_H = 
 cflags   =  $(optflags) $(debugflags) $(warnflags)
-cxxflags =  $(optflags) $(debugflags) $(warnflags)
 optflags = -O3 -fno-omit-frame-pointer -fno-fast-math
 debugflags = -g
 warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat
@@ -95,7 +94,7 @@ AR = ar
 EXEEXT = .exe
 
 RUBY_INSTALL_NAME = $(RUBY_BASE_NAME)
-RUBY_SO_NAME = msvcrt-ruby230
+RUBY_SO_NAME = msvcrt-ruby220
 RUBYW_INSTALL_NAME = $(RUBYW_BASE_NAME)
 RUBY_VERSION_NAME = $(RUBY_BASE_NAME)-$(ruby_version)
 RUBYW_BASE_NAME = rubyw
@@ -103,7 +102,7 @@ RUBY_BASE_NAME = ruby
 
 arch = i386-mingw32
 sitearch = i386-msvcrt
-ruby_version = 2.3.0
+ruby_version = 2.2.0
 ruby = $(bindir)/$(RUBY_BASE_NAME)
 RUBY = $(ruby)
 ruby_headers = $(hdrdir)/ruby.h $(hdrdir)/ruby/ruby.h $(hdrdir)/ruby/defines.h $(hdrdir)/ruby/missing.h $(hdrdir)/ruby/intern.h $(hdrdir)/ruby/st.h $(hdrdir)/ruby/subst.h $(arch_hdrdir)/ruby/config.h
@@ -159,7 +158,7 @@ CLEANLIBS     = $(TARGET).so
 CLEANOBJS     = *.o  *.bak
 
 all:    $(DLLIB)
-static: $(STATIC_LIB) install-rb
+static: $(STATIC_LIB)
 .PHONY: all install static install-so install-rb
 .PHONY: clean clean-so clean-static clean-rb
 
@@ -259,6 +258,6 @@ $(DLLIB): $(DEFFILE) $(OBJS) Makefile
 
 $(DEFFILE): 
 	$(ECHO) generating $(@)
-	$(Q) (echo EXPORTS && echo $(TARGET_ENTRY)) > $@
+	$(Q) $(RUBY) -e "puts 'EXPORTS', '$(TARGET_ENTRY)'"  > $@
 
 $(OBJS): $(HDRS) $(ruby_headers)
