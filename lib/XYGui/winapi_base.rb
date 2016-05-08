@@ -3,8 +3,8 @@
 	v1.0.0  by sxysxy           2016.03.30
 =end
 
+require 'fiddle'
 require 'win32api'
-
 class APICallError < Exception
 	
 end
@@ -12,31 +12,37 @@ end
 module WinAPI
 	def self.call(dllname, api, *arg)
 		@cache ||= {}
-		raise TypeError "WinAPI#call's arg requires an Array!" if !arg.is_a?(Array)
-		if @cache[api]
-			return @cache[api].call *arg
-		else
-			form = WinAPI.get_form(arg)
+		@dlls ||= {}
+		unless @dlls[dllname]
 			begin
-				@cache[api] = Win32API.new(dllname, api, form, "i")
-				@cache[api].call *arg
-			#rescue Exception => e
-			#	@cache[api] = nil	
-			#	puts e.message
-			#	exit
+				@dlls[dllname] = Fiddle::dlopen(dllname)
+			rescue Fiddle::DLError => e
+				
 			end
+		end
+		
+		unless @cache[api]
+			dl = @dlls[dllname]
+			@cache[api] = Fiddle::Function.new(dl[api], getForm(arg), Fiddle::TYPE_LONG)
+		end
+		
+		begin
+			@cache[api].call *arg 
+		rescue
+			
 		end
 	end
 	
-	def self.get_form(data)
+	def self.getForm(data)
 		return nil if data == nil
-		form = data.map do |e|
+		form = []
+		data.each do |e|
 			if e.is_a?(String)
-				'p'
+				form << Fiddle::TYPE_VOIDP
 			elsif e.is_a?(Float)
-				'f'
+				form << Fiddle::TYPE_FLOAT
 			else
-				'L'
+				form << Fiddle::TYPE_LONG
 			end
 		end
 		return form
