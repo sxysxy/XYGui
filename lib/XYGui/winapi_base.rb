@@ -4,7 +4,7 @@
 =end
 
 require 'fiddle'
-require 'win32api'
+#require 'win32api'
 class APICallError < Exception
 	
 end
@@ -31,6 +31,16 @@ module WinAPI
 		rescue
 			
 		end
+	end
+	
+	def self.specialCall(dllname, api, *arg)
+		addr = 0
+		begin
+			addr = Fiddle::dlopen(dllname) 
+		rescue
+			return nil
+		end
+		Fiddle::Function.new(addr[api], getForm(arg), Fiddle::TYPE_LONG).call *arg 
 	end
 	
 	def self.getForm(data)

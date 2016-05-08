@@ -25,11 +25,14 @@ class XYGLLabel < XYLabel
 	end
 	
 	def create
+		childCreate(@style)
+=begin
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
-							WS_CHILDWINDOW | @style | WS_VISIBLE,   
+							@style,   
 							@x, @y, @width, @height,              
 							@parent.handle, @id,
-							@app.instance, 0)
+							@app.instance, selfval)
+=end
 	end
 	
 	def enableGL

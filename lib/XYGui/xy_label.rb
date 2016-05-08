@@ -6,13 +6,12 @@
 
 
 require 'XYGui/winapi_base.rb'
-require 'XYGui/xy_mainwindow.rb'
+require 'XYGui/xy_childwindow.rb'
 
-class XYLabel < XYMainWindow
+class XYLabel < XYChildWindow
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
-		@style = WS_OVERLAPPED
 		if self.class == XYLabel
 			create
 			yield(self) if block_given?
@@ -20,11 +19,7 @@ class XYLabel < XYMainWindow
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
-							WS_CHILDWINDOW | @style,   
-							@x, @y, @width, @height,              
-							@parent.handle, @id,
-							@app.instance, 0)
+		childCreate(@style)
 	end
 	
 	def onDestroy(sender, data)

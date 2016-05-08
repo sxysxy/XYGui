@@ -391,8 +391,9 @@ class XYWidget                 #basic widget
 	
 	#---------------------
 	def setText(str)
-		@@xywidgetSendmsgSetText ||= Win32API.new("user32", "SendMessage", "LLLp", "i")
-		@@xywidgetSendmsgSetText.call(@handle, WM_SETTEXT, 0, str)
+		#@@xywidgetSendmsgSetText ||= Win32API.new("user32", "SendMessage", "LLLp", "i")
+		#@@xywidgetSendmsgSetText.call(@handle, WM_SETTEXT, 0, str)
+		WinAPI.specialCall("user32", "SendMessage", @handle, WM_SETTEXT, 0, str)
 	end
 	def text=(str)
 		setText(str)

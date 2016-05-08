@@ -62,7 +62,7 @@ class XYWindow < XYScrollableWidget
 		
 		#---------------------------------------------------
 		#create
-		connect(:ON_CREATE) {|a, b| arg[:creator]? arg[:creator].call(a,b): onCreate(a, b)}
+		#connect(:ON_CREATE) {|a, b| arg[:creator]? arg[:creator].call(a,b): onCreate(a, b)}
 		
 		#size
 		connect(:ON_BEFORESIZE) {|a, b| beforeSize(a, b)}

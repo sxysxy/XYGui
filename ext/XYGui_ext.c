@@ -30,7 +30,10 @@ static VALUE cXYWidget;
 static const char* XYWidgetClassName = "XYWidget";
 VALUE selfval(VALUE self)
 {
-	return INT2FIX(self);
+	return INT2FIX(self); 
+	/*
+		In ruby, INT2FIX(self) is the real value of self
+	*/
 }
 void InitXYWidget()
 {
@@ -113,7 +116,7 @@ static VALUE registerClass(VALUE self)
 {
 	WNDCLASS wc;
 	RtlZeroMemory(&wc, sizeof(wc));
-	wc.lpfnWndProc = XYWndProc;
+	wc.lpfnWndProc = XYWndProc;              // XYWndProc !
 	wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);

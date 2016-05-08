@@ -6,6 +6,7 @@
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
 
+require 'win32api'
 class XYProgressBar < XYWidget
 
 	PBM_SETRANGE = WM_USER+1

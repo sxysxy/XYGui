@@ -111,7 +111,7 @@ class XYFont
 				@ltalic, @underLine, @strikeOut, @charSet, @outPrecision,
 					@clipPrecision, @quality, @pitchAndFamily, @faceName].pack("LLLLLccccccccp")
 		hf = WinAPI.call("gdi32", "CreateFontIndirect", pk)
-		Win32API.new("user32", "SendMessage", "iiii", "i").call @widget.handle, XYWidget::WM_SETFONT, hf, 1
+		WinAPI.specialCall("user32", "SendMessage", (@widget.handle ? @widget.handle: 0), XYWidget::WM_SETFONT, hf, 1)
 	end
 	
 end

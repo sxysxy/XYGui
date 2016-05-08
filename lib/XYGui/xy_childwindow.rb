@@ -10,6 +10,8 @@ class XYChildWindow < XYMainWindow
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
+		@style = WS_CHILDWINDOW 
+		@style |= arg[:style] if arg[:style]
 		if self.class == XYChildWindow
 			create 
 			yield(self) if block_given?
@@ -17,14 +19,19 @@ class XYChildWindow < XYMainWindow
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
-							WS_OVERLAPPEDWINDOW | WS_CHILDWINDOW | @style,   
-							@x, @y, @width, @height,              
-							@parent.handle, @id,
-							@app.instance, 0)
+		childCreate(@style | WS_OVERLAPPEDWINDOW)
 	end
 	
 	def onDestroy(sender, data)
 
+	end
+	
+	private
+	def childCreate(createStyle)
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
+							createStyle,   
+							@x, @y, @width, @height,              
+							@parent.handle, @id,
+							@app.instance, selfval)
 	end
 end
