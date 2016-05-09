@@ -57,8 +57,8 @@ class XYWindow < XYScrollableWidget
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
 		@dc = 0
 		@ps = Fiddle::Pointer.malloc(64)
-		@app.windowIdCount = @app.windowIdCount + 1
-		@className = @app.name + @app.windowIdCount.to_s
+		#@app.windowIdCount = @app.windowIdCount + 1
+		@className = @app.name 
 		
 		#---------------------------------------------------
 		#create

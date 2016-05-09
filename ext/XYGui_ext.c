@@ -22,12 +22,41 @@ extern "C"
 {
 #endif
 
-// ---------------------- For XYWidget --------------------------------------------
+// ---------------------- For XYApp -----------------------------------------------
 #if 1
 // #if 1 here, and your code editor may be able to fold these code
+static VALUE cXYApp;
+static const char *XYAppClassName = "XYApp";
+// WndProc, Defined in XYWindow Ext
+static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+static VALUE registerClass(VALUE self)
+{
+	WNDCLASS wc;
+	RtlZeroMemory(&wc, sizeof(wc));
+	wc.lpfnWndProc = XYWndProc;                                 // XYWndProc !
+	wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.lpszClassName = RSTRING_PTR(rb_iv_get(self, "@name"));
+	wc.hInstance = GetModuleHandle(NULL);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	RegisterClass(&wc);
+	return self;
+}
+static void InitXYApp()
+{
+	cXYApp = rb_define_class(XYAppClassName, rb_cObject);
+	rb_define_method(cXYApp, "registerClass", registerClass, 0);
+}
+#endif
+//----------------------- End XYApp -----------------------------------------------
+
+
+// ---------------------- For XYWidget --------------------------------------------
+#if 1
 // this class
 static VALUE cXYWidget;
-static const char* XYWidgetClassName = "XYWidget";
+static const char *XYWidgetClassName = "XYWidget";
 VALUE selfval(VALUE self)
 {
 	return INT2FIX(self); 
@@ -48,7 +77,7 @@ void InitXYWidget()
 #if 1
 //this class
 static VALUE cXYScrollableWidget;
-static const char* XYScrollableWidgetClassName = "XYScrollableWidget";
+static const char *XYScrollableWidgetClassName = "XYScrollableWidget";
 void InitXYScrollableWidget()
 {
 	cXYScrollableWidget = rb_define_class(XYScrollableWidgetClassName, cXYWidget);
@@ -62,7 +91,7 @@ void InitXYScrollableWidget()
 // #if 1 here, and your code editor may be able to fold these code
 // this class
 static VALUE cXYWindow;
-static const char* XYWindowClassName = "XYWindow";
+static const char *XYWindowClassName = "XYWindow";
 // WndProc
 static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -112,20 +141,6 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	}
 	return 0;
 }
-static VALUE registerClass(VALUE self)
-{
-	WNDCLASS wc;
-	RtlZeroMemory(&wc, sizeof(wc));
-	wc.lpfnWndProc = XYWndProc;              // XYWndProc !
-	wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.lpszClassName = RSTRING_PTR(rb_iv_get(self, "@className"));
-	wc.hInstance = GetModuleHandle(NULL);
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	RegisterClass(&wc);
-	return self;
-}
 /*
 static VALUE callproc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
 {
@@ -145,19 +160,23 @@ void InitXYWindow()
 	cXYWindow = rb_define_class(XYWindowClassName, cXYScrollableWidget);
 	//rb_define_method(cXYWindow, "callproc", callproc, 4);
 	//rb_define_method(cXYWindow, "wndproc", wndprocaddr, 0);
-	rb_define_method(cXYWindow, "registerClass", registerClass, 0);
+	//rb_define_method(cXYWindow, "registerClass", registerClass, 0);
 }
 #endif
-// ------------------End XYWindow ----------------------------------------
+// ---------------------- End XYWindow ----------------------------------------
 
 
 // Init this extension
+#if 1
 void Init_XYGui_ext()
 {
+	InitXYApp();
 	InitXYWidget();
 	InitXYScrollableWidget();
 	InitXYWindow();
 }
+#endif
+// End of Init
 
 #ifdef __cplusplus
 }

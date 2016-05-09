@@ -27,6 +27,8 @@ class XYApp
 		#To use some controls
 		Fiddle::dlopen("comctl32.dll") 					#Only Load this dll into memory
 		Fiddle::dlopen("comdlg32.dll")
+		
+		registerClass
 		yield(self) if block_given?
 	end
 	
