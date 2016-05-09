@@ -1,26 +1,24 @@
 =begin
-
+	PushButton
+	v1.0.0  by sxysxy           2016.03.30
 =end
 
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
-
+require 'XYGui/xy_button.rb'
 class XYPushButton < XYWidget
-	attr_reader :text
-	
+	include XYButton
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
-		@text = @title
-		create
-		show
+		create if self.class == XYPushButton
 	end
 	
 	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "Button", @text,
-							WS_CHILDWINDOW|BS_DEFPUSHBUTTON,
+							@style | 0x40010000,
 							@x, @y, @width, @height, @parent.handle,
-							getAsChildId,    #use to tell child-window-id
-							app.instance, 0)
+							@id,    #use to tell child-window-id
+							@app.instance, 0)
 	end
 	
 	
@@ -37,7 +35,7 @@ class XYPushButton < XYWidget
 	def defaultY
 		return 0
 	end
-	def defaultTitle
+	def defaultText
 		return "Button"
 	end
 end

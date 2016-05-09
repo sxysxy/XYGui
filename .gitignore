@@ -8,4 +8,5 @@
 /tmp/
 
 /*.gem
-/example/*.exe
+
+/ruby_i386cmd.bat

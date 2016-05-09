@@ -1,50 +1,52 @@
 =begin
-
+	Main Window 
+	
+	v1.0.0  by sxysxy           2016.03.30
 =end
 
 require 'XYGui/xy_window.rb'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_layout.rb'
+require 'XYGui/xy_messagebox.rb'
 
 class XYMainWindow < XYWindow
-	attr_reader :style
-	attr_reader :type
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
-		
-		@style = arg[:style]? arg[:style]: 0
-		@type = arg[:type]? arg[:type]: 0
-
-		wndcls = [@type, wndproc.to_i, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
-					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
-					0, app.name].pack("lllllllllp")
-		
-		unless app.instance_eval{@name_registered}
-			r = WinAPI.call("user32", "RegisterClass", wndcls)
-			raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
-			app.instance_eval{@name_registered = true}
+		@style |= WS_OVERLAPPEDWINDOW
+		if(arg[:fixed])
+			@style &= (~(WS_THICKFRAME | WS_MAXIMIZEBOX))
 		end
+
+=begin
+		wndcls = [CS_OWNDC | CS_HREDRAW | CS_VREDRAW, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
+					WinAPI.call("user32", "LoadCursor", app.instance, IDC_ARROW), 5 + 1,
+					0, @className].pack("lllllllllp")
+		
+		r = WinAPI.call("user32", "RegisterClass", wndcls)
+		raise XYWidgetError, "Fail to rgister MainWindow's Window Class" if r == 0
+=end
+		registerClass
 		
 		connect(:ON_DESTROY) {|a,b| onDestroy(a, b)}
 		
-		create
-		show
+		create if self.class == XYMainWindow
+		yield(self) if block_given? && self.class == XYMainWindow
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, app.name, @title,  
-							WS_VISIBLE | WS_OVERLAPPEDWINDOW,   
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
+							@style,   
 							@x, @y, @width, @height,              
 							0, 0,
-							app.instance, 0)
+							@app.instance, selfval)
 	end
 	
 	def style=(new_style)
 		
 	end
-
+	
 	def defaultHeight
 		return 300
 	end
@@ -61,12 +63,7 @@ class XYMainWindow < XYWindow
 		return "Window"
 	end
 	
-	def addChild(c)
-		super(c)
-		@layout.replace
-	end
-	
 	def onDestroy(wp, lp)
-		WinAPI.call("user32", "PostQuitMessage", 0)
+		@app.exit
 	end
 end
