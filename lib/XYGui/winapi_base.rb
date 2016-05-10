@@ -16,8 +16,9 @@ module WinAPI
 		unless @dlls[dllname]
 			begin
 				@dlls[dllname] = Fiddle::dlopen(dllname)
-			rescue Fiddle::DLError => e
-				
+			rescue Exception => e
+				puts e
+				exit
 			end
 		end
 		

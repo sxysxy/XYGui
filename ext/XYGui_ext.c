@@ -14,19 +14,19 @@
 #include <string.h>
 #include <stdio.h>
 
-//Global Area
-#define XYWidgetCall(sig, arg1, arg2) (rb_funcall(self, rb_intern("call"), \
-						3, ID2SYM(rb_intern(sig)), arg1, arg2))
-
-//gdi functions
-typedef HDC (*__MoveTo__)(HDC hDC, int x, int y);
-__MoveTo__ XYMoveTo;
-__MoveTo__ XYLineTo;   // LineTo is similar
-						
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+// ----------------------- Global Area ------------------------------------------
+#if 1
+#define XYWidgetCall(sig, arg1, arg2) (rb_funcall(self, rb_intern("call"), \
+						3, ID2SYM(rb_intern(sig)), arg1, arg2))
+
+#endif 
+// ----------------------- End Global Area --------------------------------------
+
 
 // ---------------------- For XYApp -----------------------------------------------
 #if 1
@@ -102,9 +102,9 @@ static const char *XYWindowClassName = "XYWindow";
 static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	VALUE __arg1__;
-	VALUE __arg2__;
+	//VALUE __arg2__;
 	unsigned __tmp1__;
-	unsigned __tmp2__;
+	//unsigned __tmp2__;
 	
 	//hWnd = FIX2INT(rb_iv_get(self, "@handle"));
 	//printf("%u %u\n", FIX2INT(a1), FIX2INT(rb_iv_get(self, "@handle")));
@@ -135,6 +135,7 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			XYWidgetCall("ON_BEFORESIZE", self, __arg1__);
 			break;
 		case WM_PAINT:
+			//rb_iv_set(self, "@dc", INT2FIX((int)GetDC(hWnd)));
 			XYWidgetCall("ON_BEGINPAINT", self, Qnil);
 			break; 
 		case WM_COMMAND:
@@ -171,32 +172,6 @@ void InitXYWindow()
 #endif
 // ---------------------- End XYWindow ----------------------------------------
 
-// ---------------------- For XYPainter ---------------------------------------
-#if 1
-static VALUE cXYPainter;
-static const char *XYPainterClassName = "XYPainter";
-static void InitGDIFunctions()
-{
-	HINSTANCE h = LoadLibrary("gdi32");
-	XYMoveTo = GetProcAddress(h, "MoveTo");
-	XYLineTo = GetProcAddress(h, "LineTo");
-}
-static VALUE line(VALUE self, VALUE srcx, VALUE srcy, VALUE destx, VALUE desty)
-{
-	XYMoveTo(FIX2INT(rb_iv_get(self, "@dc")), FIX2INT(srcx), FIX2INT(srcy));
-	XYLineTo(FIX2INT(rb_iv_get(self, "@dc")), FIX2INT(destx), FIX2INT(desty));
-	return self;
-}
-static void InitXYPainter()
-{
-	cXYPainter = rb_define_class(XYPainterClassName, rb_cObject);
-	rb_define_method(cXYPainter, "line", line, 4);
-	
-	InitGDIFunctions();
-}
-#endif
-// ---------------------- End XYPainter ---------------------------------------
-
 // Init this extension
 #if 1
 void Init_XYGui_ext()
@@ -205,7 +180,6 @@ void Init_XYGui_ext()
 	InitXYWidget();
 	InitXYScrollableWidget();
 	InitXYWindow();
-	InitXYPainter();
 }
 #endif
 // End of Init
