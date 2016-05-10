@@ -7,6 +7,7 @@ require 'XYGui'
 require 'XYGui/xy_app.rb'
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_font.rb'
+require 'XYGui/xy_painter.rb'
 
 class XYWidgetError < Exception
 
@@ -338,6 +339,7 @@ class XYWidget                 #basic widget
 	attr_reader :shown
 	attr_reader :style
 	attr_reader :font
+	attr_reader :painter
 	
 	attr_reader :responder
 	
@@ -366,6 +368,7 @@ class XYWidget                 #basic widget
 		@shown = true
 		@font = arg[:font]? arg[:font]: XYFont.new
 		@font.widget = self
+		@painter = XYPainter.new(self)
 		
 		@parent.addChild(self) if @parent
 	end
