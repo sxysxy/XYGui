@@ -11,14 +11,12 @@ class XYApp
 	attr_reader :instance
 	attr_reader :name
 	attr_reader :message
-	attr_accessor :windowIdCount;
 	attr_accessor :flagExit
 	attr_reader :request
 	
 	def initialize(appname)
 		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
 		@name = appname
-		@windowIdCount = 0
 		@flagExit = false
 		@request = ADTQueue.new(32)       				#max request size:32/2 = 16
 		

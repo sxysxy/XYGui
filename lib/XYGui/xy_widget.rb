@@ -329,8 +329,8 @@ class XYWidget                 #basic widget
 	attr_reader :width
 	attr_reader :text
 	attr_reader :height
-	attr_reader :idcount	#id for childs
-	attr_writer :id			#id for itself
+	attr_reader :idcount	
+	attr_writer :id        #only write access
 	attr_reader :x
 	attr_reader :y
 	attr_reader :app

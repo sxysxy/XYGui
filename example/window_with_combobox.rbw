@@ -4,6 +4,8 @@ require 'XYGui/xy_combobox.rb'
 
 XYApp.new("cb") do |app| 
 	XYMainWindow.new(app, nil, {:title => "ComboBox"}) do |wnd|
-		XYComboBox.new(app, wnd)
+		XYComboBox.new(app, wnd) do |cb|
+		
+		end
 	end.show
 end.mainloop

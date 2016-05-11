@@ -51,13 +51,11 @@ class XYWindow < XYScrollableWidget
 	attr_reader :dc
 	attr_reader :ps
 	
-	TEMP = []             #Avoid ruby's GC free proc(see wndproc)
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
 		@dc = 0
 		@ps = Fiddle::Pointer.malloc(64)
-		#@app.windowIdCount = @app.windowIdCount + 1
 		@className = @app.name 
 		
 		#---------------------------------------------------
@@ -91,6 +89,7 @@ class XYWindow < XYScrollableWidget
 	end
 	
 =begin
+	TEMP = []
 	def wndproc
 		_self = self
 		_content = @content
@@ -143,6 +142,18 @@ class XYWindow < XYScrollableWidget
 	def onSize(sender, data)
 		@layout.replace
 	end
+	
+=begin
+	#Get The width and height of the client area
+	#See XYGui_ext.c
+	def clientWidth 
+	
+	end
+	
+	def clientHeigth
+	
+	end
+=end
 	
 	def beginPaint(sender, data)
 		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)

@@ -161,6 +161,18 @@ static VALUE wndprocaddr(VALUE self)
 	return INT2FIX((int)XYWndProc);
 }
 */
+static VALUE clientWidth(VALUE self)
+{
+	RECT r;
+	GetClientRect((HWND)FIX2INT(rb_iv_get(self, "@handle")), &r);
+	return INT2FIX(r.right);
+}
+static VALUE clientHeight(VALUE self)
+{
+	RECT r;
+	GetClientRect((HWND)FIX2INT(rb_iv_get(self, "@handle")), &r);
+	return INT2FIX(r.bottom);
+}
 // init XYWindow
 void InitXYWindow()
 {
@@ -168,6 +180,8 @@ void InitXYWindow()
 	//rb_define_method(cXYWindow, "callproc", callproc, 4);
 	//rb_define_method(cXYWindow, "wndproc", wndprocaddr, 0);
 	//rb_define_method(cXYWindow, "registerClass", registerClass, 0);
+	rb_define_method(cXYWindow, "clientHeight", clientHeight, 0);
+	rb_define_method(cXYWindow, "clientWidth", clientWidth, 0);
 }
 #endif
 // ---------------------- End XYWindow ----------------------------------------
