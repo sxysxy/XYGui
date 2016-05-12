@@ -19,5 +19,10 @@ XYApp.new("xyglapp") do |app|
 				glb.render
 			end
 		end	
+		wnd.connect(:ON_KEYDOWN) do |sender, data|
+			if data[:key] == XYKey::VK_ESC
+				app.exit
+			end
+		end
 	end.show
 end.mainloop

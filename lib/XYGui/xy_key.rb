@@ -17,6 +17,7 @@ module XYKey
 	VK_ENTER = VK_RETURN   	#VK_ENTER is added by XYKey
 	VK_SHIFT = 0x10
 	VK_ESCAPE = 0x1B
+	VK_ESC = VK_ESCAPE      #VK_ESC is added by XYKey
 	VK_CONTROL = 0x11
 	VK_MENU = 0x12
 	VK_PAUSE = 0x13

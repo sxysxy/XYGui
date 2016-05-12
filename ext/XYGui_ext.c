@@ -186,6 +186,12 @@ void InitXYWindow()
 #endif
 // ---------------------- End XYWindow ----------------------------------------
 
+// ---------------------- For XYPainter ---------------------------------------
+#if 1
+
+#endif
+// ---------------------- End XYPainter ---------------------------------------
+
 // Init this extension
 #if 1
 void Init_XYGui_ext()

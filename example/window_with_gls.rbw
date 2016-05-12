@@ -6,6 +6,11 @@ require 'XYGuiGL'
 
 XYApp.new("MultiGLTest") do |app|
 	XYMainWindow.new(app, nil, {:title => 'MultiGL', :width => 600, :height => 600, :fixed => true}) do |wnd|
+		wnd.connect(:ON_KEYDOWN) do |sender, data|
+			if data[:key] == XYKey::VK_ESCAPE
+				app.exit
+			end
+		end
 		XYGLLabel.new(app, wnd, {:x => 0, :y => 0, :width => 300, :height => 300}).set do
 			connect(:ON_PAINT) do |sender, data|
 				GL.Enable(GL::GL_DEPTH_TEST)
