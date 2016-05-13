@@ -157,8 +157,8 @@ class XYWindow < XYScrollableWidget
 	
 	def beginPaint(sender, data)
 		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
+		@painter.reset
 		@responder[:ON_PAINT].call(sender, data) if @responder[:ON_PAINT]
-		#@painter.destroy
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end
 	

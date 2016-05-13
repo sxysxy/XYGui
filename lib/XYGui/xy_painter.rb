@@ -19,9 +19,6 @@ class XYPainter
 		@widget = srcwidget
 			#! notice, please use @widget.dc (dc should be updated when ON_PAINT)
 		
-		@brush = XYBrush.new(0, 0, 0)
-		@pen = XYPen.new(0, 0, 0)
-		nilBrush
 	end
 	
 	alias :paint :instance_eval
@@ -49,47 +46,30 @@ class XYPainter
 	
 	#---------------------------------------------------
 	def setBrush(br)
-		nilBrush if !br
+		br.create
+		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
 		@brush.destroy
 		@brush = br
-		applyBrush
+		WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle)
 	end
 	alias :brush= :setBrush
 	def setPen(pn)
-		nilPen if !pn
 		@pen = pn
 		applyPen
 	end
-	def nilBrush
-		h = WinAPI.call("gdi32", "GetStockObject", NULL_BRUSH)
-		p = XYPainterTool.new
-		p.instance_eval{@handle = h; @deletable = false}
-		setBrush(p)
-	end
-	def blackPen
-		h = WinAPI.call("gdi32", "GetStockObject", BLACK_PEN)
-		p = XYPainterTool.new
-		p.instance_eval{@handle = h}
-		setPen(p)
-	end
 	alias :pen= :setPen
-	def applyBrush
-		@brush.create
-		WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle)
-	end
-	def applyPen
-		@pen.create
-		WinAPI.call("gdi32", "SelectObject", @widget.dc, @pen.handle)
-	end
 	#----------------------------------------------------------------------
 	
 	#----------------------------------------------------------------------
 	def reset
-		
+		@brush = XYBrush.new(2, 3, 3)
+		@oriBrush = XYStockPainterTool.new(WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle))
+		@brush.destroy
+		@brush = @oriBrush
+		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
 	end
 	def destroy
-		nilBrush
-		blackPen
+		
 	end
 	#---------------------------------------------------------------------
 end

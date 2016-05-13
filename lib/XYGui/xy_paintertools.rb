@@ -10,12 +10,11 @@ class XYPainterTool
 	attr_reader :handle
 	
 	attr_reader :deletable
-	def initialize(r = 0, g = 0, b = 0, del = true) 
+	def initialize(r = 0, g = 0, b = 0) 
 		@red = r
 		@green = g
 		@blue = b
 		@handle = 0
-		@deletable = del
 	end
 	
 	def create
@@ -47,5 +46,17 @@ class XYBrush < XYPainterTool
 	def create
 		@handle = WinAPI.call("gdi32", "CreateSolidBrush", [@red, @green, @blue, 0].pack("cccc").unpack("L").first)
 		#XYMessageBox.show("233", @handle.to_s)
+	end
+end
+
+# This class should't provide to users
+class XYStockPainterTool < XYPainterTool
+	def initialize(h)
+		@handle = h
+	end
+	def create
+		@handle
+	end
+	def destroy
 	end
 end
