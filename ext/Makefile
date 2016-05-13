@@ -78,7 +78,7 @@ optflags = -O3 -fno-omit-frame-pointer -fno-fast-math
 debugflags = -g
 warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration
 CCDLFLAGS = 
-CFLAGS   = $(CCDLFLAGS) $(cflags) $(ARCH_FLAG)
+CFLAGS   = $(CCDLFLAGS) $(cflags) $(ARCH_FLAG) 
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = -D_FILE_OFFSET_BITS=64
 CPPFLAGS =  -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0501 -D__MINGW_USE_VC2005_COMPAT $(DEFS) $(cppflags)
@@ -132,7 +132,7 @@ extout =
 extout_prefix = 
 target_prefix = 
 LOCAL_LIBS = 
-LIBS = $(LIBRUBYARG_SHARED)  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi  
+LIBS = $(LIBRUBYARG_SHARED)  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lgdi32
 ORIG_SRCS = XYGui_ext.c
 SRCS = $(ORIG_SRCS) 
 OBJS = XYGui_ext.o

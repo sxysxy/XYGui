@@ -35,7 +35,7 @@ static VALUE cXYApp;
 static const char *XYAppClassName = "XYApp";
 // WndProc, Defined in XYWindow Ext
 static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-static VALUE registerClass(VALUE self)
+static VALUE XYApp_registerClass(VALUE self)
 {
 	WNDCLASS wc;
 	RtlZeroMemory(&wc, sizeof(wc));
@@ -52,7 +52,7 @@ static VALUE registerClass(VALUE self)
 static void InitXYApp()
 {
 	cXYApp = rb_define_class(XYAppClassName, rb_cObject);
-	rb_define_method(cXYApp, "registerClass", registerClass, 0);
+	rb_define_method(cXYApp, "registerClass", XYApp_registerClass, 0);
 }
 #endif
 //----------------------- End XYApp -----------------------------------------------
@@ -63,17 +63,17 @@ static void InitXYApp()
 // this class
 static VALUE cXYWidget;
 static const char *XYWidgetClassName = "XYWidget";
-VALUE selfval(VALUE self)
+VALUE XYWidget_selfval(VALUE self)
 {
-	return INT2FIX(self); 
+	return INT2NUM(self); 
 	/*
-		In ruby, INT2FIX(self) is the real value of self
+		In ruby, INT2NUM(self) is the real value of self
 	*/
 }
 void InitXYWidget()
 {
 	cXYWidget = rb_define_class(XYWidgetClassName, rb_cObject);
-	rb_define_method(cXYWidget, "selfval", selfval, 0);
+	rb_define_method(cXYWidget, "selfval", XYWidget_selfval, 0);
 }
 #endif
 // ---------------------- End XYWidget --------------------------------------------
@@ -161,13 +161,13 @@ static VALUE wndprocaddr(VALUE self)
 	return INT2FIX((int)XYWndProc);
 }
 */
-static VALUE clientWidth(VALUE self)
+static VALUE XYWindow_clientWidth(VALUE self)
 {
 	RECT r;
 	GetClientRect((HWND)FIX2INT(rb_iv_get(self, "@handle")), &r);
 	return INT2FIX(r.right);
 }
-static VALUE clientHeight(VALUE self)
+static VALUE XYWindow_clientHeight(VALUE self)
 {
 	RECT r;
 	GetClientRect((HWND)FIX2INT(rb_iv_get(self, "@handle")), &r);
@@ -177,18 +177,73 @@ static VALUE clientHeight(VALUE self)
 void InitXYWindow()
 {
 	cXYWindow = rb_define_class(XYWindowClassName, cXYScrollableWidget);
-	//rb_define_method(cXYWindow, "callproc", callproc, 4);
-	//rb_define_method(cXYWindow, "wndproc", wndprocaddr, 0);
-	//rb_define_method(cXYWindow, "registerClass", registerClass, 0);
-	rb_define_method(cXYWindow, "clientHeight", clientHeight, 0);
-	rb_define_method(cXYWindow, "clientWidth", clientWidth, 0);
+	rb_define_method(cXYWindow, "clientHeight", XYWindow_clientHeight, 0);
+	rb_define_method(cXYWindow, "clientWidth", XYWindow_clientWidth, 0);
 }
 #endif
 // ---------------------- End XYWindow ----------------------------------------
 
+
+
 // ---------------------- For XYPainter ---------------------------------------
 #if 1
+//ths class
+static VALUE cXYPainter;
+static const char *XYPainterClassName = "XYPainter";
+#define GETWIDGET_DC(obj) (HDC)NUM2INT(rb_iv_get(rb_iv_get(obj, "@widget"), "@dc"))
+#define GETBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, "@brush"), "@handle"))
+//undefed after a while 
 
+//Drawing functions
+static VALUE XYPainter_lineTo(VALUE self, VALUE x, VALUE y)
+{
+	LineTo(GETWIDGET_DC(self), FIX2INT(x), FIX2INT(y));
+	return self;
+}
+static VALUE XYPainter_line(VALUE self, VALUE srcx, VALUE srcy, VALUE destx, VALUE desty)
+{
+	int sx = FIX2INT(srcx);
+	int sy = FIX2INT(srcy);
+	HDC dc = GETWIDGET_DC(self);
+	MoveToEx(dc, sx, sy, NULL);
+	LineTo(dc, FIX2INT(destx), FIX2INT(desty));
+	return self;
+}
+static VALUE XYPainter_ellipse(VALUE self, VALUE cenx, VALUE ceny, VALUE a, VALUE b)
+{
+	int _a = FIX2INT(a);
+	int _b = FIX2INT(b);
+	Ellipse(GETWIDGET_DC(self), FIX2INT(cenx)-(_a>>1), FIX2INT(ceny)-(_b>>1), FIX2INT(cenx)+(_a>>1), FIX2INT(ceny)+(_b>>1));
+	return self;
+}
+static VALUE XYPainter_circle(VALUE self, VALUE cenx, VALUE ceny, VALUE r)
+{
+	VALUE rx = INT2FIX(FIX2INT(r)*2);
+	rb_funcall(self, rb_intern("ellipse"), 4, cenx, ceny, rx, rx);
+	return self;
+}
+static VALUE XYPainter_fillRect(VALUE self, VALUE leftx, VALUE topy, VALUE width, VALUE height)
+{
+	RECT rt;
+	rt.left = FIX2INT(leftx);
+	rt.top = FIX2INT(topy);
+	rt.right = rt.left + FIX2INT(width);
+	rt.bottom = rt.top + FIX2INT(height);
+	FillRect(GETWIDGET_DC(self), &rt, GETBRUSH_HANDLE(self));
+	return self;
+}
+
+static void InitXYPainter()
+{
+	cXYPainter = rb_define_class(XYPainterClassName, rb_cObject);
+	rb_define_method(cXYPainter, "lineTo", XYPainter_lineTo, 2);
+	rb_define_method(cXYPainter, "line", XYPainter_line, 4);
+	rb_define_method(cXYPainter, "ellipse", XYPainter_ellipse, 4);
+	rb_define_method(cXYPainter, "circle", XYPainter_circle, 3);
+	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
+}
+#undef GETWIDGET_DC
+#undef GETBRUSH_HANDLE
 #endif
 // ---------------------- End XYPainter ---------------------------------------
 
@@ -200,6 +255,7 @@ void Init_XYGui_ext()
 	InitXYWidget();
 	InitXYScrollableWidget();
 	InitXYWindow();
+	InitXYPainter();
 }
 #endif
 // End of Init

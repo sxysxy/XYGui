@@ -24,6 +24,7 @@ class XYPainter
 	alias :paint :instance_eval
 	
 	#--------------------------------------------------
+=begin
 	def line(srcx, srcy, destx, desty)
 		WinAPI.call "gdi32", "MoveToEx", @widget.dc, srcx, srcy, 0
 		WinAPI.call "gdi32", "LineTo", @widget.dc, destx, desty
@@ -31,17 +32,22 @@ class XYPainter
 	def lineTo(x, y)
 		WinAPI.call "gdi32", "LineTo", @widget.dc, x, y
 	end
+=end
 	alias :drawLine :line
+=begin
 	def ellipse(cenx, ceny, a, b)
 		WinAPI.call("gdi32", "Ellipse", @widget.dc, cenx-a/2, ceny-b/2, cenx+a/2, ceny+b/2)
 	end
+=end
 	alias :drawEllipse :ellipse
+=begin
 	def circle(cenx, ceny, r)
 		ellipse(cenx, ceny, r*2, r*2)
 	end
 	def fillRect(x, y, w, h)
 		WinAPI.call("user32", "FillRect", @widget.dc, [x,y,w+x,h+y].pack("LLLL"), @brush.handle)
 	end
+=end
 	#---------------------------------------------------
 	
 	#---------------------------------------------------
@@ -63,10 +69,12 @@ class XYPainter
 	#----------------------------------------------------------------------
 	def reset
 		@brush = XYBrush.new(2, 3, 3)
+		@brush.create
 		@oriBrush = XYStockPainterTool.new(WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle))
+		#XYMessageBox.show("ori", @oriBrush.handle.to_s)
+		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
 		@brush.destroy
 		@brush = @oriBrush
-		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
 	end
 	def destroy
 		
