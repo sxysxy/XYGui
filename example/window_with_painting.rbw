@@ -1,6 +1,4 @@
 require 'XYGuiCore'
-XYConsole.show
-$ct = 0
 
 XYApp.new("painting") do |app|
 	XYMainWindow.new(app, nil, {:title => "Let's Paint!", :width => 500, :height => 500}) do |wnd|
@@ -18,10 +16,6 @@ XYApp.new("painting") do |app|
 			wnd.painter.lineTo(wnd.width*3/4, wnd.height)
 			wnd.painter.line(wnd.width/4, wnd.height*3/4, wnd.width/4, wnd.height)      # The rect
 			wnd.painter.fillRect(wnd.width/4, wnd.height*3/4, wnd.width/2, wnd.height/4)
-			
-			$ct += 1
-			puts $ct
-			STDOUT.flush
 		end
 	end.show
 end.mainloop

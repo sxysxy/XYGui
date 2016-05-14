@@ -248,6 +248,7 @@ static VALUE XYPainter_setBrush(VALUE self, VALUE br)
 	DeleteObject(GETBRUSH_HANDLE(self));
 	
 	rb_iv_set(self, "@brush", br);
+	rb_funcall(br, rb_intern("create"), 0);
 	SelectObject(dc, GETBRUSH_HANDLE(self));
 	return self;
 }

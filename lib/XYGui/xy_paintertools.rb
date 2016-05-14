@@ -39,7 +39,6 @@ class XYBrush < XYPainterTool
 	
 	def initialize(r, g, b, arg = {})
 		super(r, g, b)
-		create
 	end
 	
 	def create
