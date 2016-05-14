@@ -329,21 +329,17 @@ class XYWidget                 #basic widget
 	attr_reader :width
 	attr_reader :text
 	attr_reader :height
-	attr_reader :idcount	
 	attr_writer :id        #only write access
 	attr_reader :x
 	attr_reader :y
+	
 	attr_reader :app
 	attr_reader :parent
 	attr_reader :content
-	attr_reader :shown
-	attr_reader :style
+	
 	attr_reader :font
-	attr_reader :painter
 	
 	attr_reader :responder
-	
-	attr_reader :requestMutex
 	
 	alias :to_i :handle
 	alias :set :instance_eval
@@ -368,7 +364,6 @@ class XYWidget                 #basic widget
 		@shown = true
 		@font = arg[:font]? arg[:font]: XYFont.new
 		@font.widget = self
-		@painter = XYPainter.new(self)
 		
 		@parent.addChild(self) if @parent
 	end
@@ -394,8 +389,6 @@ class XYWidget                 #basic widget
 	
 	#---------------------
 	def setText(str)
-		#@@xywidgetSendmsgSetText ||= Win32API.new("user32", "SendMessage", "LLLp", "i")
-		#@@xywidgetSendmsgSetText.call(@handle, WM_SETTEXT, 0, str)
 		WinAPI.specialCall("user32", "SendMessage", @handle, WM_SETTEXT, 0, str)
 	end
 	def text=(str)

@@ -19,13 +19,13 @@ extern "C"
 {
 #endif
 
-// ----------------------- Global Area ------------------------------------------
+// ---------------------- Global Area ------------------------------------------
 #if 1
 #define XYWidgetCall(sig, arg1, arg2) (rb_funcall(self, rb_intern("call"), \
 						3, ID2SYM(rb_intern(sig)), arg1, arg2))
 
 #endif 
-// ----------------------- End Global Area --------------------------------------
+// ---------------------- End Global Area --------------------------------------
 
 
 // ---------------------- For XYApp -----------------------------------------------
@@ -184,15 +184,22 @@ void InitXYWindow()
 // ---------------------- End XYWindow ----------------------------------------
 
 
-
 // ---------------------- For XYPainter ---------------------------------------
 #if 1
 //ths class
 static VALUE cXYPainter;
 static const char *XYPainterClassName = "XYPainter";
-#define GETWIDGET_DC(obj) (HDC)NUM2INT(rb_iv_get(rb_iv_get(obj, "@widget"), "@dc"))
-#define GETBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, "@brush"), "@handle"))
-#define GETORIBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, "@oriBrush"), "@handle"))
+#define GETWIDGET_DC(obj) (HDC)NUM2INT(rb_iv_get(rb_iv_get(obj, "@widget"), \
+			"@dc"))
+#define GETBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, \
+		"@brush"), "@handle"))
+#define GETORIBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, \
+				"@oriBrush"), "@handle"))
+
+#define GETPEN_HANDLE(obj) (HPEN)NUM2INT(rb_iv_get(rb_iv_get(obj, \
+		"@pen"), "@handle"))
+#define GETORIPEN_HANDLE(obj) (HPEN)NUM2INT(rb_iv_get(rb_iv_get(obj, \
+		"@oriPen"), "@handle")) 
 //undefed after a while 
 
 //Drawing functions
@@ -214,7 +221,8 @@ static VALUE XYPainter_ellipse(VALUE self, VALUE cenx, VALUE ceny, VALUE a, VALU
 {
 	int _a = FIX2INT(a);
 	int _b = FIX2INT(b);
-	Ellipse(GETWIDGET_DC(self), FIX2INT(cenx)-(_a>>1), FIX2INT(ceny)-(_b>>1), FIX2INT(cenx)+(_a>>1), FIX2INT(ceny)+(_b>>1));
+	Ellipse(GETWIDGET_DC(self), FIX2INT(cenx)-(_a>>1), FIX2INT(ceny)-(_b>>1), 
+						FIX2INT(cenx)+(_a>>1), FIX2INT(ceny)+(_b>>1));
 	return self;
 }
 static VALUE XYPainter_circle(VALUE self, VALUE cenx, VALUE ceny, VALUE r)
@@ -237,10 +245,18 @@ static VALUE XYPainter_defBrush(VALUE self)
 {
 	HBRUSH old;
 	HDC dc = GETWIDGET_DC(self);
-	old = SelectObject(dc, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	old = SelectObject(dc, GetStockObject(NULL_BRUSH));
 	SelectObject(dc, old);
 	return INT2NUM((long)old);
 } 
+static VALUE XYPainter_defPen(VALUE self)
+{
+	HPEN old;
+	HDC dc = GETWIDGET_DC(self);
+	old = SelectObject(dc, GetStockObject(BLACK_PEN));
+	SelectObject(dc, old);
+	return INT2NUM((long)old);
+}
 static VALUE XYPainter_setBrush(VALUE self, VALUE br)
 {
 	HDC dc = GETWIDGET_DC(self);
@@ -250,6 +266,17 @@ static VALUE XYPainter_setBrush(VALUE self, VALUE br)
 	rb_iv_set(self, "@brush", br);
 	rb_funcall(br, rb_intern("create"), 0);
 	SelectObject(dc, GETBRUSH_HANDLE(self));
+	return self;
+}
+static VALUE XYPainter_setPen(VALUE self, VALUE pn)
+{
+	HDC dc = GETWIDGET_DC(self);
+	SelectObject(dc, GETORIPEN_HANDLE(self));
+	DeleteObject(GETPEN_HANDLE(self));
+	
+	rb_iv_set(self, "@pen", pn);
+	rb_funcall(pn, rb_intern("create"), 0);
+	SelectObject(dc, GETPEN_HANDLE(self));
 	return self;
 }
 
@@ -262,15 +289,56 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "circle", XYPainter_circle, 3);
 	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
 	rb_define_method(cXYPainter, "setBrush", XYPainter_setBrush, 1);
+	rb_define_method(cXYPainter, "setPen", XYPainter_setPen, 1);
 	
 	//Note! These method should provide to users
 	rb_define_method(cXYPainter, "defBrush", XYPainter_defBrush, 0); //For windows...
+	rb_define_method(cXYPainter, "defPen", XYPainter_defPen, 0);
 }
 #undef GETWIDGET_DC
 #undef GETBRUSH_HANDLE
 #undef GETORIBRUSH_HANDLE
+#undef GETPEN_HANDLE
+#undef GETORIPEN_HANDLE
 #endif
 // ---------------------- End XYPainter ---------------------------------------
+
+// ---------------------- For XYPainterTools -----------------------------------
+#if 1
+static VALUE cXYPainterTool;
+const char *XYPainterToolClassName = "XYPainterTool";
+static VALUE cXYBrush;
+const char *XYBrushClassName = "XYBrush";
+static VALUE cXYPen;
+const char *XYPenClassName = "XYPen";
+static VALUE XYBrush_create(VALUE self)
+{
+	HBRUSH br = CreateSolidBrush(RGB(FIX2INT(rb_iv_get(self, "@red")), 
+				FIX2INT(rb_iv_get(self, "@green")), FIX2INT(rb_iv_get(self, "@blue"))));
+	VALUE r = INT2NUM((long)br);
+	rb_iv_set(self, "@handle", r);
+	return r;
+}
+static VALUE XYPen_create(VALUE self)
+{
+	HPEN pn = CreatePen(PS_SOLID, 1, RGB(FIX2INT(rb_iv_get(self, "@red")), 
+				FIX2INT(rb_iv_get(self, "@green")), FIX2INT(rb_iv_get(self, "@blue"))));
+	VALUE r = INT2NUM((long)pn);
+	rb_iv_set(self, "@handle", r);
+	return r;
+}
+
+static void InitXYPainterTools()
+{
+	cXYPainterTool = rb_define_class(XYPainterToolClassName, rb_cObject);
+	cXYBrush = rb_define_class(XYBrushClassName, cXYPainterTool);
+	rb_define_method(cXYBrush, "create", XYBrush_create, 0);
+	
+	cXYPen = rb_define_class(XYPenClassName, cXYPainterTool);
+	rb_define_method(cXYPen, "create", XYPen_create, 0);
+}
+#endif
+// ---------------------- End XYPainterTools -----------------------------------
 
 // Init this extension
 #if 1
@@ -281,6 +349,7 @@ void Init_XYGui_ext()
 	InitXYScrollableWidget();
 	InitXYWindow();
 	InitXYPainter();
+	InitXYPainterTools();
 }
 #endif
 // End of Init

@@ -46,15 +46,14 @@ class XYWindow < XYScrollableWidget
 	IDTIMEOUT = 32000
 
 	attr_reader :layout
-	
-	attr_reader :className
 	attr_reader :dc
-	attr_reader :ps
+	attr_reader :painter
 	
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
 		@dc = 0
+		@painter = XYPainter.new(self)
 		@ps = Fiddle::Pointer.malloc(64)
 		@className = @app.name 
 		

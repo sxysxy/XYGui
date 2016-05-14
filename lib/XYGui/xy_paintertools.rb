@@ -30,9 +30,12 @@ class XYPen < XYPainterTool
 		super(r, g, b)
 	end
 	
+#See XYGui_ext.c These function may be called very frequently
+=begin
 	def create
-		
+		@handle = WinAPI.call("gdi32", "CreatePen", )
 	end
+=end
 end
 
 class XYBrush < XYPainterTool
@@ -40,11 +43,14 @@ class XYBrush < XYPainterTool
 	def initialize(r, g, b, arg = {})
 		super(r, g, b)
 	end
-	
+
+#See XYGui_ext.c These function may be called very frequently
+=begin
 	def create
 		@handle = WinAPI.call("gdi32", "CreateSolidBrush", [@red, @green, @blue, 0].pack("cccc").unpack("L").first)
 		#XYMessageBox.show("233", @handle.to_s)
 	end
+=end
 end
 
 # This class should't provide to users

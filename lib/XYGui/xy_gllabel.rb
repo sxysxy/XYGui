@@ -15,7 +15,7 @@ class XYGLLabel < XYLabel
 		@glrc = 0
 		#connect(:ON_PAINT) {|a,b| onPaint(a,b)}
 		#connect(:ON_CREATE) {|a,b| onCreate(a, b)}
-		disconnect(:ON_CREATE)
+		@painter = nil
 		
 		if self.class == XYGLLabel
 			create
@@ -33,6 +33,10 @@ class XYGLLabel < XYLabel
 							@parent.handle, @id,
 							@app.instance, selfval)
 =end
+	end
+	
+	def painter
+		warn "Warning: OpenGL Label DO NOT use XYPainter!"
 	end
 	
 	def enableGL

@@ -14,7 +14,6 @@ class XYPainter
 	
 	attr_reader :brush
 	attr_reader :pen
-	attr_reader :tools
 	def initialize(srcwidget = nil)
 		@widget = srcwidget
 			#! notice, please use @widget.dc (dc should be updated when ON_PAINT)
@@ -68,10 +67,11 @@ class XYPainter
 	end
 =end
 	alias :brush= :setBrush
+=begin
 	def setPen(pn)
-		@pen = pn
-		applyPen
+		
 	end
+=end
 	alias :pen= :setPen
 	#----------------------------------------------------------------------
 	
@@ -79,10 +79,13 @@ class XYPainter
 	def reset
 		@oriBrush = XYStockPainterTool.new(defBrush)
 		@brush = @oriBrush
+		@oriPen = XYStockPainterTool.new(defPen)
+		@pen = @oriPen
 	end
 	def destroy
 		@brush.destroy
+		@pen.destroy
 	end
 	#---------------------------------------------------------------------
-	private :defBrush
+	private :defBrush, :defPen
 end
