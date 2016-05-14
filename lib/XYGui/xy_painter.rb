@@ -1,6 +1,7 @@
 =begin
 	Basic Graphics Support
 	Use native API to provide basic painting function...........
+		sxysxy 2016.05.11
 =end
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_paintertools.rb'

@@ -9,6 +9,7 @@
 
 #include "ruby.h"
 #include <windows.h>
+#include <commctrl.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,9 +106,7 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	VALUE __arg2__;
 	unsigned __tmp1__;
 	//unsigned __tmp2__;
-	
-	//hWnd = FIX2INT(rb_iv_get(self, "@handle"));
-	//printf("%u %u\n", FIX2INT(a1), FIX2INT(rb_iv_get(self, "@handle")));
+	HDC hdc;
 	
 	//Store the 'self' when creating the window
 	VALUE self;
@@ -167,6 +166,11 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			}
 			rb_hash_aset(__arg1__, ID2SYM(rb_intern("key")), __arg2__);
 			XYWidgetCall("ON_MOUSEMOVE", self, __arg1__);
+			break;
+		case WM_CTLCOLORSTATIC:
+			hdc = (HDC)wParam;
+			SetBkColor(hdc, RGB(255, 255, 255));
+			return (LRESULT)GetStockObject(WHITE_BRUSH);
 			break;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);

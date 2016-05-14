@@ -1,5 +1,6 @@
 =begin
 	Pen , Brush , ect
+		sxysxy 2016.05.12
 =end
 
 require 'XYGui/winapi_base.rb'

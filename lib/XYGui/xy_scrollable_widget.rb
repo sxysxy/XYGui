@@ -7,7 +7,6 @@ require 'XYGui/xy_widget.rb'
 
 class XYScrollableWidget < XYWidget
 	
-	#private constants..
 	SB_HORZ = 0	
 	SB_VERT = 1
 	SB_CTL = 2
@@ -47,5 +46,5 @@ class XYScrollableWidget < XYWidget
 	def vscroll(offset)
 		WinAPI.call("user32", "ScrollWindow", @handle, 0, offset, 0, 0)
 	end
-	
+
 end
