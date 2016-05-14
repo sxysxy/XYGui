@@ -102,7 +102,7 @@ static const char *XYWindowClassName = "XYWindow";
 static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	VALUE __arg1__;
-	//VALUE __arg2__;
+	VALUE __arg2__;
 	unsigned __tmp1__;
 	//unsigned __tmp2__;
 	
@@ -135,13 +135,38 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			XYWidgetCall("ON_BEFORESIZE", self, __arg1__);
 			break;
 		case WM_PAINT:
-			//rb_iv_set(self, "@dc", INT2FIX((int)GetDC(hWnd)));
 			XYWidgetCall("ON_BEGINPAINT", self, Qnil);
 			break; 
 		case WM_COMMAND:
 			__tmp1__ = LOWORD(wParam);
 			rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
 								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil); 
+			break;
+		case WM_MOUSEMOVE:
+			__arg1__ = rb_hash_new();
+			rb_hash_aset(__arg1__, ID2SYM(rb_intern("x")), INT2FIX(LOWORD(lParam)));
+			rb_hash_aset(__arg1__, ID2SYM(rb_intern("y")), INT2FIX(HIWORD(lParam)));
+			switch(wParam)
+			{
+				case MK_LBUTTON:
+				case MK_RBUTTON:
+					__arg2__ = INT2FIX(wParam);
+					break;
+				case MK_MBUTTON:
+					__arg2__ = INT2FIX(VK_MBUTTON);
+					break;
+				case MK_XBUTTON1:
+					__arg2__ = INT2FIX(VK_XBUTTON1);
+					break;
+				case MK_XBUTTON2:
+					__arg2__ = INT2FIX(VK_XBUTTON2);
+					break;
+				default:
+					__arg2__ = INT2FIX(0);
+					break;
+			}
+			rb_hash_aset(__arg1__, ID2SYM(rb_intern("key")), __arg2__);
+			XYWidgetCall("ON_MOUSEMOVE", self, __arg1__);
 			break;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);

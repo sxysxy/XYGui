@@ -4,6 +4,9 @@
 	sxysxy 2016.04.05
 =end
 module XYKey
+	VK_NONE = 0
+	VK_NIL = 0
+	VK_NULL = 0
 	VK_LBUTTON = 0x01
 	VK_RBUTTON = 0x02
 	VK_CANCEL = 0x03

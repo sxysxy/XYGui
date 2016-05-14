@@ -73,8 +73,11 @@ class XYWindow < XYScrollableWidget
 		connect(:ON_KEYDOWN) {|a, b| onKeydown(a, b)}
 		connect(:ON_KEYUP) {|a,b| onKeyup(a, b)}
 		#scroll
-		connect(:ON_VSCROLL) {|a, b| onVScroll(a, b)} 
-		connect(:ON_HSCROLL) {|a, b| onHScroll(a, b)} 
+		#connect(:ON_VSCROLL) {|a, b| onVScroll(a, b)} 
+		#connect(:ON_HSCROLL) {|a, b| onHScroll(a, b)} 
+		
+		#mouse
+		connect(:ON_MOUSEMOVE) {|a, b| onMouseMove(a, b)}
 	end
 	
 	def show(flag = 1)
@@ -170,17 +173,11 @@ class XYWindow < XYScrollableWidget
 		
 	end
 	
-	def onKeyup(sender, data)
-		
-	end
 	def onKeydown(sender, data)
 		
 	end
 	
-	def onVScroll(sender, data)
-	
-	end
-	def onHScroll(sender, data)
+	def onMouseMove(sender, data)
 		
 	end
 	
