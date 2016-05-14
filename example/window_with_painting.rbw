@@ -20,8 +20,8 @@ XYApp.new("painting") do |app|
 			wnd.painter.fillRect(wnd.width/4, wnd.height*3/4, wnd.width/2, wnd.height/4)
 			
 			$ct += 1
-			#puts $ct
-			#STDOUT.flush
+			puts $ct
+			STDOUT.flush
 		end
 	end.show
 end.mainloop

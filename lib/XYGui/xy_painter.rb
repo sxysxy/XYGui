@@ -24,7 +24,7 @@ class XYPainter
 	alias :paint :instance_eval
 	
 	#--------------------------------------------------
-#See XYGui_ext.c
+#See XYGui_ext.c These function may be called very frequently
 =begin
 	def line(srcx, srcy, destx, desty)
 		WinAPI.call "gdi32", "MoveToEx", @widget.dc, srcx, srcy, 0
@@ -52,17 +52,21 @@ class XYPainter
 	#---------------------------------------------------
 	
 	#---------------------------------------------------
+#See XYGui_ext.c , These function may be called very frequently
+=begin
 	def setBrush(br)
 		#Destroy old brush
 		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
 		                    #Erase @brush's refrence count(Then Windows can DeleteObejct it)
 		@brush.destroy
+		@bursh = nil
 		
 		#Apply the new brush
-		br.create
 		@brush = br
+					#@brush has been created when XYBrush.new
 		WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle)
 	end
+=end
 	alias :brush= :setBrush
 	def setPen(pn)
 		@pen = pn
@@ -75,6 +79,9 @@ class XYPainter
 	def reset
 		@oriBrush = XYStockPainterTool.new(defBrush)
 		@brush = @oriBrush
+	end
+	def destroy
+		@brush.destroy
 	end
 	#---------------------------------------------------------------------
 	private :defBrush

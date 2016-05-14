@@ -192,6 +192,7 @@ static VALUE cXYPainter;
 static const char *XYPainterClassName = "XYPainter";
 #define GETWIDGET_DC(obj) (HDC)NUM2INT(rb_iv_get(rb_iv_get(obj, "@widget"), "@dc"))
 #define GETBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, "@brush"), "@handle"))
+#define GETORIBRUSH_HANDLE(obj) (HBRUSH)NUM2INT(rb_iv_get(rb_iv_get(obj, "@oriBrush"), "@handle"))
 //undefed after a while 
 
 //Drawing functions
@@ -240,6 +241,16 @@ static VALUE XYPainter_defBrush(VALUE self)
 	SelectObject(dc, old);
 	return INT2NUM((long)old);
 } 
+static VALUE XYPainter_setBrush(VALUE self, VALUE br)
+{
+	HDC dc = GETWIDGET_DC(self);
+	SelectObject(dc, GETORIBRUSH_HANDLE(self));
+	DeleteObject(GETBRUSH_HANDLE(self));
+	
+	rb_iv_set(self, "@brush", br);
+	SelectObject(dc, GETBRUSH_HANDLE(self));
+	return self;
+}
 
 static void InitXYPainter()
 {
@@ -249,12 +260,14 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "ellipse", XYPainter_ellipse, 4);
 	rb_define_method(cXYPainter, "circle", XYPainter_circle, 3);
 	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
+	rb_define_method(cXYPainter, "setBrush", XYPainter_setBrush, 1);
 	
 	//Note! These method should provide to users
 	rb_define_method(cXYPainter, "defBrush", XYPainter_defBrush, 0); //For windows...
 }
 #undef GETWIDGET_DC
 #undef GETBRUSH_HANDLE
+#undef GETORIBRUSH_HANDLE
 #endif
 // ---------------------- End XYPainter ---------------------------------------
 
