@@ -24,6 +24,7 @@ class XYPainter
 	alias :paint :instance_eval
 	
 	#--------------------------------------------------
+#See XYGui_ext.c
 =begin
 	def line(srcx, srcy, destx, desty)
 		WinAPI.call "gdi32", "MoveToEx", @widget.dc, srcx, srcy, 0
@@ -52,9 +53,13 @@ class XYPainter
 	
 	#---------------------------------------------------
 	def setBrush(br)
-		br.create
+		#Destroy old brush
 		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
+		                    #Erase @brush's refrence count(Then Windows can DeleteObejct it)
 		@brush.destroy
+		
+		#Apply the new brush
+		br.create
 		@brush = br
 		WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle)
 	end
@@ -68,16 +73,9 @@ class XYPainter
 	
 	#----------------------------------------------------------------------
 	def reset
-		@brush = XYBrush.new(2, 3, 3)
-		@brush.create
-		@oriBrush = XYStockPainterTool.new(WinAPI.call("gdi32", "SelectObject", @widget.dc, @brush.handle))
-		#XYMessageBox.show("ori", @oriBrush.handle.to_s)
-		WinAPI.call("gdi32", "SelectObject", @widget.dc, @oriBrush.handle)
-		@brush.destroy
+		@oriBrush = XYStockPainterTool.new(defBrush)
 		@brush = @oriBrush
 	end
-	def destroy
-		
-	end
 	#---------------------------------------------------------------------
+	private :defBrush
 end

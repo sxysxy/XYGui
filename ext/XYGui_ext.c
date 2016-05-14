@@ -232,6 +232,14 @@ static VALUE XYPainter_fillRect(VALUE self, VALUE leftx, VALUE topy, VALUE width
 	FillRect(GETWIDGET_DC(self), &rt, GETBRUSH_HANDLE(self));
 	return self;
 }
+static VALUE XYPainter_defBrush(VALUE self)
+{
+	HBRUSH old;
+	HDC dc = GETWIDGET_DC(self);
+	old = SelectObject(dc, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	SelectObject(dc, old);
+	return INT2NUM((long)old);
+} 
 
 static void InitXYPainter()
 {
@@ -241,6 +249,9 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "ellipse", XYPainter_ellipse, 4);
 	rb_define_method(cXYPainter, "circle", XYPainter_circle, 3);
 	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
+	
+	//Note! These method should provide to users
+	rb_define_method(cXYPainter, "defBrush", XYPainter_defBrush, 0); //For windows...
 }
 #undef GETWIDGET_DC
 #undef GETBRUSH_HANDLE

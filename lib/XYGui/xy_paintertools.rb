@@ -9,7 +9,6 @@ class XYPainterTool
 	attr_reader :red, :green, :blue
 	attr_reader :handle
 	
-	attr_reader :deletable
 	def initialize(r = 0, g = 0, b = 0) 
 		@red = r
 		@green = g
@@ -21,7 +20,7 @@ class XYPainterTool
 	end
 	
 	def destroy 
-		WinAPI.call("gdi32", "DeleteObject", @handle) if @deletable
+		WinAPI.call("gdi32", "DeleteObject", @handle)
 	end
 end
 

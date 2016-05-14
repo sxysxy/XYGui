@@ -1,2 +1,0 @@
-Makefile
-Added -lgdi32 after LIBS (line 135)
