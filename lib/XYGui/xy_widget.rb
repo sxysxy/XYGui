@@ -423,7 +423,18 @@ class XYWidget                 #basic widget
 	def hide 
 		show(0)
 	end
+	def update
+		WinAPI.call("user32", "InvalidateRect", @handle, 0, 0)
+		WinAPI.call("user32", "UpdateWindow", @handle)
+	end
 	#-----------------------
+	
+	#----------------------------
+	def setFocus
+		WinAPI.call("user32", "SetFocus", @handle)
+	end
+	alias :focus :setFocus
+	#----------------------------
 	
 	#-----------------------
 	def isChildWidget?
