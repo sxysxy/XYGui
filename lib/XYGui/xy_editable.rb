@@ -3,7 +3,8 @@
 =end
 
 module XYEditable
-		
+	WM_GETTEXT = 0x000D
+	
 	ES_LEFT = 0x0000
 	ES_CENTER = 0x0001
 	ES_RIGHT = 0x0002
@@ -74,4 +75,9 @@ module XYEditable
 		_flag = (flag == true)? 1: 0
 		WinAPI.call("user32", "PostMessage", @handle, EM_SETREADONLY, _flag, 0)
 	end
+	
+	def getLineCount
+		
+	end
+	alias :lineCount :getLineCount
 end
