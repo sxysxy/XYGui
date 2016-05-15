@@ -369,10 +369,24 @@ static void InitXYPainterTools()
 #endif
 // ---------------------- End XYPainterTools -----------------------------------
 
+// ---------------------- Begin WinAPI -----------------------------------------
+static VALUE cWinAPI;
+static const char *WinAPIModuleName = "WinAPI";
+#define DEFAPI_METHOD(name, argc) rb_define_module_function(cWinAPI, "##name##", WinAPI_##name, argc)
+
+static void InitWinAPI()
+{
+	cWinAPI = rb_define_module(WinAPIModuleName);
+}
+#undef DEFAPI_METHOD
+// ---------------------- End WinAPI -------------------------------------------
+
 // Init this extension
 #if 1
 void Init_XYGui_ext()
 {
+	InitWinAPI();
+	
 	InitXYApp();
 	InitXYWidget();
 	InitXYScrollableWidget();

@@ -13,22 +13,22 @@ module WinAPI
 	def self.call(dllname, api, *arg)
 		@cache ||= {}
 		@dlls ||= {}
-		unless @dlls[dllname]
+		unless @dlls[dllname.to_sym]
 			begin
-				@dlls[dllname] = Fiddle::dlopen(dllname)
+				@dlls[dllname.to_sym] = Fiddle::dlopen(dllname)
 			rescue Exception => e
 				puts e
 				exit
 			end
 		end
 		
-		unless @cache[api]
-			dl = @dlls[dllname]
-			@cache[api] = Fiddle::Function.new(dl[api], getForm(arg), Fiddle::TYPE_LONG)
+		unless @cache[api.to_sym]
+			dl = @dlls[dllname.to_sym]
+			@cache[api.to_sym] = Fiddle::Function.new(dl[api], getForm(arg), Fiddle::TYPE_LONG)
 		end
 		
 		begin
-			@cache[api].call *arg 
+			return @cache[api.to_sym].call *arg 
 		rescue
 			
 		end
@@ -37,11 +37,11 @@ module WinAPI
 	def self.specialCall(dllname, api, *arg)
 		addr = 0
 		begin
-			addr = Fiddle::dlopen(dllname) 
+			addr = Fiddle::dlopen(dllname)[api]
 		rescue
 			return nil
 		end
-		Fiddle::Function.new(addr[api], getForm(arg), Fiddle::TYPE_LONG).call *arg 
+		Fiddle::Function.new(addr, getForm(arg), Fiddle::TYPE_LONG).call(*arg) if addr != 0
 	end
 	
 	def self.getForm(data)
