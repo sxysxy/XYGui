@@ -57,6 +57,10 @@ class ChatCubeServer
 		
 		@send.connect(:ON_COMMAND) do |sender, data|
 			text = @textarea.text
+			if text == ""
+				XYMessageBox.show("Tip!", "Please write something")
+				next
+			end
 			Thread.new do
 				begin
 					s = TCPSocket.open(@host, port)

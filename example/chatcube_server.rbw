@@ -69,7 +69,7 @@ class ChatCubeServer
 		name = clt.gets.chop
 		cmp = clt.gets
 		txt = clt.read
-		@msg += "#{name} said (#{Time.now}) \r\n#{txt}\r\n"
+		@msg = "#{name} said (#{Time.now}) \r\n#{txt}\r\n" + @msg
 		@log += "Connection from #{name} \r\n"
 		@textarea.request do |textarea|
 			textarea.text = @log
