@@ -107,10 +107,11 @@ class XYFont
 	end
 	
 	def apply
-		pk = [@height, @width, @escapement, @orientation, @weight,
-				@ltalic, @underLine, @strikeOut, @charSet, @outPrecision,
-					@clipPrecision, @quality, @pitchAndFamily, @faceName].pack("LLLLLccccccccp")
-		hf = WinAPI.call("gdi32", "CreateFontIndirect", pk)
+		#pk = [@height, @width, @escapement, @orientation, @weight,
+		#		@ltalic, @underLine, @strikeOut, @charSet, @outPrecision,
+		#			@clipPrecision, @quality, @pitchAndFamily, @faceName].pack("LLLLLccccccccp")
+		#hf = WinAPI.call("gdi32", "CreateFontIndirect", pk)
+		hf = WinAPI.call("gdi32", "GetStockObject", 17) #gui default font
 		WinAPI.specialCall("user32", "SendMessage", (@widget.handle ? @widget.handle: 0), XYWidget::WM_SETFONT, hf, 1)
 	end
 	
