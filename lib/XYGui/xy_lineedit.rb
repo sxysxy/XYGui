@@ -30,7 +30,6 @@ class XYLineEdit < XYWidget
 			WS_CHILD | ES_NOHIDESEL | ES_OEMCONVERT | ES_AUTOHSCROLL | @style | _style,
 			@x, @y, @width, @height, @parent.handle,
 			@id, @app.instance, 0)
-		XYMessageBox.show("2", "3") if @handle == nil
 	end
 	private :lineEditCreate
 end
