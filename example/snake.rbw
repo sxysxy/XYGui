@@ -101,8 +101,7 @@ XYApp.new("snake_23333") do |snake|
 		mainm = XYMenu.new
 		mainm.addSubMenu(gm)
 		mainm.addSubMenu(abt)
-		b = XYMenuBar.new(mainm)
-		win.setMenu b
+		win.setMenu mainm
 		
 		
 		view.focus

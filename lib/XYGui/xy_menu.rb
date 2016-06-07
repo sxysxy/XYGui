@@ -135,7 +135,7 @@ class XYMenuBar
 		@id = -1 
 		@cmds = []
 		@top = top
-		top.setBar(self)
+		top.setBar(self) if top
 	end
 	
 	def getMyId(cmd)

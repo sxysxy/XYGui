@@ -188,23 +188,27 @@ class XYWindow < XYScrollableWidget
 	
 	def menuCall(id)
 		if @menu
-			@menu.call(id)
+			@menu.bar.call(id)
 		end
 	end
 	
 	def setMenu(mu)
-		raise TypeError, "setMenu expected a XYMenuBar(or its deriving class)" if !mu.is_a?(XYMenuBar)
+		raise TypeError, "setMenu expected a XYMenu(or its deriving class)" if !mu.is_a?(XYMenu)
 		
-		@menu.widget = nil if @menu
 		@menu = mu
-		@menu.widget = self
-		if @menu.is_a?(XYMenuBar)
+		if @menu
 			WinAPI.call("user32", "DrawMenuBar", @handle)
-			@menu.show
+			a = XYMenuBar.new(@menu)
+			a.widget = self
+			a.show
 		end
 	end
 	alias :menu= :setMenu
 	alias :getMenu :menu
+	
+	def destroyMenu
+		
+	end
 end
 
 # Unused but useful.... 
