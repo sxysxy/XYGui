@@ -138,8 +138,16 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			break; 
 		case WM_COMMAND:
 			__tmp1__ = LOWORD(wParam);
-			rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
-								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil); 
+			
+			if(lParam == 0)  // Command caused by menu
+			{
+				rb_funcall(self, rb_intern("menuCall"), 1, INT2NUM(__tmp1__));
+			}else 
+			{ // Command caused by a child control
+				
+				rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
+								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil);
+			}
 			break;
 		case WM_MOUSEMOVE:
 			__arg1__ = rb_hash_new();
@@ -308,6 +316,13 @@ static VALUE XYPainter_setPen(VALUE self, VALUE pn)
 	SelectObject(dc, GETPEN_HANDLE(self));
 	return self;
 }
+static VALUE XYPainter_text(VALUE self, VALUE str, VALUE x, VALUE y)
+{
+	int len = rb_funcall(str, rb_intern("length"), 0);
+	HDC dc = GETWIDGET_DC(self);
+	TextOut(dc, FIX2INT(x), FIX2INT(y), RSTRING_PTR(str), len/2);
+	return self;
+}
 
 static void InitXYPainter()
 {
@@ -319,6 +334,7 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
 	rb_define_method(cXYPainter, "setBrush", XYPainter_setBrush, 1);
 	rb_define_method(cXYPainter, "setPen", XYPainter_setPen, 1);
+	rb_define_method(cXYPainter, "text", XYPainter_text, 3);
 	
 	//Note! These method should provide to users
 	rb_define_method(cXYPainter, "defBrush", XYPainter_defBrush, 0); //For windows...
@@ -373,7 +389,6 @@ static void InitXYPainterTools()
 #if 1
 void Init_XYGui_ext()
 {
-	InitWinAPI();
 	
 	InitXYApp();
 	InitXYWidget();

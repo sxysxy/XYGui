@@ -23,7 +23,8 @@ class XYPainter
 	
 	alias :paint :instance_eval
 	
-	#--------------------------------------------------
+#---------------------------------------------------------------------------------------------------
+	
 #See XYGui_ext.c These function may be called very frequently
 =begin
 	def line(srcx, srcy, destx, desty)
@@ -49,9 +50,10 @@ class XYPainter
 		WinAPI.call("user32", "FillRect", @widget.dc, [x,y,w+x,h+y].pack("LLLL"), @brush.handle)
 	end
 =end
+	alias :drawText :text
 	#---------------------------------------------------
 	
-	#---------------------------------------------------
+#----------------------------------------------------------------------------------------------------
 #See XYGui_ext.c , These function may be called very frequently
 =begin
 	def setBrush(br)

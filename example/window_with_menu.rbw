@@ -1,11 +1,20 @@
-require 'XYGui/xy_app.rb'
-require 'XYGui/xy_mainwindow.rb'
-require 'XYGui/xy_menu.rb'
+require 'XYGuiCore'
 
-app = XYApp.new("hh")
-wnd = XYMainWindow.new(app, nil)
+app = XYApp.new("tmenu")
+wnd = XYMainWindow.new(app)
+
+f = XYMenu.new("File")
+f.addItem(XYMenuItem.new("open") {XYMessageBox.show("Tip", "Menu 'open' clicked!")})
+f.addItem("save")
+e = XYMenu.new("Edit") 
+e.addItem("copy")
+e.addItem("cut")
+e.addItem("plaste")
+mainm = XYMenu.new
+mainm.addSubMenu(f)
+mainm.addSubMenu(e)
+b = XYMenuBar.new(mainm)
+wnd.setMenu b
+
 wnd.show
-m = XYMenuBar.new(wnd)
-m.setText "我是菜单".encode("gbk", "utf-8")
-m.show
 app.mainloop

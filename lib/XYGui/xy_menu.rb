@@ -5,8 +5,35 @@
 
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_widget.rb'
+require 'XYGui/xy_messagebox.rb'
 
-class XYMenuBar
+class XYMenuItem
+	attr_accessor :text
+	attr_reader :cmd
+	def initialize(name, &cmd)
+		@cmd = cmd
+		if !cmd 
+			@cmd = proc{onCommand}
+		end
+		@text = name ? name:""
+	end
+	
+	def call
+		@cmd.call
+	end
+	
+	def cmd=(&c)
+		@cmd = c
+	end
+	alias :setCmd :cmd=
+	alias :getCmd :cmd
+	
+	def onCommand
+	
+	end
+end
+
+class XYMenu
 	#constants
 	MF_INSERT = 0x00000000
 	MF_CHANGE = 0x00000080
@@ -53,51 +80,88 @@ class XYMenuBar
 	attr_reader :handle
 	attr_reader :widget
 	attr_reader :content
-	def initialize(widget)
+	attr_reader :bar
+	def initialize(text = nil)
 		@handle = WinAPI.call("user32", "CreateMenu")
-		@widget = widget
+		@text = text ? text:""
 		@content = []
-		@text = ""
+		@bar = nil
+	end
+ 
+	def addSubMenu(mu)
+		@content << mu
+		#WinAPI.specialCall("user32", "AppendMenu", @handle, MF_POPUP, mu.handle, mu.text)
+	end
+	
+	def addItem(cmd)
+		if cmd.is_a?(String)
+			@content << XYMenuItem.new(cmd)
+		else
+			@content << cmd
+		end
+		#WinAPI.specialCall("user32", "AppendMenu", @handle, MF_STRING, cmd.id, cmd.text)
+	end
+	
+	def create
+		return false if !@bar || !@bar.is_a?(XYMenuBar)
+		@content.each do |o|
+			if o.is_a?(XYMenu)
+				o.bar = @bar
+				o.create
+				WinAPI.specialCall("user32", "AppendMenu", @handle, MF_POPUP, o.handle, o.text)
+			elsif o.is_a?(XYMenuItem)
+				WinAPI.specialCall("user32", "AppendMenu", @handle, MF_STRING, @bar.getMyId(o), o.text)
+			end
+		end
+		return true
+	end
+	
+	def setBar(b)
+		@bar = b
+	end
+	alias :bar= :setBar
+	
+end
+
+class XYMenuBar
+	attr_accessor :widget
+	attr_accessor :top
+	alias :setTop :top=
+	alias :getTop :top
+	#----------------------------
+	attr_reader :id	
+	attr_reader :cmds
+	def initialize(top = nil)
+		@id = -1 
+		@cmds = []
+		@top = top
+		top.setBar(self)
+	end
+	
+	def getMyId(cmd)
+		@id += 1
+		cmds[@id] = cmd
+		return @id
+	end
+	
+	def call(id)
+		cmds[id].call if cmds[id]
 	end
 	
 	def show
-		@content.each do |e|
-				WinAPI.call("user32", "AppendMenu", @handle, MF_POPUP, 0, e.text)
+		if @widget && @top
+			@top.create
+			WinAPI.call("user32", "SetMenu", @widget.handle, @top.handle)
 		end
-		WinAPI.call("user32", "AppendMenu", @handle, MF_POPUP, 0, @text)
-		WinAPI.call("user32", "DrawMenuBar", @widget.handle)
-		WinAPI.call("user32", "SetMenu", @widget.handle, @handle)
-	end
-	
-	def setText(s)
-		@text = s
 	end
 end
 
-=begin
 class XYPopupMenuBar < XYMenuBar
-	def initialize(widget)
-		super(widget)
-	end
-end
-=end
-
-class XYMenuCommand < XYWidget
-	attr_accessor :text
-	attr_reader :handle
-	def initialize(bar, arg = {})
-		super(bar.app, bar.widget)
-		@handle = WinAPI.call("user32", "CreateMenu")
-		@text = String.new
-		
-		connect(:ON_COMMAND) {|sender, data| onCommand(sender, data)}
+	def initialize(top)
+		super(top)
 	end
 	
-	def setText(s)
-		@text = s
-	end
-	
-	def onCommand(sender, data)
-		
+	def show
+			# Different.....
 	end
 end

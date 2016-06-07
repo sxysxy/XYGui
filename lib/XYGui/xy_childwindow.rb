@@ -6,7 +6,7 @@
 require 'XYGui/winapi_base.rb'
 require 'XYGui/xy_mainwindow.rb'
 
-class XYChildWindow < XYMainWindow
+class XYChildWindow < XYWindow
 	
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)

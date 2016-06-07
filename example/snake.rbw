@@ -113,6 +113,7 @@ XYApp.new("snake_23333") do |snake|
 				}.call	#Draw the snake
 				
 			end
+			stbar.text = "score: #{$score}"
 		end
 		
 		view.connect(:ON_KEYDOWN) do |sender, data|

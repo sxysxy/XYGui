@@ -48,7 +48,7 @@ class XYWindow < XYScrollableWidget
 	attr_reader :layout
 	attr_reader :dc
 	attr_reader :painter
-	
+	attr_reader :menu
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
@@ -56,7 +56,7 @@ class XYWindow < XYScrollableWidget
 		@painter = XYPainter.new(self)
 		@ps = Fiddle::Pointer.malloc(64)
 		@className = @app.name 
-		
+		@menu = nil
 		#---------------------------------------------------
 		#create
 		#connect(:ON_CREATE) {|a, b| arg[:creator]? arg[:creator].call(a,b): onCreate(a, b)}
@@ -185,6 +185,26 @@ class XYWindow < XYScrollableWidget
 		super(w, h)
 		@layout.replace
 	end
+	
+	def menuCall(id)
+		if @menu
+			@menu.call(id)
+		end
+	end
+	
+	def setMenu(mu)
+		raise TypeError, "setMenu expected a XYMenuBar(or its deriving class)" if !mu.is_a?(XYMenuBar)
+		
+		@menu.widget = nil if @menu
+		@menu = mu
+		@menu.widget = self
+		if @menu.is_a?(XYMenuBar)
+			WinAPI.call("user32", "DrawMenuBar", @handle)
+			@menu.show
+		end
+	end
+	alias :menu= :setMenu
+	alias :getMenu :menu
 end
 
 # Unused but useful.... 
