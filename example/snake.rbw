@@ -88,10 +88,22 @@ end
 
 
 XYApp.new("snake_23333") do |snake|
-	XYMainWindow.new(snake, nil, {:title => 'Snake', :fixed => true, :width => 408, :height => 492, :x => 400}) do |win|
+	XYMainWindow.new(snake, nil, {:title => 'Snake', :fixed => true, :width => 408, :height => 512, :x => 400}) do |win|
 		view = XYLabel.new(snake, win, {:fixed => true, :width => win.clientWidth, :height => 400, :x => 0, :y => 0}) 
 		restart = XYPushButton.new(snake, win, {:text => "Restart!", :x => 0, :y => view.height, :width => win.clientWidth})
 		stbar = XYStatusBar.new(snake, win, {:text => "Happy playing"})
+		
+		gm = XYMenu.new("Game")
+		gm.addItem(XYMenuItem.new("Restart (F2)") {reset(view); view.focus})
+		gm.addItem(XYMenuItem.new("Exit") {snake.exit})
+		abt = XYMenu.new("About")
+		abt.addItem(XYMenuItem.new("About Snake") {XYMessageBox.show("About", "Written by sxysxy"); view.focus})
+		mainm = XYMenu.new
+		mainm.addSubMenu(gm)
+		mainm.addSubMenu(abt)
+		b = XYMenuBar.new(mainm)
+		win.setMenu b
+		
 		
 		view.focus
 		view.connect(:ON_PAINT) do |sender, data|
