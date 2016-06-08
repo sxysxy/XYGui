@@ -50,10 +50,62 @@ static VALUE XYApp_registerClass(VALUE self)
 	RegisterClass(&wc);
 	return self;
 }
+  //#----
+#define GEN_ERROR_LOG(s) MessageBox(0, "Sorry, An unexpectd exception occurred: "s" Abort", "XYGui Exception", 0) 
+
+long WINAPI XYApp_excpHandler(PEXCEPTION_POINTERS exceptionInfo)
+{
+	switch(exceptionInfo -> ExceptionRecord -> ExceptionCode)
+	{
+		case STATUS_ACCESS_VIOLATION:
+			GEN_ERROR_LOG("Access Violation");
+			break;
+		case STATUS_NO_MEMORY:
+			GEN_ERROR_LOG("Lack of memory");
+			break;
+		case STATUS_IN_PAGE_ERROR:
+			GEN_ERROR_LOG("Page fault");
+			break;
+		case STATUS_FLOAT_DIVIDE_BY_ZERO:
+			GEN_ERROR_LOG("Divided by 0");
+			break;
+		case STATUS_FLOAT_STACK_CHECK:
+			GEN_ERROR_LOG("Float stack check failed");
+			break;
+		case STATUS_STACK_OVERFLOW:
+			GEN_ERROR_LOG("Stack overflowed");
+			break;
+		case STATUS_ILLEGAL_INSTRUCTION:
+			GEN_ERROR_LOG("Invalid Operation code");
+			break;
+		case STATUS_ARRAY_BOUNDS_EXCEEDED:
+			GEN_ERROR_LOG("Array bounds exceeded");
+			break;
+		default:
+			GEN_ERROR_LOG("Unknown");
+			break;
+	}
+	ExitProcess(0);
+	return 1;
+}
+	//#-----
+static VALUE XYApp_defExcpHandler(VALUE self)
+{
+	MessageBox(0,  "Sorry, An unexpectd exception occurred, Abort", "XYGui Exception", 0);
+	rb_funcall(self, rb_intern("forceExit"), 0);
+	return self;
+}
+static VALUE XYApp_registerExcpHandler(VALUE self)
+{
+	SetUnhandledExceptionFilter(XYApp_excpHandler);
+	return self;
+}
 static void InitXYApp()
 {
 	cXYApp = rb_define_class(XYAppClassName, rb_cObject);
 	rb_define_method(cXYApp, "registerClass", XYApp_registerClass, 0);
+	rb_define_method(cXYApp, "registerExcpHandler", XYApp_registerExcpHandler, 0);
+	rb_define_method(cXYApp, "defExcpHandler", XYApp_defExcpHandler, 0);
 }
 #endif
 //----------------------- End XYApp -----------------------------------------------

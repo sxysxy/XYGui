@@ -13,8 +13,15 @@ class XYApp
 	attr_reader :message
 	attr_accessor :flagExit
 	attr_reader :request
+	attr_reader :excpHandler
 	
 	def initialize(appname)
+		#-----set excpHandler
+		
+		@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
+		registerExcpHandler
+		#-----
+		
 		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
 		@name = appname
 		@flagExit = false

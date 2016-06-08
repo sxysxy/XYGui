@@ -157,7 +157,7 @@ class Game
 				
 					@drawNode ||= ->(x,y){fillRect(x * 20, y * 20, 20, 20)}  
 					setBrush(XYBrush.new(255, 255, 255))
-					fillRect(0, 0, 420, 400)	#Clear Screen
+					fillRect(0, 0, 400, 400)	#Clear Screen
 					
 					#Draw snake
 					setBrush(XYBrush.new(255, 0, 0))
