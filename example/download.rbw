@@ -7,7 +7,6 @@ HTTP_HRAD_FORMAT = "GET %s HTTP/1.0 \r\n" +
 					"User-Agent: HttpDownloader \r\n" + 
 					"Connection: Keep-Alive \r\n" +
 					"\r\n"
-XYConsole.show
 
 XYApp.new("down") do |app|
 	XYMainWindow.new(app, nil, {:x => 400, :y => 400, :width => 360, :height => 135, :fixed => true, :title => 'Http Downloader'}) do |wnd|
@@ -75,7 +74,7 @@ XYApp.new("down") do |app|
 				opt = File.new(path.split('/').pop, "w")
 				cmp = 0
 				   #---
-				buf = nil
+				
 				while buf = io.read(65535)
 					opt.write buf
 					cmp += buf.size
@@ -84,8 +83,7 @@ XYApp.new("down") do |app|
 					pro.request {|ps| ps.value = Integer(rate*10000)}
 					tv.request {|tvr| tvr.text = sprintf("%.1f%%", rate*100)}
 					
-					break if cmp == sz
-					
+					break if cmp == sz		
 				end
 				opt.close
 				io.close
