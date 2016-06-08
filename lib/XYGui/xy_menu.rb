@@ -102,6 +102,10 @@ class XYMenu
 		#WinAPI.specialCall("user32", "AppendMenu", @handle, MF_STRING, cmd.id, cmd.text)
 	end
 	
+	def addSeper
+		@content << :seper
+	end
+	
 	def create
 		return false if !@bar || !@bar.is_a?(XYMenuBar)
 		@content.each do |o|
@@ -111,6 +115,10 @@ class XYMenu
 				WinAPI.specialCall("user32", "AppendMenu", @handle, MF_POPUP, o.handle, o.text)
 			elsif o.is_a?(XYMenuItem)
 				WinAPI.specialCall("user32", "AppendMenu", @handle, MF_STRING, @bar.getMyId(o), o.text)
+			elsif o.is_a?(Symbol)
+				if o == :seper 
+					WinAPI.specialCall("user32", "AppendMenu", @handle, MF_SEPARATOR, 0, 0)
+				end
 			end
 		end
 		return true

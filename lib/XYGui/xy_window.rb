@@ -54,7 +54,7 @@ class XYWindow < XYScrollableWidget
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
 		@dc = 0
 		@painter = XYPainter.new(self)
-		@ps = Fiddle::Pointer.malloc(64)
+		#@ps = Fiddle::Pointer.malloc(64)   // no use
 		@className = @app.name 
 		@menu = nil
 		#---------------------------------------------------
@@ -157,6 +157,7 @@ class XYWindow < XYScrollableWidget
 	end
 =end
 	
+=begin  # See XYGui_ext.c, this code would be called very frequently 
 	def beginPaint(sender, data)
 		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
 		@painter.reset
@@ -164,6 +165,7 @@ class XYWindow < XYScrollableWidget
 		@painter.destroy
 		WinAPI.call("user32", "EndPaint", @handle, @ps.to_i)
 	end
+=end	
 	
 	def onCreate(sender, data)
 	

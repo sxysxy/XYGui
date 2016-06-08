@@ -29,7 +29,7 @@ class Game
 	
 	def main
 		@app = XYApp.new("mines!mines!")
-		@win = XYMainWindow.new(@app, nil, {:title => 'Mines', :width => 325, :height => 439, :fixed => true})
+		@win = XYMainWindow.new(@app, nil, {:title => 'Mines', :width => 325, :height => 439, :x => 400, :fixed => true})
 		@mines = Array.new(10) {Array.new(10) {Mine.new(@win)}}
 		replace
 		clear
@@ -82,7 +82,7 @@ class Game
 	end
 	
 	def press(x, y)
-		
+		XYMessageBox.show("mine", "line #{x} col #{y}")
 	end
 end
 

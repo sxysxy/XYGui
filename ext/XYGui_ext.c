@@ -237,19 +237,6 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	}
 	return 0;
 }
-/*
-static VALUE callproc(VALUE self, VALUE a1, VALUE a2, VALUE a3, VALUE a4)
-{
-	return INT2FIX(XYWndProc(FIX2INT(a1), FIX2INT(a2), FIX2INT(a3), FIX2INT(a4)));
-}
-*/
-/*
-static VALUE wndprocaddr(VALUE self)
-{
-	//printf("In c: %d %p\n", XYWndProc, XYWndProc);
-	return INT2FIX((int)XYWndProc);
-}
-*/
 static VALUE XYWindow_clientWidth(VALUE self)
 {
 	RECT r;
@@ -262,12 +249,25 @@ static VALUE XYWindow_clientHeight(VALUE self)
 	GetClientRect((HWND)FIX2INT(rb_iv_get(self, "@handle")), &r);
 	return INT2FIX(r.bottom);
 }
+static VALUE XYWindow_beginPaint(VALUE self, VALUE a, VALUE b)
+{
+	PAINTSTRUCT ps;
+	HWND hw = (HWND)NUM2INT(rb_iv_get(self, "@handle"));
+	VALUE pater = rb_iv_get(self, "@painter");
+	rb_iv_set(self, "@dc", INT2NUM((long)BeginPaint(hw, &ps)));
+	rb_funcall(pater, rb_intern("reset"), 0);
+	XYWidgetCall("ON_PAINT", a, b);
+	rb_funcall(pater, rb_intern("destroy"), 0);
+	EndPaint(hw, &ps);
+	return self;
+}
 // init XYWindow
 void InitXYWindow()
 {
 	cXYWindow = rb_define_class(XYWindowClassName, cXYScrollableWidget);
 	rb_define_method(cXYWindow, "clientHeight", XYWindow_clientHeight, 0);
 	rb_define_method(cXYWindow, "clientWidth", XYWindow_clientWidth, 0);
+	rb_define_method(cXYWindow, "beginPaint", XYWindow_beginPaint, 2);
 }
 #endif
 // ---------------------- End XYWindow ----------------------------------------
