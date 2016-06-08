@@ -25,7 +25,7 @@ class XYApp
 		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
 		@name = appname
 		@flagExit = false
-		@request = ADTQueue.new(32)       				#max request size:32/2 = 16
+		@request = ADTQueue.new(256)       				#max request size: n/2 (default as 256/2 = 128)
 		
 		@message = Fiddle::Pointer.malloc(36)
 		
