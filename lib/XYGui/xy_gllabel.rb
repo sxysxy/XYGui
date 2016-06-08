@@ -13,7 +13,9 @@ class XYGLLabel < XYLabel
 	def initialize(app, parent, arg = {})
 		super(app, parent, arg)
 		@glrc = 0
-		#connect(:ON_PAINT) {|a,b| onPaint(a,b)}
+		@ps = Fiddle::Pointer.malloc(64)   
+		connect(:ON_PAINT) {|a,b| onPaint(a,b)}
+		connect(:ON_BEGINPAINT) {|a,b| beginPaint(a,b)}
 		#connect(:ON_CREATE) {|a,b| onCreate(a, b)}
 		@painter = nil
 		
@@ -102,7 +104,7 @@ class XYGLLabel < XYLabel
 	
 	def beginPaint(sender, data)
 		@dc = WinAPI.call("user32", "BeginPaint", @handle, @ps.to_i)
-		#@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
+		@glrc = WinAPI.call("opengl32", "wglCreateContext", @dc)
 		if @responder[:ON_PAINT]
 			WinAPI.call("opengl32", "wglMakeCurrent", @dc, @glrc)
 			@responder[:ON_PAINT].call(sender, data) 

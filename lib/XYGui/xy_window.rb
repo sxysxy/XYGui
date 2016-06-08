@@ -54,7 +54,6 @@ class XYWindow < XYScrollableWidget
 		@layout = arg[:layout]? arg[:layout].new(self): XYLayout.new(self)
 		@dc = 0
 		@painter = XYPainter.new(self)
-		#@ps = Fiddle::Pointer.malloc(64)   // no use
 		@className = @app.name 
 		@menu = nil
 		#---------------------------------------------------

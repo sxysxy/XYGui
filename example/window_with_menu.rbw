@@ -1,7 +1,7 @@
 require 'XYGuiCore'
 
 app = XYApp.new("tmenu")
-wnd = XYMainWindow.new(app)
+wnd = XYMainWindow.new(app, nil, {:title => "See Menu"})
 
 f = XYMenu.new("File")
 f.addItem(XYMenuItem.new("open") {XYMessageBox.show("Tip", "Menu 'open' clicked!")})
