@@ -303,6 +303,7 @@ void InitXYWindow()
 // ---------------------- End XYWindow ----------------------------------------
 
 // ---------------------- For XYPushButton --------------------------------------
+#if 1
 VALUE cXYPushButton;
 static const char *XYPushButtonClassName = "XYPushButton";
 
@@ -355,7 +356,14 @@ void InitXYPushButton()
 	cXYPushButton = rb_define_class(XYPushButtonClassName, cXYWidget);
 	rb_define_method(cXYPushButton, "changeProc", XYPushButton_changeProc, 0);
 }
+#endif
 // ---------------------- End XYPushButton --------------------------------------
+
+// ---------------------- For XYTextEdit ---------------------------------------
+#if 1
+
+#endif
+// ---------------------- End XYTextEdit ---------------------------------------
 
 // ---------------------- For XYPainter ---------------------------------------
 #if 1

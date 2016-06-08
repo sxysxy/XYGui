@@ -28,8 +28,6 @@ class XYTextEdit < XYScrollableWidget
 								@x, @y, @width, @height, @parent.handle, 
 								@id,
 								@app.instance, 0)
-		@oriproc = Fiddle::Function.new(WinAPI.call("user32", "GetWindowLong", @handle, -4), [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT)
-		WinAPI.call("user32", "SetWindowLong", @handle, -4, editproc)
 	end
 	
 	def show(flag = 1)
@@ -44,20 +42,5 @@ class XYTextEdit < XYScrollableWidget
 	def defaultWidth
 		return 100
 	end
-	
-	def editproc
-		_self = self
-		_content = @content
-		_responder = @responder
-		_app = @app
-		_oriproc = @oriproc
-		proc = Class.new(Fiddle::Closure) do
-			define_method :call do |hwnd, msg, wparam, lparam|
-				
-				_oriproc.call hwnd, msg, wparam, lparam
-			end
-		end.new(Fiddle::TYPE_INT, [Fiddle::TYPE_INT]*4)
-		TEMP << proc
-		Fiddle::Function.new(proc, [Fiddle::TYPE_INT]*4, Fiddle::TYPE_INT).to_i
-	end
+
 end
