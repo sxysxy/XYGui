@@ -20,6 +20,24 @@ wnd.connect(:ON_MOUSEMOVE) do |sender, data|
 	end
 	stbar.text = text
 end
+wnd.connect(:ON_MOUSEDOWN) do |sender, data|
+	text = "Mouse Pressed: "
+	case data[:key]
+		when XYKey::VK_LBUTTON
+			text += "Left Button"
+		when XYKey::VK_RBUTTON
+			text += "Right Button"
+		when XYKey::VK_MBUTTON
+			text += "Middle Button"
+		when XYKey::VK_XBUTTON1
+			text += "XButton#1"
+		when XYKey::VK_XBUTTON2
+			text += "XButton#2"
+		else
+			return
+	end
+	stbar.text = text
+end
 wnd.connect(:ON_SIZE) do |sender, data|
 	stbar.width = data[:width];
 	stbar.repos(0, wnd.clientHeight - stbar.height)

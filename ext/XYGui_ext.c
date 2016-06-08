@@ -152,6 +152,16 @@ void InitXYScrollableWidget()
 static VALUE cXYWindow;
 static const char *XYWindowClassName = "XYWindow";
 // WndProc
+static void XYWindow_emitMouseDown(VALUE self, int key, LPARAM l)
+{
+	VALUE v;
+	v = rb_hash_new();
+	rb_hash_aset(v, ID2SYM(rb_intern("key")), INT2FIX(key));
+	rb_hash_aset(v, ID2SYM(rb_intern("x")), INT2FIX(LOWORD(l)));
+	rb_hash_aset(v, ID2SYM(rb_intern("y")), INT2FIX(HIWORD(l)));
+	XYWidgetCall("ON_MOUSEDOWN", self, v);
+}
+
 static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	VALUE __arg1__;
@@ -226,6 +236,26 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			}
 			rb_hash_aset(__arg1__, ID2SYM(rb_intern("key")), __arg2__);
 			XYWidgetCall("ON_MOUSEMOVE", self, __arg1__);
+			break;
+		case WM_LBUTTONDOWN:
+			XYWindow_emitMouseDown(self, VK_LBUTTON, lParam);
+			break;
+		case WM_RBUTTONDOWN:
+			XYWindow_emitMouseDown(self, VK_RBUTTON, lParam);
+			break;
+		case WM_MBUTTONDOWN:
+			XYWindow_emitMouseDown(self, VK_MBUTTON, lParam);
+			break;
+		case WM_XBUTTONDOWN:
+			switch(HIWORD(wParam))
+			{
+				case 1:   //XButton 1
+					XYWindow_emitMouseDown(self, VK_XBUTTON1, lParam);
+					break;
+				case 2:   //XButton 2
+					XYWindow_emitMouseDown(self, VK_XBUTTON2, lParam);
+					break;
+			}
 			break;
 		case WM_CTLCOLORSTATIC:
 			hdc = (HDC)wParam;
