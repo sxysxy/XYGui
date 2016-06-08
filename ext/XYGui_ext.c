@@ -323,7 +323,7 @@ LRESULT CALLBACK XYPushButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			XYWindow_emitMouseDown(self, VK_LBUTTON, lParam);
 			return oriproc(hWnd, uMsg, wParam, lParam);
 		case WM_MBUTTONDOWN:
-			XYWindow_emitMouseDown(self, VK_LBUTTON, lParam);
+			XYWindow_emitMouseDown(self, VK_MBUTTON, lParam);
 			break;
 		case WM_XBUTTONDOWN:
 			switch(HIWORD(wParam))

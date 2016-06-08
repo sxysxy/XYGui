@@ -434,6 +434,15 @@ class XYWidget                 #basic widget
 		WinAPI.call("user32", "SetFocus", @handle)
 	end
 	alias :focus :setFocus
+	
+	#--------------------------------
+	
+	def disable
+		WinAPI.call("user32", "EnableWindow", @handle, 0)
+	end
+	def enable
+		WinAPI.call("user32", "EnableWindow", @handle, 1)
+	end
 	#----------------------------
 	
 	#-----------------------

@@ -22,8 +22,6 @@ class XYPushButton < XYWidget
 		changeProc
 	end
 	
-	
-	
 	def defaultHeight
 		return 40
 	end

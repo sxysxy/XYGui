@@ -1,5 +1,5 @@
 =begin
-	Basic Button MODULE£°
+	Basic Button MODULEÔºÅ
 =end
 
 module XYButton
@@ -55,6 +55,5 @@ module XYButton
 	BST_CHECKED = 0x0001
 	BST_INDETERMINATE = 0x0002
 	BST_PUSHED = 0x0004
-	BST_FOCUS = 0x0008
-	
+	BST_FOCUS = 0x0008	
 end
