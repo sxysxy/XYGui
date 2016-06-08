@@ -302,6 +302,60 @@ void InitXYWindow()
 #endif
 // ---------------------- End XYWindow ----------------------------------------
 
+// ---------------------- For XYPushButton --------------------------------------
+VALUE cXYPushButton;
+static const char *XYPushButtonClassName = "XYPushButton";
+
+LRESULT CALLBACK XYPushButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	VALUE self;
+	WNDPROC oriproc;
+	
+	self = (VALUE)GetWindowLong(hWnd, GWL_USERDATA);
+	switch(uMsg)
+	{
+		case WM_RBUTTONDOWN:
+			XYWindow_emitMouseDown(self, VK_RBUTTON, lParam);
+			break;
+		case WM_LBUTTONDOWN:
+			oriproc = (WNDPROC)NUM2INT(rb_iv_get(self, "@oriproc"));
+			XYWindow_emitMouseDown(self, VK_LBUTTON, lParam);
+			return oriproc(hWnd, uMsg, wParam, lParam);
+		case WM_MBUTTONDOWN:
+			XYWindow_emitMouseDown(self, VK_LBUTTON, lParam);
+			break;
+		case WM_XBUTTONDOWN:
+			switch(HIWORD(wParam))
+			{
+				case 1:   //XButton 1
+					XYWindow_emitMouseDown(self, VK_XBUTTON1, lParam);
+					break;
+				case 2:   //XButton 2
+					XYWindow_emitMouseDown(self, VK_XBUTTON2, lParam);
+					break;
+			}
+			break;
+		default:
+			oriproc = (WNDPROC)NUM2INT(rb_iv_get(self, "@oriproc"));
+			return oriproc(hWnd, uMsg, wParam, lParam);
+	}
+	return 0;
+}
+
+static VALUE XYPushButton_changeProc(VALUE self)
+{
+	HWND hw = (HWND)NUM2INT(rb_iv_get(self, "@handle"));
+	SetWindowLong(hw, GWL_USERDATA, (LONG)NUM2INT(rb_funcall(self, rb_intern("selfval"), 0)));
+	rb_iv_set(self, "@oriproc", INT2NUM(GetWindowLong(hw, GWL_WNDPROC)));
+	SetWindowLong(hw, GWL_WNDPROC, (LONG)XYPushButtonProc);
+	return self;
+}
+void InitXYPushButton()
+{
+	cXYPushButton = rb_define_class(XYPushButtonClassName, cXYWidget);
+	rb_define_method(cXYPushButton, "changeProc", XYPushButton_changeProc, 0);
+}
+// ---------------------- End XYPushButton --------------------------------------
 
 // ---------------------- For XYPainter ---------------------------------------
 #if 1
@@ -476,6 +530,7 @@ void Init_XYGui_ext()
 	InitXYWidget();
 	InitXYScrollableWidget();
 	InitXYWindow();
+	InitXYPushButton();
 	InitXYPainter();
 	InitXYPainterTools();
 }

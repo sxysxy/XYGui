@@ -12,9 +12,7 @@ class Mine
 	end
 	
 	def mkcall(&handler)
-		@button.connect(:ON_COMMAND) do |sender, data|
-			handler.call
-		end
+		
 	end
 	
 	def clear
@@ -22,6 +20,22 @@ class Mine
 		@ismine = false
 		@number = 0
 		@button.text = ""
+	end
+end
+
+class Grids
+	attr_accessor :top, :left
+	attr_accessor :gridw, :gridh
+	
+	def initialize(x, y, w, h)
+		@top = y
+		@left = x
+		@gridw = w
+		@gridh = h
+	end
+	
+	def pos2grid(x, y)
+		return (x-@left/@gridw),(y-@top/@gridh)
 	end
 end
 
@@ -34,12 +48,14 @@ class Game
 		replace
 		clear
 		menu
+		keyp
 		@win.show
 		@app.mainloop
 	end
 	
 	def reset
 		clear
+		mkmine
 	end
 	
 	def menu
@@ -55,15 +71,25 @@ class Game
 		@win.menu = mm
 	end
 	
+	def keyp
+		@win.connect(:ON_KEYDOWN) do |sender, data|
+			case data[:key]
+				when XYKey::VK_ESC then
+					@app.exit
+			end
+		end
+	end
+	
 	def replace
 		x = 10
 		y = 80
+		@grid = Grids.new(10, 80, 30, 30)
 		(0..9).each do |i|
 			(0..9).each do |j|
 				@mines[i][j].button.repos(x, y)
 				@mines[i][j].button.resize(30, 30)
-				@mines[i][j].mkcall do  
-					press(i, j)
+				@mines[i][j].mkcall do |arg|
+					press(i, j, arg)
 				end
 				x += 30
 			end
@@ -81,8 +107,18 @@ class Game
 		end
 	end
 	
-	def press(x, y)
-		XYMessageBox.show("mine", "line #{x} col #{y}")
+	def press(x, y, flag = :left)
+		if flag == :left
+			XYMessageBox.show("tip", "l")
+		elsif flag == :middle
+			XYMessageBox.show("tip", "m")
+		elsif flag == :right
+			XYMessageBox.show("tip", "r")
+		end
+	end
+	
+	def mkmine
+	
 	end
 end
 

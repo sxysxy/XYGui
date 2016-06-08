@@ -19,6 +19,7 @@ class XYPushButton < XYWidget
 							@x, @y, @width, @height, @parent.handle,
 							@id,    #use to tell child-window-id
 							@app.instance, 0)
+		changeProc
 	end
 	
 	

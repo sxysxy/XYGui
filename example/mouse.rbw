@@ -36,6 +36,7 @@ wnd.connect(:ON_MOUSEDOWN) do |sender, data|
 		else
 			return
 	end
+	text += sprintf(". At %d %d", data[:x], data[:y])
 	stbar.text = text
 end
 wnd.connect(:ON_SIZE) do |sender, data|
