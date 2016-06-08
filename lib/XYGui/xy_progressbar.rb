@@ -42,7 +42,7 @@ class XYProgressBar < XYWidget
 	
 	def create
 		@handle = WinAPI.call("user32", "CreateWindowEx", 0, "msctls_progress32", "", 
-								WS_CHILD | WS_CHILDWINDOW | PBS_MARQUEE | PBS_SMOOTH, @x, @y, defaultWidth, defaultHeight,
+								WS_CHILD | WS_CHILDWINDOW | PBS_MARQUEE | PBS_SMOOTH, @x, @y, @width, @height,
 								@parent.handle, @id, @app.instance, 0)
 	end
 	
