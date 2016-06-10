@@ -2,10 +2,10 @@ require 'XYGuiCore'
 require 'socket'
 
 HTTP_HRAD_FORMAT = "GET %s HTTP/1.0 \r\n" + 
-					"Host: %s \r\n" +
+					"Host: %s:80 \r\n" +
 					"Accept: */* \r\n" + 
-					"User-Agent: HttpDownloader \r\n" + 
-					"Connection: Keep-Alive \r\n" +
+					"User-Agent: HttpDownloader_XYGui \r\n" + 
+					"Connection: close \r\n" +
 					"\r\n"
 
 XYApp.new("down") do |app|
@@ -13,7 +13,7 @@ XYApp.new("down") do |app|
 		ed = XYTextEdit.new(app, wnd, {:x => 10, :y => 0, :width => 250, :height => 60}) 
 		go = XYPushButton.new(app, wnd, {:x => 275, :y => 10, :text => 'Go', :width => 60, :height => 40})
 		pro = XYProgressBar.new(app, wnd, {:x => 10, :y => 70, :height => 15, :width => 282})
-		tv = XYTextView.new(app, wnd, {:x => 304, :width => 40, :height => 15, :y => 71, :text => "0%"})
+		tv = XYTextView.new(app, wnd, {:x => 304, :width => 40, :height => 15, :y => 71, :text => "0.0%"})
 		stb = XYStatusBar.new(app, wnd, {:text => "Ready"})
 		
 		working = false
@@ -64,7 +64,7 @@ XYApp.new("down") do |app|
 						requestq["Requestion file not found, Abort"]
 					end
 					if line =~ /302/
-						
+						requestq["Relocation url are not supported now..."]
 					end
 					if line =~ /Content-Length: [0-9]{1,}/
 						sz = line.split(":")[1].to_i
@@ -74,12 +74,14 @@ XYApp.new("down") do |app|
 					end
 				end
 				break if !working
-				stb.request {|s| s.text = "Begin to Download #{path.split('/').last}, size: #{sz} bytes"}
+				stb.request {|s| s.text = "Begin to Download size: #{sz} bytes"}
 				   #---
-				opt = File.new(path.split('/').pop, "w")
+				opt = File.new(path.split('/').pop, "wb")
 				cmp = 0
+				rate = nil
 				   #---
 				
+				#---------------
 				qbuf = Queue.new
 				reving = true
 				wtr = Thread.new do
@@ -91,9 +93,10 @@ XYApp.new("down") do |app|
 							opt.flush
 							break
 						end
-						sleep(0.02)
+						sleep(0.01)
 					end
 				end
+				#-----------------
 				sec = 1
 				timer = Thread.new do
 					loop do
@@ -101,29 +104,42 @@ XYApp.new("down") do |app|
 						sec += 1
 					end
 				end
+				#----------------
+				tbuf = Queue.new
+				teller = Thread.new do
+					loop do
+						while tbuf.size > 0
+							rate = Float(cmp)/sz
+							pro.request {|ps| ps.value = Integer(rate*10000)}
+							tv.request {|tvr| tvr.text = sprintf("%.1f%%", rate*100)}
+							stb.request {|s| s.text = sprintf("%d/%d bytes completed, average speed %.1f kb/s", cmp, sz ,cmp/1024/sec)}
+						end
+						if !reving && tbuf.size == 0
+							break
+						end
+						sleep(0.01)
+					end
+				end
+				#----------------
 				while buf = io.read(65535)
 					qbuf.push buf
 					cmp += buf.size
-						
-					Thread.new do
-						rate = Float(cmp)/sz
-						pro.request {|ps| ps.value = Integer(rate*10000)}
-						tv.request {|tvr| tvr.text = sprintf("%.1f%%", rate*100)}
-						stb.request {|s| s.text = sprintf("%d/%d completed, averge speed %.1f kb/s", cmp, sz ,cmp/1024/sec)}
-					end
-					
+					tbuf.push 2333
 					break if cmp == sz		
 				end
+				#-----------------
 				reving = false
-				wtr.join
 				timer.kill
+				teller.kill
+				wtr.join
+				
 				opt.close
 				io.close
+				pro.request {|ps| ps.value = 10000}
+				tv.request {|tvr| tvr.text = "100.0%"}
 				#-----------------------------------------------------
-				
+				stb.request {|s| s.text = "OK, saveed to #{path.split('/').pop}"}
 				working = false
-				stb.request {|s| s.text = "Completed, you can give me new task now"}
-			
 			end
 		end
 		
