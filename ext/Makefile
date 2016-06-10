@@ -7,17 +7,16 @@ Q1 = $(V:1=)
 Q = $(Q1:0=@)
 ECHO1 = $(V:1=@:)
 ECHO = $(ECHO1:0=@echo)
-NULLCMD = :
 
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /C/Ruby22/include/ruby-2.2.0
+topdir = /C/Ruby21/include/ruby-2.1.0
 hdrdir = $(topdir)
-arch_hdrdir = C:/Ruby22/include/ruby-2.2.0/i386-mingw32
+arch_hdrdir = C:/Ruby21/include/ruby-2.1.0/i386-mingw32
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/C/Ruby22
+prefix = $(DESTDIR)/C/Ruby21
 rubysitearchprefix = $(rubylibprefix)/$(sitearch)
 rubyarchprefix = $(rubylibprefix)/$(arch)
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
@@ -77,7 +76,7 @@ RUBY_EXTCONF_H =
 cflags   =  $(optflags) $(debugflags) $(warnflags)
 optflags = -O3 -fno-omit-frame-pointer -fno-fast-math
 debugflags = -g
-warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat
+warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration
 CCDLFLAGS = 
 CFLAGS   = $(CCDLFLAGS) $(cflags) $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
@@ -93,8 +92,8 @@ LDSHAREDXX = $(CXX) -shared $(if $(filter-out -g -g0,$(debugflags)),,-s)
 AR = ar
 EXEEXT = .exe
 
-RUBY_INSTALL_NAME = $(RUBY_BASE_NAME)
-RUBY_SO_NAME = msvcrt-ruby220
+RUBY_INSTALL_NAME = ruby
+RUBY_SO_NAME = msvcrt-ruby210
 RUBYW_INSTALL_NAME = $(RUBYW_BASE_NAME)
 RUBY_VERSION_NAME = $(RUBY_BASE_NAME)-$(ruby_version)
 RUBYW_BASE_NAME = rubyw
@@ -102,8 +101,8 @@ RUBY_BASE_NAME = ruby
 
 arch = i386-mingw32
 sitearch = i386-msvcrt
-ruby_version = 2.2.0
-ruby = $(bindir)/$(RUBY_BASE_NAME)
+ruby_version = 2.1.0
+ruby = $(bindir)/ruby
 RUBY = $(ruby)
 ruby_headers = $(hdrdir)/ruby.h $(hdrdir)/ruby/ruby.h $(hdrdir)/ruby/defines.h $(hdrdir)/ruby/missing.h $(hdrdir)/ruby/intern.h $(hdrdir)/ruby/st.h $(hdrdir)/ruby/subst.h $(arch_hdrdir)/ruby/config.h
 
@@ -190,7 +189,7 @@ install-rb-default: pre-install-rb-default
 pre-install-rb: Makefile
 pre-install-rb-default: Makefile
 pre-install-rb-default:
-	@$(NULLCMD)
+	$(ECHO) installing default XYGui_ext libraries
 $(TIMESTAMP_DIR)/.RUBYARCHDIR.time:
 	$(Q) $(MAKEDIRS) $(@D) $(RUBYARCHDIR)
 	$(Q) $(TOUCH) $@
@@ -199,55 +198,31 @@ site-install: site-install-so site-install-rb
 site-install-so: install-so
 site-install-rb: install-rb
 
-.SUFFIXES: .c .m .cc .mm .cxx .cpp .o .S
+.SUFFIXES: .c .m .cc .mm .cxx .cpp .o
 
 .cc.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
 
-.cc.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
-
 .mm.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
-
-.mm.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
 
 .cxx.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
 
-.cxx.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
-
 .cpp.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<
-
-.cpp.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -S $<
 
 .c.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -c $<
 
-.c.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -S $<
-
 .m.o:
 	$(ECHO) compiling $(<)
 	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -c $<
-
-.m.S:
-	$(ECHO) translating $(<)
-	$(Q) $(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -S $<
 
 $(DLLIB): $(DEFFILE) $(OBJS) Makefile
 	$(ECHO) linking shared-object $(DLLIB)
