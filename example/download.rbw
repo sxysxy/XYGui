@@ -9,11 +9,11 @@ HTTP_HRAD_FORMAT = "GET %s HTTP/1.0 \r\n" +
 					"\r\n"
 
 XYApp.new("down") do |app|
-	XYMainWindow.new(app, nil, {:x => 400, :y => 400, :width => 360, :height => 135, :fixed => true, :title => 'Http Downloader'}) do |wnd|
-		ed = XYTextEdit.new(app, wnd, {:x => 10, :y => 0, :width => 250, :height => 60}) 
-		go = XYPushButton.new(app, wnd, {:x => 275, :y => 10, :text => 'Go', :width => 60, :height => 40})
-		pro = XYProgressBar.new(app, wnd, {:x => 10, :y => 70, :height => 15, :width => 282})
-		tv = XYTextView.new(app, wnd, {:x => 304, :width => 40, :height => 15, :y => 71, :text => "0.0%"})
+	XYMainWindow.new(app, nil, {:x => 400, :y => 400, :width => 400, :height => 135, :fixed => true, :title => 'Http Downloader'}) do |wnd|
+		ed = XYTextEdit.new(app, wnd, {:x => 10, :y => 0, :width => 290, :height => 60}) 
+		go = XYPushButton.new(app, wnd, {:x => 315, :y => 10, :text => 'Go', :width => 60, :height => 40})
+		pro = XYProgressBar.new(app, wnd, {:x => 10, :y => 70, :height => 15, :width => 322})
+		tv = XYTextView.new(app, wnd, {:x => 347, :width => 40, :height => 15, :y => 71, :text => "0.0%"})
 		stb = XYStatusBar.new(app, wnd, {:text => "Ready"})
 		
 		working = false
@@ -83,7 +83,7 @@ XYApp.new("down") do |app|
 				
 				#---------------
 				qbuf = Queue.new
-				reving = true
+				reving = true #Must true here, or the wtr&teller will be killed
 				wtr = Thread.new do
 					loop do
 						while qbuf.size > 0
@@ -121,7 +121,7 @@ XYApp.new("down") do |app|
 					end
 				end
 				#----------------
-				while buf = io.read(65535)
+				while buf = io.read(131072)
 					qbuf.push buf
 					cmp += buf.size
 					tbuf.push 2333
@@ -131,14 +131,15 @@ XYApp.new("down") do |app|
 				reving = false
 				timer.kill
 				teller.kill
+				stb.request {|s| s.text = "Writing file..."}
 				wtr.join
 				
 				opt.close
 				io.close
-				pro.request {|ps| ps.value = 10000}
 				tv.request {|tvr| tvr.text = "100.0%"}
+				pro.request {|ps| ps.value = 10000}
 				#-----------------------------------------------------
-				stb.request {|s| s.text = "OK, saveed to #{path.split('/').pop}"}
+				stb.request {|s| s.text = "OK, saved to #{path.split('/').pop}"}
 				working = false
 			end
 		end
