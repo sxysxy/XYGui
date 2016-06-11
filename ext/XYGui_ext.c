@@ -100,12 +100,32 @@ static VALUE XYApp_registerExcpHandler(VALUE self)
 	SetUnhandledExceptionFilter(XYApp_excpHandler);
 	return self;
 }
+static VALUE XYApp_mainloop(VALUE self)
+{
+	MSG msg;
+	VALUE flag;
+	while(1)
+	{
+		if(PeekMessage(&msg, 0, 0, 0, PM_REMOVE) > 0)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}else
+		{
+			rb_funcall(self, rb_intern("proRequest"), 0);
+		}
+		flag = rb_iv_get(self, "@flagExit");
+		if(flag == Qtrue)break;
+	}
+	return self;
+}
 static void InitXYApp()
 {
 	cXYApp = rb_define_class(XYAppClassName, rb_cObject);
 	rb_define_method(cXYApp, "registerClass", XYApp_registerClass, 0);
 	rb_define_method(cXYApp, "registerExcpHandler", XYApp_registerExcpHandler, 0);
 	rb_define_method(cXYApp, "defExcpHandler", XYApp_defExcpHandler, 0);
+	rb_define_method(cXYApp, "mainloop", XYApp_mainloop, 0);
 }
 #endif
 //----------------------- End XYApp -----------------------------------------------
