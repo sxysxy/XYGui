@@ -104,6 +104,12 @@ static VALUE XYApp_mainloop(VALUE self)
 {
 	MSG msg;
 	VALUE flag;
+	VALUE widget;
+	VALUE rq;
+	VALUE q;
+	int mn;
+	
+	q = rb_iv_get(self, "@request");
 	while(1)
 	{
 		if(PeekMessage(&msg, 0, 0, 0, PM_REMOVE) > 0)
@@ -112,10 +118,19 @@ static VALUE XYApp_mainloop(VALUE self)
 			DispatchMessage(&msg);
 		}else
 		{
-			rb_funcall(self, rb_intern("proRequest"), 0);
+			//rb_funcall(self, rb_intern("proRequest"), 0); //no use now....
+			mn = 5; // process at most five requests once
+			while(mn--)
+			{
+				widget = rb_funcall(q, rb_intern("pop"), 0);
+				rq = rb_funcall(q, rb_intern("pop"), 0);
+				if(widget == Qnil || rq == Qnil)break;	// Ok to leave
+				rb_funcall(rq, rb_intern("call"), 1, widget);
+			}
 		}
 		flag = rb_iv_get(self, "@flagExit");
 		if(flag == Qtrue)break;
+		Sleep(10);	// ms, protect our cpu (hh)
 	}
 	return self;
 }

@@ -40,7 +40,7 @@ class XYApp
 		
 	end
 =end	
-
+=begin
 	def proRequest
 		widget = @request.pop
 		rq = @request.pop
@@ -48,6 +48,7 @@ class XYApp
 		rq.call(widget) if rq&&widget
 		sleep(0.02)
 	end
+=end
 	
 	def exit
 		@flagExit = true
