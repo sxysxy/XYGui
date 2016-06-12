@@ -24,6 +24,8 @@ extern "C"
 #if 1
 #define XYWidgetCall(sig, arg1, arg2) (rb_funcall(self, rb_intern("call"), \
 						3, ID2SYM(rb_intern(sig)), arg1, arg2))
+					
+#define WM_XYGUI_RQ (WM_USER + 233)
 
 #endif 
 // ---------------------- End Global Area --------------------------------------
@@ -107,9 +109,10 @@ static VALUE XYApp_mainloop(VALUE self)
 	VALUE widget;
 	VALUE rq;
 	VALUE q;
-	int mn;
+	//int mn;
 	
 	q = rb_iv_get(self, "@request");
+	
 	while(1)
 	{
 		if(PeekMessage(&msg, 0, 0, 0, PM_REMOVE) > 0)
@@ -119,19 +122,39 @@ static VALUE XYApp_mainloop(VALUE self)
 		}else
 		{
 			//rb_funcall(self, rb_intern("proRequest"), 0); //no use now....
-			mn = 5; // process at most five requests once
-			while(mn--)
-			{
+			//mn = 1; // process at most five requests once
+			//while(mn--)
+			//{
 				widget = rb_funcall(q, rb_intern("pop"), 0);
 				rq = rb_funcall(q, rb_intern("pop"), 0);
-				if(widget == Qnil || rq == Qnil)break;	// Ok to leave
-				rb_funcall(rq, rb_intern("call"), 1, widget);
-			}
+				//if(widget == Qnil || rq == Qnil)break;	// Ok to leave
+				if(widget != Qnil && rq != Qnil)
+					rb_funcall(rq, rb_intern("call"), 1, widget);
+			//}
+			rb_funcall(rb_mKernel, rb_intern("sleep"), 1, DBL2NUM(0.02));
 		}
 		flag = rb_iv_get(self, "@flagExit");
 		if(flag == Qtrue)break;
-		Sleep(10);	// ms, protect our cpu (hh)
 	}
+	
+	/*
+	while(GetMessage(&msg, 0, 0, 0))
+	{
+		if(msg.message == WM_XYGUI_RQ)
+		{
+			widget = rb_funcall(q, rb_intern("pop"), 0);
+			rq = rb_funcall(q, rb_intern("pop"), 0);
+			if(widget == Qnil || rq == Qnil)break;	// Ok to leave
+			rb_funcall(rq, rb_intern("call"), 1, widget);
+		}else
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		flag = rb_iv_get(self, "@flagExit");
+		if(flag == Qtrue)break;
+	}
+	*/
 	return self;
 }
 static void InitXYApp()
