@@ -27,7 +27,11 @@ ChatCube, A Loacl Area Network chatting software (including client, server)
 ![](http://i3.piimg.com/e19aacc36aca1a54.png)
 
 Snake, Classical game
-![](http://i2.buimg.com/4bbe215175b77044.png)
+![](http://i2.buimg.com/e75ff9a9585a6748.png)
+Mines~
+![](http://i2.buimg.com/365be333accdd86c.png)
+Effective Downloader with very few ruby codes
+![](http://i2.buimg.com/3450172de3b76180.png)
 
 Calender 
 ![](http://i3.piimg.com/5fb28465529b6993.png)
