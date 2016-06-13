@@ -13,15 +13,16 @@ class XYApp
 	attr_accessor :flagExit
 	attr_reader :request
 	attr_reader :excpHandler
+	attr_reader :request
 	
 	def initialize(appname)
 		#-----set excpHandler
 		
-		#@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
-		#registerExcpHandler
+		@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
+		registerExcpHandler
 		#-----
 		
-		@instance = Win32API.new("kernel32", "GetModuleHandle", "i", "L").call 0
+		@instance = WinAPI.call("kernel32", "GetModuleHandle", 0)
 		@name = appname
 		@flagExit = false
 		@request = ADTQueue.new(256)       				#max request size: n/2 (default as 256/2 = 128)

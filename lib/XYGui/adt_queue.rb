@@ -8,12 +8,12 @@ class ADTQueue
 	attr_reader :free
 	attr_reader :maxsize
 	attr_reader :size
-		
 	
 	def initialize(maxsize)
 		@data = Array.new(maxsize, nil)
 		@free = maxsize
 		@maxsize = maxsize
+		@mutex = Mutex.new
 		
 		@size = 0
 		@head = 0
@@ -21,34 +21,61 @@ class ADTQueue
 	end
 	
 	def push(elem)
-		if (@free > 0)
-			@data[@tail] = elem
-			@tail += 1
-			@tail %= @maxsize
+		@mutex.lock
+		r = nil
+		begin
+			if (@free > 0)
+				@data[@tail] = elem
+				@tail += 1
+				@tail %= @maxsize
 			
-			@free -= 1
-			@size += 1
-			return true
+				@free -= 1
+				@size += 1
+				r = true
+			else
+				r = false
+			end
+		ensure
+			@mutex.unlock
+			return r
 		end
-		return false
 	end
 	
 	def pop
-		if @size > 0
-			ret = @data[@head]
-			@head += 1
-			@head = @head % @maxsize
+		@mutex.lock
+		ret = nil
+		begin
+			if @size > 0
+				ret = @data[@head]
+				@head += 1
+				@head = @head % @maxsize
 			
-			@free += 1
-			@size -= 1
+				@free += 1
+				@size -= 1
+			else
+				ret = nil
+			end
+		ensure
+			@mutex.unlock
 			return ret
-		else
-			return nil
 		end
 	end
 	
-	def front
+	def front #Do not need mutex, because the queue won't be chenged
 		return @size > 0? @data[@head]: nil
+	end
+	
+	def clear
+		@mutex.lock
+		begin
+			@data.fill(nil)
+			@free = @maxsize
+			@size = 0
+			@head = 0
+			@tail = 0
+		ensure
+			@mutex.unlock
+		end
 	end
 end
 

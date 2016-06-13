@@ -7,6 +7,9 @@ HTTP_HRAD_FORMAT = "GET %s HTTP/1.0 \r\n" +
 					"User-Agent: HttpDownloader_XYGui \r\n" + 
 					"Connection: close \r\n" +
 					"\r\n"
+#-------------------------					
+begin
+#-------------------------
 
 XYApp.new("down") do |app|
 	XYMainWindow.new(app, nil, {:x => 400, :y => 400, :width => 400, :height => 135, :fixed => true, :title => 'Http Downloader'}) do |wnd|
@@ -22,15 +25,20 @@ XYApp.new("down") do |app|
 		go.connect(:ON_COMMAND) do |sender, data|
 			if working
 				stb.text = "Working... Please wait for a moment"
-				break
+				next
 			end
+			
+			#---
+			begin   #Process Exception 
+			#----
+			
 			
 			working = true
 			pro.value = 0
 			url = ed.text 
-			Thread.new do 
+			wk = Thread.new do 
 				stb.request {|s| s.text = "Analysing the url"}
-				
+				tv.request {|tvr| tvr.text = "0.0"}
 				#-----------------------------------------------------
 				ana =-> (turl) do 
 					bg = 0
@@ -56,10 +64,10 @@ XYApp.new("down") do |app|
 				rescue
 					requestq["Bad URL, Abort"]
 				end
-				break if !working
+				next if !working
 				   #----
 				sz = 0
-				while line = io.gets
+				while line = io.__send__(:gets)
 					if line =~ /404/
 						requestq["Requestion file not found, Abort"]
 					end
@@ -73,7 +81,7 @@ XYApp.new("down") do |app|
 						break
 					end
 				end
-				break if !working
+				next if !working
 				stb.request {|s| s.text = "Begin to Download size: #{sz} bytes"}
 				   #---
 				opt = File.new(path.split('/').pop, "wb")
@@ -93,9 +101,10 @@ XYApp.new("down") do |app|
 							opt.flush
 							break
 						end
-						sleep(0.01)
+						sleep(0.02)
 					end
 				end
+				wtr.abort_on_exception = true
 				#-----------------
 				sec = 1
 				timer = Thread.new do
@@ -104,22 +113,34 @@ XYApp.new("down") do |app|
 						sec += 1
 					end
 				end
+				timer.abort_on_exception = true
 				#----------------
 				tbuf = Queue.new
 				teller = Thread.new do
 					loop do
-						while tbuf.size > 0
-							rate = Float(cmp)/sz
-							pro.request {|ps| ps.value = Integer(rate*10000)}
-							tv.request {|tvr| tvr.text = sprintf("%.1f%%", rate*100)}
-							stb.request {|s| s.text = sprintf("%d/%d bytes completed, average speed %.1f kb/s", cmp, sz ,cmp/1024/sec)}
+						while tbuf.size > 0	
+							retryt = 0
+							begin
+								tbuf.pop
+								rate = Float(cmp)/sz
+								pro.request {|poo| poo.value = Integer(rate*10000)}
+								tv.request {|tvr| tvr.text = sprintf("%.1f%%", rate*100)}
+								stb.request {|s| s.text = sprintf("%d/%d bytes completed, average speed %.1f kb/s", cmp, sz ,cmp/1024/sec)}
+							rescue
+								if retryt > 3
+									next
+								else
+									retry
+								end
+							end
 						end
 						if !reving && tbuf.size == 0
 							break
 						end
-						sleep(0.01)
+						sleep(0.05)
 					end
 				end
+				teller.abort_on_exception = true
 				#----------------
 				while buf = io.read(131072)
 					qbuf.push buf
@@ -131,18 +152,41 @@ XYApp.new("down") do |app|
 				reving = false
 				timer.kill
 				teller.kill
+				app.request.clear
 				stb.request {|s| s.text = "Writing file..."}
 				wtr.join
-				
-				opt.close
-				io.close
-				tv.request {|tvr| tvr.text = "100.0%"}
-				pro.request {|ps| ps.value = 10000}
-				#-----------------------------------------------------
-				stb.request {|s| s.text = "OK, saved to #{path.split('/').pop}"}
+				begin
+					opt.close
+					io.close
+				rescue
+					
+				ensure
+					#-----------------------------------------------------
+					stb.request {|s| s.text = "OK, saved to #{path.split('/').pop}"}
+					tv.request {|tvr| tvr.text = "100.0%"}
+					pro.request {|ps| ps.value = 10000}
+					working = false
+				end
+			end
+			wk.abort_on_exception = true
+			#---
+			rescue			#Process Exception
+				stb.request {|s| s.text = "Error, Abort"}
 				working = false
+				next
+			#----
 			end
 		end
 		
 	end.show
 end.mainloop
+
+#-------------------------------------------------------------------------------
+rescue Exception => e
+	case XYMessageBox.show("Error", e.message + e.backtrace_locations, :retry)
+		when XYMessageBox::CANSEL then
+			exit
+		when XYMessageBox::RETRY then
+			retry
+	end
+end
