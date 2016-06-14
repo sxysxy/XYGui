@@ -1,4 +1,0 @@
-First, Start the server
-Second, ,modify chatcube_client.xml.This file configs server's host(it can be an ip or a 
-computer name) and port(2333 by default). And name for your nick name.
-Then you can enjoy it
