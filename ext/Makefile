@@ -10,7 +10,7 @@ ECHO = $(ECHO1:0=@echo)
 
 #### Start of system configuration section. ####
 
-srcdir = .
+srcdir = /C/Ruby21/lib/ruby/gems/2.1.0/gems/XYGui-0.1.0/ext
 topdir = /C/Ruby21/include/ruby-2.1.0
 hdrdir = $(topdir)
 arch_hdrdir = C:/Ruby21/include/ruby-2.1.0/i386-mingw32

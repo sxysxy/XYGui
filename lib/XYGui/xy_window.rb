@@ -66,7 +66,7 @@ class XYWindow < XYScrollableWidget
 		
 		#paint
 		connect(:ON_BEGINPAINT) {|a,b| beginPaint(a,b)}
-		connect(:ON_PAINT) {|a,b| onPaint(a, b)}
+		#connect(:ON_PAINT) {|a,b| onPaint(a, b)}
 		
 		#key
 		connect(:ON_KEYDOWN) {|a, b| onKeydown(a, b)}
