@@ -347,6 +347,7 @@ static VALUE XYWindow_beginPaint(VALUE self, VALUE a, VALUE b)
 	XYWidgetCall("ON_PAINT", a, b);
 	rb_funcall(pater, rb_intern("destroy"), 0);
 	EndPaint(hw, &ps);
+	rb_iv_set(self, "@dc", Qnil);
 	return self;
 }
 // init XYWindow
@@ -525,6 +526,14 @@ static VALUE XYPainter_text(VALUE self, VALUE str, VALUE x, VALUE y)
 	TextOut(dc, FIX2INT(x), FIX2INT(y), RSTRING_PTR(str), len/2);
 	return self;
 }
+static VALUE XYPainter_point(VALUE self, VALUE x, VALUE y)
+{
+	VALUE pen = rb_iv_get(self, "@pen");
+	HDC dc = GETWIDGET_DC(self);
+	SetPixel(dc, FIX2INT(x), FIX2INT(y), RGB(FIX2INT(rb_iv_get(pen, "@red")),
+				FIX2INT(rb_iv_get(pen, "@green")), FIX2INT(rb_iv_get(pen, "@blue"))));
+	return self;
+}
 
 static void InitXYPainter()
 {
@@ -537,6 +546,7 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "setBrush", XYPainter_setBrush, 1);
 	rb_define_method(cXYPainter, "setPen", XYPainter_setPen, 1);
 	rb_define_method(cXYPainter, "text", XYPainter_text, 3);
+	rb_define_method(cXYPainter, "point", XYPainter_point, 2);
 	
 	//Note! These method should provide to users
 	rb_define_method(cXYPainter, "defBrush", XYPainter_defBrush, 0); //For windows...

@@ -21,7 +21,19 @@ class XYPainter
 		
 	end
 	
-	alias :paint :instance_eval
+	def paint(&p)
+		flag = false  #flag of not ON_PAINT
+		if !@widget.dc
+			flag = true #Not caused by ON_PAINT
+			@widget.dc = WinAPI.call("user32", "GetDC", @widget.handle)
+		end
+		instance_eval(&p)
+		if flag
+			destroy
+			WinAPI.call("user32", "ReleaseDC", @widget.handle, @widget.dc)
+			@widget.dc = nil
+		end
+	end
 	
 #---------------------------------------------------------------------------------------------------
 	
@@ -50,7 +62,15 @@ class XYPainter
 		WinAPI.call("user32", "FillRect", @widget.dc, [x,y,w+x,h+y].pack("LLLL"), @brush.handle)
 	end
 =end
+	alias :drawRect :fillRect
+	alias :rect :fillRect
 	alias :drawText :text
+=begin
+	def point(x, y)
+		
+	end
+=end
+	alias :drawPoint :point
 	#---------------------------------------------------
 	
 #----------------------------------------------------------------------------------------------------

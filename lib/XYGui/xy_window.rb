@@ -46,7 +46,7 @@ class XYWindow < XYScrollableWidget
 	IDTIMEOUT = 32000
 
 	attr_reader :layout
-	attr_reader :dc
+	attr_accessor :dc
 	attr_reader :painter
 	attr_reader :menu
 	def initialize(app, parent = nil, arg = {})
