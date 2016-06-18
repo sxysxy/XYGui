@@ -10,7 +10,6 @@ HTTP_HRAD_FORMAT = "GET %s HTTP/1.0 \r\n" +
 #-------------------------					
 begin
 #-------------------------
-
 XYApp.new("down") do |app|
 	XYMainWindow.new(app, nil, {:x => 400, :y => 400, :width => 400, :height => 135, :fixed => true, :title => 'Http Downloader'}) do |wnd|
 		ed = XYTextEdit.new(app, wnd, {:x => 10, :y => 0, :width => 290, :height => 60}) 
@@ -54,25 +53,40 @@ XYApp.new("down") do |app|
 					end
 					host = turl[bg, p-bg]
 					path = turl[p, turl.length-p]
-					return host,path
+					return host, path
 				end
+				fname = ""
+				names = []
 				#---
+				io = nil
 				begin
 					host, path = ana[url]
 					io = TCPSocket.new(host, 80)
 					io.print sprintf(HTTP_HRAD_FORMAT, path, host)
+					names << path.split('/').pop
 				rescue
 					requestq["Bad URL, Abort"]
 				end
-				next if !working
+				next if !working || !io
 				   #----
 				sz = 0
 				while line = io.__send__(:gets)
 					if line =~ /404/
 						requestq["Requestion file not found, Abort"]
+						break
 					end
-					if line =~ /302/
-						requestq["Relocation url are not supported now..."]
+					if line =~ /Location/
+						stb.request {|s| s.text = "Relocating address..."}
+						begin
+							io.close
+							host, path = ana[line.split[1]]
+							io = TCPSocket.new(host, 80)
+							io.print sprintf(HTTP_HRAD_FORMAT, path, host)
+							names << path.split('/').pop
+						rescue
+							requestq["Bad URL, Abort"]
+							break
+						end
 					end
 					if line =~ /Content-Length: [0-9]{1,}/
 						sz = line.split(":")[1].to_i
@@ -82,11 +96,23 @@ XYApp.new("down") do |app|
 					end
 				end
 				next if !working
-				stb.request {|s| s.text = "Begin to Download size: #{sz} bytes"}
+				stb.request {|s| s.text = "Begin to Download, size: #{sz} bytes"}
 				   #---
-				opt = File.new(path.split('/').pop, "wb") rescue requestq["Bad file name: #{path.split('/').pop},Abort"]
+				  
+				opt = nil
+				names.each do |try|
+					begin
+						opt = File.new(try, "wb")
+						fname = try
+						break
+					rescue
+						next
+					end
+				end
+				requestq["Bad file name, Abort"] if !opt
 				next if !working || opt.class == TrueClass
 						#I also don't know why opt can be a TrueClass instance but sometimes it just is...
+						
 					#-----------
 				cmp = 0
 				rate = nil
@@ -165,7 +191,7 @@ XYApp.new("down") do |app|
 					
 				ensure
 					#-----------------------------------------------------
-					stb.request {|s| s.text = "OK, saved to #{path.split('/').pop}"}
+					stb.request {|s| s.text = "OK, saved to #{fname}"}
 					tv.request {|tvr| tvr.text = "100.0%"}
 					pro.request {|ps| ps.value = 10000}
 					working = false
