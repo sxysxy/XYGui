@@ -521,7 +521,8 @@ class XYWidget                 #basic widget
 	
 	def showImage(img)
 		if defined?(XYGuiImg)
-			XYGuiImg::SHOWIMG.call img.filename, 0, 0, 200, 200, @handle
+			#XYGuiImg::SHOWIMG.call img.filename, 0, 0, 200, 200, @handle
+			img.show self, 0, 0, 0, 0
 		end
 	end
 	

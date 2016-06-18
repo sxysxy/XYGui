@@ -20,6 +20,8 @@ class XYApp
 		
 		@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
 		registerExcpHandler
+		#------
+		otherThings
 		#-----
 		
 		@instance = WinAPI.call("kernel32", "GetModuleHandle", 0)
@@ -61,5 +63,9 @@ class XYApp
 	
 	def forceExitProcess
 		WinAPI.call("kernel32", "ExitProcess", 0)
+	end
+	
+	def otherThings
+		changeMsgFtl
 	end
 end

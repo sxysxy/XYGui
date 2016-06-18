@@ -102,6 +102,17 @@ static VALUE XYApp_registerExcpHandler(VALUE self)
 	SetUnhandledExceptionFilter(XYApp_excpHandler);
 	return self;
 }
+#define __MSGFLT_ADD__ 	     1
+#define __MSGFLT_REMOVE__    2  
+static VALUE XYApp_changeMsgFilter(VALUE self)
+{
+	typedef BOOL WINAPI (*pChangeWindowMessageFilter) (UINT uMsg, DWORD flag);
+	HINSTANCE hUser32 = GetModuleHandle("user32.dll");
+	pChangeWindowMessageFilter pCWM = GetProcAddress(hUser32, "ChangeWindowMessageFilter");
+	if(!pCWM)return Qfalse;
+	pCWM(WM_DROPFILES, __MSGFLT_ADD__); 		// Allow drop files into window in Admin Model 
+	return self;
+}
 static VALUE XYApp_mainloop(VALUE self)
 {
 	MSG msg;
@@ -164,6 +175,9 @@ static void InitXYApp()
 	rb_define_method(cXYApp, "registerExcpHandler", XYApp_registerExcpHandler, 0);
 	rb_define_method(cXYApp, "defExcpHandler", XYApp_defExcpHandler, 0);
 	rb_define_method(cXYApp, "mainloop", XYApp_mainloop, 0);
+	
+	// --------------------------------------
+	rb_define_method(cXYApp, "changeMsgFtl", XYApp_changeMsgFilter, 0);
 }
 #endif
 //----------------------- End XYApp -----------------------------------------------
