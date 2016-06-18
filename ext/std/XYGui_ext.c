@@ -264,9 +264,21 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 				rb_funcall(self, rb_intern("menuCall"), 1, INT2NUM(__tmp1__));
 			}else 
 			{ // Command caused by a child control
-				
-				rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
+				switch(HIWORD(wParam))
+				{
+					case EN_UPDATE:
+						rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
+								ID2SYM(rb_intern("ON_CHANGED")), self, Qnil);
+						break;
+					case EN_CHANGE:
+						rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
+								ID2SYM(rb_intern("ON_CHANGING")), self, Qnil);
+						break;
+					default:
+						rb_funcall(self, rb_intern("childCall"), 4, INT2FIX(__tmp1__), 
 								ID2SYM(rb_intern("ON_COMMAND")), self, Qnil);
+						break;
+				}
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -319,6 +331,9 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			hdc = (HDC)wParam;
 			SetBkColor(hdc, RGB(255, 255, 255));
 			return (LRESULT)GetStockObject(WHITE_BRUSH);
+			break;
+		case WM_DROPFILES:   // Drop files into the window
+			
 			break;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);

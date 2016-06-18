@@ -8,6 +8,7 @@ module XYEditable
 	ES_LEFT = 0x0000
 	ES_CENTER = 0x0001
 	ES_RIGHT = 0x0002
+	
 	ES_MULTILINE = 0x0004
 	ES_UPPERCASE = 0x0008
 	ES_LOWERCASE = 0x0010
@@ -62,7 +63,7 @@ module XYEditable
 	def text
 		len = WinAPI.call("user32", "GetWindowTextLength", @handle)
 		buf = "\x00"*(len+1)
-		WinAPI.call("user32", "SendMessage", @handle, WM_GETTEXT, len+1, buf)
+		WinAPI.specialCall("user32", "SendMessage", @handle, WM_GETTEXT, len+1, buf)
 		buf.chop!
 	end
 		
@@ -70,6 +71,8 @@ module XYEditable
 		WinAPI.call("user32", "GetWindowTextLength", @handle)
 	end
 	alias :size :length
+	alias :getLenght :length
+	alias :getSize :size
 	
 	def setReadOnly(flag)
 		_flag = (flag == true)? 1: 0
@@ -77,7 +80,55 @@ module XYEditable
 	end
 	
 	def getLineCount
-		
+		WinAPI.specialCall("user32", "SendMessage", @handle, EM_GETLINECOUNT, 0, 0)
 	end
 	alias :lineCount :getLineCount
+	
+	def setLimit(sz)
+		WinAPI.call("user32", "PostMessage", @handle, EM_LIMITTEXT, sz, 0)
+	end
+	alias :limit= :setLimit
+	
+	def disable
+		
+	end
+	
+	#return an array with 2 values, start index and the end index+1
+	def getSelectIndex
+		r1 = "\0\0\0\0"
+		r2 = "\0\0\0\0"
+		WinAPI.specialCall("user32", "SendMessage", @handle, EM_GETSEL, r1, r2)
+		return [r1.unpack("L"), r2.unpack("L")]
+	end
+
+=begin	
+	WM_CUT = 0x0300
+	WM_COPY = 0x0301
+	WM_PASTE = 0x0302
+	WM_CLEAR = 0x0303
+	WM_UNDO = 0x0304
+=end
+
+	def cut
+															  #WM_CUT
+		WinAPI.specialCall("user32", "SendMessage", @handle, 0x0300, 0, 0)
+	end
+	def undo
+		WinAPI.specialCall("user32", "SendMessage", @handle, EM_UNDO, 0, 0)
+	end
+	def copy
+		WinAPI.specialCall("user32", "SendMessage", @handle, 0x0301, 0, 0)
+	end
+	def del
+		
+	end
+	def paste
+		WinAPI.specialCall("user32", "SendMessage", @handle, 0x0302, 0, 0)
+	end
+	def clear
+		WinAPI.specialCall("user32", "SendMessage", @handle, 0x0303, 0, 0)
+	end
+	def replaceSelect(s)
+		WinAPI.specialCall("user32", "SendMessage", @handle, EM_REPLACESEL, 0, s)
+	end
 end

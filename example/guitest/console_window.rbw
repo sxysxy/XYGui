@@ -1,4 +1,4 @@
-require 'XYGui/xy_console.rb'
+require 'XYGuiCore'
 
 XYConsole.show
 puts "Hello world!"

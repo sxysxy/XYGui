@@ -519,6 +519,13 @@ class XYWidget                 #basic widget
 	end
 	#-------------------------
 	
+	def showImage(img)
+		if defined?(XYGuiImg)
+			XYGuiImg::SHOWIMG.call img.filename, 0, 0, 200, 200, @handle
+		end
+	end
+	
+	#-------------------------
 	def pushRequest(&proc)
 		@requestMutex.lock
 		begin
