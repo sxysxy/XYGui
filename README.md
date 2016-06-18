@@ -4,8 +4,7 @@ A set of GUI tools based on Win32API, so Please Use **32-bit** ruby interpreter 
 
 ## you can use XYGui to create a simple gui application like this:
 ```ruby
-require 'XYGui/xy_app.rb'
-require 'XYGui/xy_mainwindow.rb'
+require 'XYGuiCore'
 
 app = XYApp.new("simple")
 wnd = XYMainWindow.new(app)
