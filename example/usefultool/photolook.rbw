@@ -1,6 +1,6 @@
 require 'XYGuiCore'
 require 'XYGuiImg'
-
+FILE_PATTERNS = [["PNG Files(*.png)", "*.png"], ["BMP Files(*.bmp)", "*.bmp"], ["JPEG Files(*.jpg)", "*.jpg"], ["GIF Files(*.gif)", "*.gif"], ["All","*.*"]]
 XYApp.new("ptlk") do |app|
 	wins = 0
 	newwin =->(img) do
@@ -31,7 +31,7 @@ XYApp.new("ptlk") do |app|
 		end
 		mm = XYMenu.new.instance_eval do
 			addSubMenu(XYMenu.new("File").instance_eval do
-				addItem(XYMenuItem.new("Open"))   #Note:file dialog will be changed so...
+				addItem(XYMenuItem.new("Open") {win.call(:ON_DROPFILES, self, {:files => [XYFileDialog.show(win, {:filter => FILE_PATTERNS})]})})
 				addItem(XYMenuItem.new("Close") {win.destroy})
 				addSeper
 				addItem(XYMenuItem.new("New") {newwin[nil]})

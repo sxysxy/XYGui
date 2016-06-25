@@ -19,7 +19,8 @@ class XYFileDialog < XYWidget
 	
 	def self.show(parent = nil, arg = {})
 		@owner = (parent.is_a?(XYWidget))? parent.handle: 0
-		@filter = arg[:filter]? arg[:filter]: "*.*\x00"
+		@filter = arg[:filter]? arg[:filter]: [["All Files(*.*)", "*.*"]]
+		@filter = @filter.join("\0")+"\0\0"
 		@flag = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST
 		#@flag |= OFN_ALLOWMULTISELECT if arg[:multiple]       #reserve 
 		@flag |= OFN_CREATEPROMPT if arg[:okcreate]

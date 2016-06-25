@@ -5,14 +5,14 @@ XYApp.new("fff") do |app|
 		XYPushButton.new(app, wnd, {:text => "Show Open File Dialog"}).set do
 			connect(:ON_COMMAND) do |sender, data|
 				f = XYFileDialog.show(wnd, {:multiple => true, :title => "Open a file to play", :okcreate => true, 
-						:filter => "All Files(*.*)\0*.*\0Ruby File(*.rb)\0*.rb\0RubyW File(*.rbw)\0*.rbw\0Text File(*.txt)\0*.txt\0\0"}) #note, this format will be replaced soon
+						:filter => [["All Files(*.*)", "*.*"], ["Ruby Files(*.rb)", "*.rb"], ["RubyW Files(*.rbw)", "*.rbw"], ["Text Files(*.txt)", "*.txt"]]})
 				XYMessageBox.show("Tip", "You have chosen #{f}")
 			end
 		end
 		XYPushButton.new(app, wnd, {:text => "Show Open Save Dialog"}).set do
 			connect(:ON_COMMAND) do |sender, data|
 				f = XYFileDialog.show(wnd, {:save => true, :title => "Save a file to play",
-					:filter => "All Files(*.*)\0*.*\0Ruby File(*.rb)\0*.rb\0RubyW File(*.rbw)\0*.rbw\0Text File(*.txt)\0*.txt\0\0"})
+					:filter => [["All Files(*.*)", "*.*"], ["Ruby Files(*.rb)", "*.rb"], ["RubyW Files(*.rbw)", "*.rbw"], ["Text Files(*.txt)", "*.txt"]]})
 				XYMessageBox.show("Tip", "You have chosen #{f}")
 			end
 		end
