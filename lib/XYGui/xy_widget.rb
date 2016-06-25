@@ -443,6 +443,9 @@ class XYWidget                 #basic widget
 	def enable
 		WinAPI.call("user32", "EnableWindow", @handle, 1)
 	end
+	def destroy
+		WinAPI.call("user32", "DestroyWindow", @handle)
+	end
 	#----------------------------
 	
 	#-----------------------
