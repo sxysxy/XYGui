@@ -37,6 +37,13 @@ XYApp.new("ptlk") do |app|
 				addItem(XYMenuItem.new("New") {newwin[nil]})
 				self
 			end)
+			addSubMenu(XYMenu.new("About").instance_eval do
+				addItem(XYMenuItem.new("About") {XYMessageBox.show("About", "Powered by XYGui")})
+				addSeper
+				addItem(XYMenuItem.new("Help") {XYMessageBox.show("Help", "To view your pictures, you can click 'open' in menu,
+																	also you can drop files into the window")})
+				self
+			end)
 			self
 		end
 		win.menu = mm
