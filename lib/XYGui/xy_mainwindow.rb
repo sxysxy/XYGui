@@ -15,9 +15,11 @@ class XYMainWindow < XYWindow
 	def initialize(app, parent = nil, arg = {})
 		super(app, parent, arg)
 		@style |= WS_OVERLAPPEDWINDOW
+		@ex_style = 0
 		if(arg[:fixed])
 			@style &= (~(WS_THICKFRAME | WS_MAXIMIZEBOX))
 		end
+		@ex_style |= 16 if arg[:acfiles]   #ACCEPT_FILES
 
 =begin
 		wndcls = [CS_OWNDC | CS_HREDRAW | CS_VREDRAW, wndproc, 0, 0, app.instance, WinAPI.call("user32", "LoadIcon", app.instance, IDI_APPLICATION),
@@ -36,7 +38,7 @@ class XYMainWindow < XYWindow
 	end
 	
 	def create
-		@handle = WinAPI.call("user32", "CreateWindowEx", 0, @className, @title,  
+		@handle = WinAPI.call("user32", "CreateWindowEx", 0 | @ex_style, @className, @title,  
 							@style,   
 							@x, @y, @width, @height,              
 							0, 0,

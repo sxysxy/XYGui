@@ -24,3 +24,4 @@ end
 #main
 
 puts "Notice! This DLL extension should be created by vc++. (I also wonder why it will make errors with g++...)"
+system("pause")

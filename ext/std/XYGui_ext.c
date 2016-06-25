@@ -238,8 +238,11 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	VALUE __arg1__;
 	VALUE __arg2__;
+	
 	unsigned __tmp1__;
-	//unsigned __tmp2__;
+	unsigned __tmp2__;
+	char *__tmpcptr1__;
+
 	HDC hdc;
 	
 	//Store the 'self' when creating the window
@@ -347,7 +350,21 @@ static LRESULT CALLBACK XYWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			return (LRESULT)GetStockObject(WHITE_BRUSH);
 			break;
 		case WM_DROPFILES:   // Drop files into the window
-			
+			// wParam is HDrop (Win32)
+			__tmpcptr1__ = (char *)malloc(sizeof(char) * 256);
+			__tmp2__ = DragQueryFile((HDROP)wParam, 0xffffffff, NULL, 0);
+			__arg1__ = rb_ary_new();
+			for(__tmp1__ = 0; __tmp1__ < __tmp2__; __tmp1__++)
+			{
+				DragQueryFile((HDROP)wParam, __tmp1__, __tmpcptr1__, 256);
+				__arg2__ = rb_str_new2(__tmpcptr1__);
+				rb_funcall(__arg1__, rb_intern("push"), 1, __arg2__);
+			}
+			free(__tmpcptr1__);
+			DragFinish((HDROP)wParam);
+			__arg2__ = rb_hash_new();
+			rb_hash_aset(__arg2__, ID2SYM(rb_intern("files")), __arg1__);
+			XYWidgetCall("ON_DROPFILES", self, __arg2__);
 			break;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
