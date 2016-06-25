@@ -21,4 +21,6 @@ def main
 	clean if ARGV[0] == "clean"
 end
 
-main
+#main
+
+puts "Notice! This DLL extension should be created by vc++. (I also wonder why it will make errors with g++...)"
