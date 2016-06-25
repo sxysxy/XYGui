@@ -9,12 +9,29 @@ class XYImage
 		@filename = name
 		@x = 0
 		@y = 0
+		@width = 0
+		@height = 0
 		
-		#width, height will be set here
-		afterInit
-		ObjectSpace.define_finalizer(self, proc {|hh| destroyNativeObject})
+		#GDI+ runs it
+		@nativeObject = XYGuiImg::CreateImageObject.call(@filename)
+		
+				#width, height will be reset here
+		@width = getOriginWidth
+		@height = getOriginHeight
 	end
 	
-	private :destroyNativeObject
-	#:show, :showOnPaint
+	def getOriginHeight
+		XYGuiImg::GetImageHeight.call(@nativeObject) 
+	end
+	def getOriginWidth
+		XYGuiImg::GetImageWidth.call(@nativeObject) 
+	end
+	
+	def close
+		XYGuiImg::DeleteImageObject.call(@nativeObject)
+	end
+	
+	def show(widget, arg = {})
+		XYGuiImg::ShowImage.call(@nativeObject, widget.handle, @x, @y, @width, @height)
+	end
 end

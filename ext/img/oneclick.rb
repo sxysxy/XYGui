@@ -10,9 +10,7 @@ def clean
 end
 
 def make
-	system("ruby ./XYGuiImg_conf.rb")
-	system("make")
-	FileUtils.rm "Makefile"
+	system("g++ xyimg_mswin.cpp -shared -lgdiplus -luser32 -lkernel32 -lcrtdll -O3 -o xyimg.dll")
 	system("ruby ./movext.rb")
 end
 

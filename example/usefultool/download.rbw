@@ -37,7 +37,7 @@ XYApp.new("down") do |app|
 			url = ed.text 
 			wk = Thread.new do 
 				stb.request {|s| s.text = "Analysing the url"}
-				tv.request {|tvr| tvr.text = "0.0"}
+				tv.request {|tvr| tvr.text = "0.0%"}
 				#-----------------------------------------------------
 				ana =-> (turl) do 
 					bg = 0

@@ -1,9 +1,10 @@
 module XYGuiImg
-	#LIBXYIMG = Fiddle::dlopen(File.join(__FILE__[0, __FILE__.length - 11], "xyimg.dll"))
-	#SHOWIMG = Fiddle::Function.new(LIBXYIMG['showImage'], [Fiddle::TYPE_VOIDP] + [Fiddle::TYPE_LONG]*5, 
-	#						Fiddle::TYPE_INT)
-	#SHOWIMG_ON_PAINT = Fiddle::Function.new(LIBXYIMG['showImageOnPaint'], 
-	#						[Fiddle::TYPE_VOIDP] + [Fiddle::TYPE_LONG]*5, Fiddle::TYPE_INT) 
+	LIBXYIMG = Fiddle::dlopen(File.join(__FILE__[0, __FILE__.length - 11], "xyimg.dll"))
+	ShowImage = Fiddle::Function.new(LIBXYIMG['_ShowImage'], [Fiddle::TYPE_LONG]*6,  
+ 							Fiddle::TYPE_VOIDP)
+	CreateImageObject = Fiddle::Function.new(LIBXYIMG['_CreateImageObject'], [Fiddle::TYPE_VOIDP], Fiddle::TYPE_LONG)
+	DeleteImageObject = Fiddle::Function.new(LIBXYIMG['_DeleteImageObject'], [Fiddle::TYPE_LONG], Fiddle::TYPE_VOID)
+	GetImageWidth = Fiddle::Function.new(LIBXYIMG['_GetImageWidth'], [Fiddle::TYPE_LONG], Fiddle::TYPE_INT)
+	GetImageHeight = Fiddle::Function.new(LIBXYIMG['_GetImageHeight'], [Fiddle::TYPE_LONG], Fiddle::TYPE_INT)
 end
-require 'XYGuiImg_ext.so'
 require 'XYGui/xy_image.rb'
