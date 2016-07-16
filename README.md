@@ -40,4 +40,4 @@ Simple Opengl
 ![](http://i4.piimg.com/2de964225c6b09e5.png)
 
 ##For more information or join me
-Find me by qq 1441157749 (or tel +86 15638234038)
+Find me by email: sxysxygm@gmail.com 1441157749@qq.com; qq:1441157749 tel: +86 15638234038)
