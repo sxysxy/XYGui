@@ -6,7 +6,7 @@ A set of GUI tools based on Win32API, so Please Use **32-bit** ruby interpreter 
 ```ruby
 require 'XYGuiCore'
 
-app = XYApp.new("simple")
+app = XYApp.new("too_young_too_simple")
 wnd = XYMainWindow.new(app)
 wnd.show
 app.mainloop   #Just so easy
