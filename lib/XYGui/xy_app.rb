@@ -18,8 +18,8 @@ class XYApp
 	def initialize(appname)
 		#-----set excpHandler
 		
-		@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
-		registerExcpHandler
+		#@excpHandler = proc{defExcpHandler} #defExcpHandler, see XYGui_ext.c
+		#registerExcpHandler
 		#------
 		otherThings
 		#-----

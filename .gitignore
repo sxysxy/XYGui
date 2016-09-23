@@ -10,3 +10,5 @@
 /*.gem
 
 /ruby_i386cmd.bat
+/lib/*.so
+/lib/*.dll

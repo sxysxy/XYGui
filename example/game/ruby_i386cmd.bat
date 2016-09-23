@@ -1,0 +1,1 @@
+cmd /K C:\Ruby22\bin\setrbvars.bat
