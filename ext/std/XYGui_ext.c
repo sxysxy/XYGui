@@ -565,11 +565,11 @@ static VALUE XYPainter_setPen(VALUE self, VALUE pn)
 	SelectObject(dc, GETPEN_HANDLE(self));
 	return self;
 }
-static VALUE XYPainter_text(VALUE self, VALUE str, VALUE x, VALUE y)
+static VALUE XYPainter_text(VALUE self, VALUE str, VALUE x, VALUE y, VALUE len)
 {
-	int len = rb_funcall(str, rb_intern("length"), 0);
+	//int len = rb_funcall(str, rb_intern("length"), 0);
 	HDC dc = GETWIDGET_DC(self);
-	TextOut(dc, FIX2INT(x), FIX2INT(y), RSTRING_PTR(str), len/2);
+	TextOut(dc, FIX2INT(x), FIX2INT(y), RSTRING_PTR(str), FIX2INT(len));
 	return self;
 }
 static VALUE XYPainter_point(VALUE self, VALUE x, VALUE y)
@@ -591,7 +591,7 @@ static void InitXYPainter()
 	rb_define_method(cXYPainter, "fillRect", XYPainter_fillRect, 4);
 	rb_define_method(cXYPainter, "setBrush", XYPainter_setBrush, 1);
 	rb_define_method(cXYPainter, "setPen", XYPainter_setPen, 1);
-	rb_define_method(cXYPainter, "text", XYPainter_text, 3);
+	rb_define_method(cXYPainter, "text", XYPainter_text, 4);
 	rb_define_method(cXYPainter, "point", XYPainter_point, 2);
 	
 	//Note! These method should provide to users

@@ -19,7 +19,7 @@ XYApp.new("painting") do |app|
 			wnd.painter.line(wnd.width/4, wnd.height*3/4, wnd.width/4, wnd.height)      # The rect
 			wnd.painter.fillRect(wnd.width/4, wnd.height*3/4, wnd.width/2, wnd.height/4)
 			
-			wnd.painter.text("o", wnd.width/2, wnd.height/4)
+			wnd.painter.text("o", wnd.width/2, wnd.height/4, 1)
 		end
 	end.show
 end.mainloop
