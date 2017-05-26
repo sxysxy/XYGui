@@ -3,27 +3,6 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'XYGui/version'
 
-traverse_dir = ->(file_path, files = []) do
-  if File.directory?(file_path)
-    Dir.foreach(file_path) do |file|
-      if file !="." and file !=".."
-        traverse_dir.call(file_path+"/"+file, files)
-      end
-    end
-  else
-    files.push(file_path)
-  end
-  return files
-end
-
-traverse_dirs = ->(*file_paths) do
-  files = Array.new
-  file_paths.flatten.each do |file_path|
-    traverse_dir.call(file_path, files)
-  end
-  return files
-end
-
 Gem::Specification.new do |spec|
   spec.name          = "XYGui"
   spec.version       = XYGui::VERSION
@@ -43,7 +22,7 @@ Gem::Specification.new do |spec|
     raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
 
-  spec.files         = traverse_dirs.call("lib", "example", "ext")
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.11"
